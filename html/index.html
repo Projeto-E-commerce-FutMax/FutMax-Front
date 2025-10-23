@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutMax - Camisas de Futebol Oficiais</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FutMax</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html?categoria=nacional">Nacionais</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html?categoria=internacional">Internacionais</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="position-relative search-box d-none d-lg-block">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" id="searchInput" class="form-control search-input" placeholder="Buscar camisas...">
+                    </div>
+                    <button class="btn btn-link text-dark" id="themeToggle" title="Alternar tema">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+                    <a href="login.html" class="btn btn-link text-dark" id="userButton">
+                        <i class="bi bi-box-arrow-in-right"></i> <span class="d-none d-lg-inline">Entrar</span>
+                    </a>
+                    <a href="carrinho.html" class="btn btn-link text-dark position-relative">
+                        <i class="bi bi-cart3 fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <span class="badge-oferta mb-3 d-inline-block">
+                        <i class="bi bi-lightning-fill"></i> OFERTA RELÂMPAGO
+                    </span>
+                    <h1 class="display-3 fw-bold mb-3">MEGA PROMOÇÃO</h1>
+                    <h2 class="fw-bold mb-3">Até 50% OFF</h2>
+                    <p class="fs-5 mb-4">em camisas oficiais selecionadas</p>
+                    <div class="mb-4 d-flex gap-3 flex-wrap">
+                        <span class="badge-info"><i class="bi bi-truck"></i> Frete Grátis acima de R$ 200</span>
+                        <span class="badge-info"><i class="bi bi-credit-card"></i> 12x Sem Juros</span>
+                    </div>
+                    <a href="produtos.html" class="btn-comprar">COMPRAR AGORA <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card-destaque position-relative">
+                        <span class="badge-desconto">-50%</span>
+                        <img src="https://via.placeholder.com/400x400/FFD700/333?text=Camisa+Destaque" class="img-fluid rounded" alt="Camisa Destaque">
+                        <div class="text-center mt-3">
+                            <h5 class="fw-bold text-dark">Camisa Brasil Seleção</h5>
+                            <p class="preco-antigo mb-1">R$ 399,90</p>
+                            <p class="preco-novo mb-0">R$ 199,90</p>
+                            <p class="text-muted small">ou 12x de R$ 16,66 sem juros</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold">Produtos em Destaque</h3>
+                <a href="produtos.html" class="text-decoration-none link-primary">Ver todos <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="row" id="produtosDestaque">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white">
+        <div class="container">
+            <h3 class="fw-bold text-center mb-5">Categorias Populares</h3>
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3">
+                    <a href="produtos.html?categoria=nacional" class="text-decoration-none text-dark">
+                        <div class="categoria-card p-4">
+                            <div class="categoria-icon"><span class="fw-bold">BR</span></div>
+                            <h6 class="fw-bold">Camisas Nacionais</h6>
+                            <p class="text-muted small mb-0">Times brasileiros</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="produtos.html?categoria=internacional" class="text-decoration-none text-dark">
+                        <div class="categoria-card p-4">
+                            <div class="categoria-icon"><i class="bi bi-globe"></i></div>
+                            <h6 class="fw-bold">Internacionais</h6>
+                            <p class="text-muted small mb-0">Times do mundo</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="produtos.html?categoria=selecoes" class="text-decoration-none text-dark">
+                        <div class="categoria-card p-4">
+                            <div class="categoria-icon"><i class="bi bi-star-fill"></i></div>
+                            <h6 class="fw-bold">Seleções</h6>
+                            <p class="text-muted small mb-0">Seleções nacionais</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="produtos.html?categoria=retro" class="text-decoration-none text-dark">
+                        <div class="categoria-card p-4">
+                            <div class="categoria-icon"><i class="bi bi-clock-history"></i></div>
+                            <h6 class="fw-bold">Retrô</h6>
+                            <p class="text-muted small mb-0">Camisas clássicas</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-md-4">
+                    <div class="icon-box"><i class="bi bi-shield-check icon-diferencial"></i></div>
+                    <h6 class="fw-bold">Autenticidade Verificada</h6>
+                    <p class="text-muted small">Todas as peças são originais e verificadas</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="icon-box"><i class="bi bi-truck icon-diferencial"></i></div>
+                    <h6 class="fw-bold">Entrega Rápida</h6>
+                    <p class="text-muted small">Frete grátis em compras acima de R$ 200</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="icon-box"><i class="bi bi-arrow-repeat icon-diferencial"></i></div>
+                    <h6 class="fw-bold">Troca Garantida</h6>
+                    <p class="text-muted small">Até 30 dias para trocas e devoluções</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <h3 class="fw-bold mb-3">Fique por dentro das novidades</h3>
+                    <p class="text-muted mb-4">Receba ofertas exclusivas e lançamentos em primeira mão</p>
+                    <form id="newsletterForm" class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Seu melhor e-mail" required>
+                        <button class="btn btn-primary" type="submit">Inscrever-se</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3 brand-footer">FutMax</h5>
+                    <p class="text-muted small">A maior loja de camisas de futebol do Brasil. Qualidade garantida e entrega rápida.</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Categorias</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="produtos.html?categoria=nacional" class="text-muted text-decoration-none small">Camisas Nacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=internacional" class="text-muted text-decoration-none small">Internacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=selecoes" class="text-muted text-decoration-none small">Seleções</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=retro" class="text-muted text-decoration-none small">Retrô</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Atendimento</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Central de Ajuda</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Trocas e Devoluções</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Fale Conosco</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Pagamento</h6>
+                    <p class="text-muted small mb-3">Aceitamos:</p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge bg-light text-dark"><i class="bi bi-credit-card"></i> Cartão</span>
+                        <span class="badge bg-light text-dark"><i class="bi bi-upc-scan"></i> Boleto</span>
+                        <span class="badge bg-light text-dark">PIX</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="text-center text-muted small mb-0">
+                © 2025 <span class="brand-inline">FutMax</span>. Todos os direitos reservados. | 
+                CNPJ: 00.000.000/0000-00
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/cart.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho - FutMax</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FutMax</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html?categoria=nacional">Nacionais</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html?categoria=internacional">Internacionais</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-link text-dark" id="themeToggle">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+                    <a href="login.html" class="btn btn-link text-dark" id="userButton">
+                        <i class="bi bi-box-arrow-in-right"></i> <span class="d-none d-lg-inline">Entrar</span>
+                    </a>
+                    <a href="carrinho.html" class="btn btn-link text-dark position-relative">
+                        <i class="bi bi-cart3 fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-light py-3">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.html">Início</a></li>
+                    <li class="breadcrumb-item active">Carrinho</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="py-5">
+        <div class="container">
+            <h2 class="fw-bold mb-4">Meu Carrinho</h2>
+
+            <div class="row">
+                <div class="col-lg-8">
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-0">
+                            <div id="cartItems">
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Carregando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="emptyCart" class="text-center py-5 d-none">
+                        <i class="bi bi-cart-x display-1 text-muted"></i>
+                        <h4 class="text-muted mt-3">Seu carrinho está vazio</h4>
+                        <p class="text-muted">Adicione produtos ao carrinho para continuar</p>
+                        <a href="produtos.html" class="btn btn-primary mt-3">Ver Produtos</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-4">Resumo do Pedido</h5>
+                            
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Subtotal</span>
+                                <span class="fw-bold" id="subtotal">R$ 0,00</span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Frete</span>
+                                <span class="fw-bold" id="shipping">Grátis</span>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="fw-bold">Total</span>
+                                <span class="fw-bold text-success fs-4" id="total">R$ 0,00</span>
+                            </div>
+
+                            <div class="alert alert-success py-2 small mb-3" id="freteGratisAlert">
+                                <i class="bi bi-truck"></i> Frete Grátis em compras acima de R$ 200
+                            </div>
+
+                            <button class="btn btn-success w-100 py-3 mb-3" id="finalizarPedido" disabled>
+                                Finalizar Pedido
+                            </button>
+
+                            <a href="produtos.html" class="btn btn-outline-secondary w-100">
+                                Continuar Comprando
+                            </a>
+
+                            <div class="mt-4 pt-4 border-top">
+                                <p class="small text-muted mb-2"><i class="bi bi-shield-check text-success"></i> Compra 100% segura</p>
+                                <p class="small text-muted mb-2"><i class="bi bi-credit-card text-primary"></i> Parcelamento em até 12x</p>
+                                <p class="small text-muted mb-0"><i class="bi bi-arrow-repeat text-info"></i> Troca garantida em 30 dias</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3 brand-footer">FutMax</h5>
+                    <p class="text-muted small">A maior loja de camisas de futebol do Brasil.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Categorias</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="produtos.html?categoria=nacional" class="text-muted text-decoration-none small">Nacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=internacional" class="text-muted text-decoration-none small">Internacionais</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Atendimento</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Central de Ajuda</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Fale Conosco</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Pagamento</h6>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-light text-dark"><i class="bi bi-credit-card"></i></span>
+                        <span class="badge bg-light text-dark">PIX</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="text-center text-muted small mb-0">© 2025 <span class="brand-inline">FutMax</span>. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Finalizar Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Para finalizar seu pedido, você precisa estar logado.</p>
+                    <p class="text-muted small mb-0">Após o login, você será redirecionado de volta ao carrinho.</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="login.html" class="btn btn-primary">Fazer Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/cart.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/carrinho.js"></script>
+</body>
+</html>
