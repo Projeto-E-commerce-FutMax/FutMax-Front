@@ -7,6 +7,9 @@
     --text-medium: #555;
     --text-light: #999;
     --bg-light: #F5F5F5;
+    --bg-white: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #e0e0e0;
     --success: #28a745;
     --warning: #ffc107;
     --danger: #dc3545;
@@ -20,7 +23,10 @@ body.dark-theme {
     --text-medium: #ccc;
     --text-light: #999;
     --bg-light: #1a1a1a;
-    background-color: #121212;
+    --bg-white: #1e1e1e;
+    --card-bg: #1e1e1e;
+    --border-color: #333;
+    background-color: #121212 !important;
     color: #f5f5f5;
 }
 
@@ -42,6 +48,124 @@ body.dark-theme .bg-light {
     background-color: #1a1a1a !important;
 }
 
+body.dark-theme .bg-white {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-theme .navbar-light {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-theme .modal-content {
+    background-color: #1e1e1e;
+    color: #f5f5f5;
+}
+
+body.dark-theme .modal-header,
+body.dark-theme .modal-footer {
+    border-color: #333 !important;
+    background-color: #1a1a1a !important;
+}
+
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #f5f5f5;
+}
+
+body.dark-theme .form-control:focus,
+body.dark-theme .form-select:focus {
+    background-color: #2a2a2a;
+    border-color: var(--primary-color);
+    color: #f5f5f5;
+}
+
+body.dark-theme .breadcrumb {
+    background-color: transparent;
+}
+
+body.dark-theme .breadcrumb-item a {
+    color: var(--primary-color);
+}
+
+body.dark-theme .breadcrumb-item.active {
+    color: var(--text-medium);
+}
+
+body.dark-theme .table {
+    color: #f5f5f5;
+}
+
+body.dark-theme .table thead {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-theme .table-hover tbody tr:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark-theme .border-0 {
+    border-color: transparent !important;
+}
+
+body.dark-theme .cart-item {
+    border-bottom-color: #333 !important;
+}
+
+body.dark-theme .produto-img,
+body.dark-theme .cart-item-img {
+    background-color: #2a2a2a;
+}
+
+body.dark-theme .icon-box {
+    background-color: rgba(255, 87, 51, 0.2);
+}
+
+body.dark-theme .badge.bg-light {
+    background-color: #2a2a2a !important;
+    color: #f5f5f5 !important;
+}
+
+body.dark-theme .btn-outline-secondary {
+    color: #ccc;
+    border-color: #444;
+}
+
+body.dark-theme .btn-outline-secondary:hover {
+    background-color: #444;
+    border-color: #444;
+    color: #fff;
+}
+
+body.dark-theme .alert {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #f5f5f5;
+}
+
+body.dark-theme hr {
+    border-color: #333;
+    opacity: 1;
+}
+
+body.dark-theme .shadow-sm {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+}
+
+body.dark-theme .categoria-icon {
+    background-color: var(--primary-color);
+}
+
+body.dark-theme .sticky-top {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder {
+    color: #666;
+}
+
 /* ===== RESET & BASE ===== */
 * {
     margin: 0;
@@ -53,6 +177,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: var(--text-dark);
     overflow-x: hidden;
+    background-color: var(--bg-white);
 }
 
 /* ===== NAVBAR ===== */
@@ -86,6 +211,7 @@ body {
     border-radius: 25px;
     background-color: var(--bg-light);
     border: none;
+    color: var(--text-dark);
 }
 
 .search-icon {
@@ -108,7 +234,7 @@ body {
 
 .badge-oferta {
     background-color: #FFD700;
-    color: var(--text-dark);
+    color: #333;
     padding: 0.5rem 1.5rem;
     border-radius: 25px;
     font-weight: 700;
@@ -151,7 +277,7 @@ body {
 }
 
 .card-destaque {
-    background: white;
+    background: var(--card-bg);
     border-radius: 15px;
     padding: 1rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -188,7 +314,7 @@ body {
 
 /* ===== PRODUTOS ===== */
 .produto-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 15px;
     padding: 1rem;
     box-shadow: var(--shadow-sm);
@@ -303,7 +429,7 @@ body {
 /* ===== CARRINHO ===== */
 .cart-item {
     padding: 1rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--border-color);
     transition: background-color 0.3s ease;
 }
 
@@ -333,13 +459,14 @@ body {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    border: 1px solid #ddd;
-    background: white;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    color: var(--text-dark);
 }
 
 .quantity-btn:hover {
@@ -461,3 +588,4 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-color);
 }
+

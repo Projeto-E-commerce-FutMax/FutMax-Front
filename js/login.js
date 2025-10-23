@@ -1,40 +1,15 @@
 // Script para página de login
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificar se já está logado
-    if (isLoggedIn()) {
-        redirecionarUsuario();
-        return;
-    }
-    
     setupLoginForm();
     setupRegisterForm();
     setupMasks();
 });
-
-// Redirecionar usuário baseado na role
-function redirecionarUsuario() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const returnUrl = urlParams.get('return');
-    
-    if (isAdmin()) {
-        window.location.href = returnUrl || '/html/admin.html';
-    } else {
-        window.location.href = returnUrl || '/html/index.html';
-    }
-}
 
 function setupLoginForm() {
     const form = document.getElementById('loginForm');
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.innerHTML;
-        
-        // Desabilitar botão e mostrar loading
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Entrando...';
         
         const formData = new FormData(form);
         const data = {
@@ -46,13 +21,11 @@ function setupLoginForm() {
             // Fazer login usando o endpoint correto
             const response = await authAPI.login(data);
             
-            console.log('✅ Login bem-sucedido:', response);
+            console.log('Login bem-sucedido:', response);
             
             // Verificar se o usuário está ativo
             if (!response.usuario.flAtivo) {
                 showToast('Usuário inativo. Entre em contato com o suporte.', 'error');
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalButtonText;
                 return;
             }
             
@@ -61,16 +34,14 @@ function setupLoginForm() {
             
             showToast('Login realizado com sucesso!', 'success');
             
-            // Redirecionar após 500ms
+            // Redirecionar após 1 segundo
             setTimeout(() => {
-                redirecionarUsuario();
-            }, 500);
+                const returnUrl = new URLSearchParams(window.location.search).get('return') || 'index.html';
+                window.location.href = returnUrl;
+            }, 1000);
             
         } catch (error) {
-            console.error('❌ Erro no login:', error);
-            
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalButtonText;
+            console.error('Erro no login:', error);
             
             // Mensagens de erro mais específicas
             if (error.message.includes('401') || error.message.includes('Unauthorized')) {
@@ -84,6 +55,7 @@ function setupLoginForm() {
     });
 }
 
+
 // Configurar formulário de cadastro
 function setupRegisterForm() {
     const form = document.getElementById('registerForm');
@@ -91,21 +63,12 @@ function setupRegisterForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.innerHTML;
-        
-        // Desabilitar botão e mostrar loading
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Cadastrando...';
-        
         const formData = new FormData(form);
         
         // Validar senha
         const senha = formData.get('nmSenha');
         if (!validarSenha(senha)) {
             showToast('A senha deve conter: maiúscula, minúscula, número e caractere especial', 'error');
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalButtonText;
             return;
         }
         
@@ -113,8 +76,6 @@ function setupRegisterForm() {
         const cpf = formData.get('nmCpf').replace(/\D/g, '');
         if (!validarCPF(cpf)) {
             showToast('CPF inválido', 'error');
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalButtonText;
             return;
         }
         
@@ -130,32 +91,24 @@ function setupRegisterForm() {
         };
         
         try {
-            await usuarioAPI.cadastrar(data);
+            const response = await usuarioAPI.cadastrar(data);
             
-            showToast('Cadastro realizado com sucesso! Fazendo login...', 'success');
+            showToast('Cadastro realizado com sucesso!', 'success');
             
-            // Fazer login automaticamente após cadastro
-            const loginResponse = await authAPI.login({
-                nmEmail: data.nmEmail,
-                nmSenha: data.nmSenha
-            });
+            // Fazer login automaticamente
+            localStorage.setItem('futmax_user', JSON.stringify(response));
             
-            localStorage.setItem('futmax_user', JSON.stringify(loginResponse));
-            
-            // Redirecionar após 500ms
+            // Redirecionar após 1 segundo
             setTimeout(() => {
-                window.location.href = '/html/index.html';
-            }, 500);
+                window.location.href = 'index.html';
+            }, 1000);
             
         } catch (error) {
-            console.error('❌ Erro no cadastro:', error);
-            
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalButtonText;
+            console.error('Erro no cadastro:', error);
             
             if (error.message.includes('CPF')) {
                 showToast('CPF já cadastrado', 'error');
-            } else if (error.message.includes('email') || error.message.includes('e-mail') || error.message.includes('E-mail')) {
+            } else if (error.message.includes('email')) {
                 showToast('E-mail já cadastrado', 'error');
             } else {
                 showToast('Erro ao realizar cadastro. Verifique os dados e tente novamente.', 'error');
