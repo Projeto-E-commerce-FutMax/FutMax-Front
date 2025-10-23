@@ -35,7 +35,30 @@ body.dark-theme {
     color: #f5f5f5;
 }
 
+<<<<<<< HEAD
 body.dark-theme .navbar,
+=======
+body.dark-theme .navbar {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-theme .navbar .btn-link {
+    color: #f5f5f5 !important;
+}
+
+body.dark-theme .navbar .btn-link:hover {
+    color: var(--primary-color) !important;
+}
+
+body.dark-theme #themeToggle i {
+    color: #f5f5f5;
+}
+
+body.dark-theme #themeToggle:hover i {
+    color: var(--primary-color);
+}
+
+>>>>>>> c3e2892167d37f46345b232e625d8ab1085034be
 body.dark-theme .card,
 body.dark-theme .produto-card,
 body.dark-theme .card-destaque,
@@ -61,6 +84,80 @@ body.dark-theme .navbar-light {
     background-color: #1e1e1e !important;
 }
 
+<<<<<<< HEAD
+=======
+/* Página de Login - Tema Escuro */
+body.dark-theme .nav-pills .nav-link {
+    background-color: transparent;
+    color: var(--text-medium);
+}
+
+body.dark-theme .nav-pills .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+body.dark-theme .tab-content {
+    color: var(--text-dark);
+}
+
+body.dark-theme .form-label {
+    color: var(--text-dark);
+}
+
+/* Ajuste do gradiente laranja na página de login */
+body.dark-theme .col-lg-6[style*="gradient"] {
+    opacity: 0.95;
+}
+
+/* Links no tema escuro */
+body.dark-theme a {
+    color: var(--primary-color);
+}
+
+body.dark-theme a:hover {
+    color: var(--secondary-color);
+}
+
+body.dark-theme .text-decoration-none {
+    transition: color 0.3s ease;
+}
+
+/* Checkbox no tema escuro */
+body.dark-theme .form-check-label {
+    color: var(--text-dark);
+}
+
+body.dark-theme .form-check-input {
+    background-color: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Input group (botão de olho na senha) */
+body.dark-theme .input-group .btn-outline-secondary {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #f5f5f5;
+}
+
+body.dark-theme .input-group .btn-outline-secondary:hover {
+    background-color: #3a3a3a;
+    border-color: var(--primary-color);
+    color: #f5f5f5;
+}
+
+/* Texto pequeno (small) */
+body.dark-theme small,
+body.dark-theme .small {
+    color: var(--text-medium);
+}
+
+>>>>>>> c3e2892167d37f46345b232e625d8ab1085034be
 body.dark-theme .modal-content {
     background-color: #1e1e1e;
     color: #f5f5f5;
@@ -186,6 +283,13 @@ body {
 }
 
 /* ===== NAVBAR ===== */
+<<<<<<< HEAD
+=======
+.navbar {
+    background-color: #ffffff !important;
+}
+
+>>>>>>> c3e2892167d37f46345b232e625d8ab1085034be
 .navbar-brand {
     font-size: 1.8rem;
     font-weight: 700;
@@ -228,6 +332,39 @@ body {
     z-index: 10;
 }
 
+<<<<<<< HEAD
+=======
+/* Botões da navbar - modo claro */
+.navbar .btn-link {
+    color: #333 !important;
+    text-decoration: none;
+}
+
+.navbar .btn-link:hover {
+    color: var(--primary-color) !important;
+}
+
+.navbar .btn-link i {
+    font-size: 1.2rem;
+}
+
+#themeToggle {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+}
+
+#themeToggle i {
+    color: #333;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+#themeToggle:hover i {
+    color: var(--primary-color);
+}
+
+>>>>>>> c3e2892167d37f46345b232e625d8ab1085034be
 /* ===== HERO SECTION ===== */
 .hero-section {
     background: var(--gradient);
@@ -427,6 +564,10 @@ body {
 }
 
 .brand-inline {
+<<<<<<< HEAD
+=======
+    color: var(--primary-color);
+>>>>>>> c3e2892167d37f46345b232e625d8ab1085034be
     font-weight: 600;
 }
 
@@ -511,6 +652,33 @@ body {
     background-color: var(--danger) !important;
 }
 
+<<<<<<< HEAD
+=======
+.badge.rounded-pill {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Badge do carrinho */
+#cartCount {
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+}
+
+/* Ícones da navbar */
+.navbar .bi {
+    transition: transform 0.2s ease;
+}
+
+.navbar .btn-link:hover .bi {
+    transform: scale(1.1);
+}
+
+>>>>>>> c3e2892167d37f46345b232e625d8ab1085034be
 /* ===== FORMS ===== */
 .form-control:focus {
     border-color: var(--primary-color);
