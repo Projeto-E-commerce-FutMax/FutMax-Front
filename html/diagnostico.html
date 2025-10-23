@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Autenticação - FutMax</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .log-success { color: #28a745; }
+        .log-error { color: #dc3545; }
+        .log-warning { color: #ffc107; }
+        .log-info { color: #17a2b8; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="mb-4">🔍 Diagnóstico de Autenticação</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Status Atual</h5>
+            </div>
+            <div class="card-body">
+                <div id="diagnostico"></div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Dados do LocalStorage</h5>
+            </div>
+            <div class="card-body">
+                <pre id="localStorage"></pre>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Token JWT Decodificado</h5>
+            </div>
+            <div class="card-body">
+                <pre id="tokenDecoded"></pre>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Ações</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-danger me-2" onclick="limparLocalStorage()">
+                    <i class="bi bi-trash"></i> Limpar LocalStorage
+                </button>
+                <button class="btn btn-primary me-2" onclick="testarLogin()">
+                    <i class="bi bi-box-arrow-in-right"></i> Testar Login
+                </button>
+                <button class="btn btn-success" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise"></i> Recarregar
+                </button>
+            </div>
+        </div>
+
+        <div class="card" id="testeLogin" style="display: none;">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Teste de Login</h5>
+            </div>
+            <div class="card-body">
+                <form id="formTesteLogin">
+                    <div class="mb-3">
+                        <label class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="emailTeste" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Senha:</label>
+                        <input type="password" class="form-control" id="senhaTeste" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div id="resultadoLogin" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para decodificar JWT
+        function decodeJWT(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Função de diagnóstico
+        function diagnosticar() {
+            const diagnostico = document.getElementById('diagnostico');
+            let html = '';
+
+            // 1. Verificar se tem dados no localStorage
+            const userData = localStorage.getItem('futmax_user');
+            
+            if (!userData) {
+                html += '<p class="log-error"><i class="bi bi-x-circle-fill"></i> <strong>PROBLEMA:</strong> Nenhum dado encontrado no localStorage</p>';
+                html += '<p class="log-info">→ Você não está logado. Faça login primeiro.</p>';
+            } else {
+                html += '<p class="log-success"><i class="bi bi-check-circle-fill"></i> Dados encontrados no localStorage</p>';
+                
+                try {
+                    const data = JSON.parse(userData);
+                    
+                    // 2. Verificar token
+                    if (!data.token) {
+                        html += '<p class="log-error"><i class="bi bi-x-circle-fill"></i> <strong>PROBLEMA:</strong> Token não encontrado</p>';
+                    } else {
+                        html += '<p class="log-success"><i class="bi bi-check-circle-fill"></i> Token encontrado</p>';
+                        
+                        // Decodificar token
+                        const decoded = decodeJWT(data.token);
+                        if (decoded) {
+                            const now = Date.now() / 1000;
+                            if (decoded.exp && decoded.exp < now) {
+                                html += '<p class="log-error"><i class="bi bi-x-circle-fill"></i> <strong>PROBLEMA:</strong> Token EXPIRADO!</p>';
+                                html += `<p class="log-info">→ Expirou em: ${new Date(decoded.exp * 1000).toLocaleString()}</p>`;
+                            } else {
+                                html += '<p class="log-success"><i class="bi bi-check-circle-fill"></i> Token válido</p>';
+                                if (decoded.exp) {
+                                    html += `<p class="log-info">→ Expira em: ${new Date(decoded.exp * 1000).toLocaleString()}</p>`;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 3. Verificar usuário
+                    if (!data.usuario) {
+                        html += '<p class="log-error"><i class="bi bi-x-circle-fill"></i> <strong>PROBLEMA:</strong> Dados do usuário não encontrados</p>';
+                    } else {
+                        html += '<p class="log-success"><i class="bi bi-check-circle-fill"></i> Dados do usuário encontrados</p>';
+                        html += `<p class="log-info">→ Nome: ${data.usuario.nmUsuario}</p>`;
+                        html += `<p class="log-info">→ Email: ${data.usuario.nmEmail}</p>`;
+                        html += `<p class="log-info">→ Ativo: ${data.usuario.flAtivo ? 'Sim' : 'Não'}</p>`;
+                        
+                        // 4. Verificar roles - ESTE É O MAIS IMPORTANTE
+                        if (!data.usuario.roleModels) {
+                            html += '<p class="log-error"><i class="bi bi-x-circle-fill"></i> <strong>PROBLEMA CRÍTICO:</strong> Campo "roleModels" não existe!</p>';
+                            html += '<p class="log-warning">→ Este é o motivo do erro de permissão!</p>';
+                            html += '<p class="log-info">→ Seu backend deve retornar o campo "roleModels" com as roles do usuário</p>';
+                        } else if (Array.isArray(data.usuario.roleModels) && data.usuario.roleModels.length === 0) {
+                            html += '<p class="log-error"><i class="bi bi-x-circle-fill"></i> <strong>PROBLEMA:</strong> roleModels está VAZIO!</p>';
+                            html += '<p class="log-warning">→ Usuário não tem nenhuma role associada no banco de dados</p>';
+                        } else {
+                            html += '<p class="log-success"><i class="bi bi-check-circle-fill"></i> Roles encontradas:</p>';
+                            data.usuario.roleModels.forEach(role => {
+                                const isAdmin = role.nmRole === 'ROLE_ADMIN' || role.nmRole === 'ADMIN';
+                                html += `<p class="${isAdmin ? 'log-success' : 'log-info'}">→ ${role.nmRole} ${isAdmin ? '(É ADMIN! ✅)' : ''}</p>`;
+                            });
+                            
+                            // Verificar se é admin
+                            const isAdmin = data.usuario.roleModels.some(r => 
+                                r.nmRole === 'ROLE_ADMIN' || r.nmRole === 'ADMIN'
+                            );
+                            
+                            if (isAdmin) {
+                                html += '<p class="log-success"><strong>✅ USUÁRIO É ADMIN!</strong></p>';
+                                html += '<p class="log-info">→ Deve ter acesso ao painel administrativo</p>';
+                            } else {
+                                html += '<p class="log-warning"><strong>⚠️ USUÁRIO NÃO É ADMIN</strong></p>';
+                                html += '<p class="log-info">→ Não tem permissão para acessar painel admin</p>';
+                            }
+                        }
+                    }
+                    
+                } catch (e) {
+                    html += `<p class="log-error"><i class="bi bi-x-circle-fill"></i> Erro ao analisar dados: ${e.message}</p>`;
+                }
+            }
+
+            diagnostico.innerHTML = html;
+
+            // Mostrar dados do localStorage
+            if (userData) {
+                try {
+                    const data = JSON.parse(userData);
+                    document.getElementById('localStorage').textContent = JSON.stringify(data, null, 2);
+                    
+                    if (data.token) {
+                        const decoded = decodeJWT(data.token);
+                        document.getElementById('tokenDecoded').textContent = decoded ? 
+                            JSON.stringify(decoded, null, 2) : 
+                            'Não foi possível decodificar o token';
+                    }
+                } catch (e) {
+                    document.getElementById('localStorage').textContent = userData;
+                }
+            } else {
+                document.getElementById('localStorage').textContent = 'Nenhum dado no localStorage';
+                document.getElementById('tokenDecoded').textContent = 'Nenhum token para decodificar';
+            }
+        }
+
+        // Limpar localStorage
+        function limparLocalStorage() {
+            if (confirm('Deseja realmente limpar todos os dados do localStorage?')) {
+                localStorage.clear();
+                alert('LocalStorage limpo!');
+                location.reload();
+            }
+        }
+
+        // Testar login
+        function testarLogin() {
+            document.getElementById('testeLogin').style.display = 'block';
+        }
+
+        // Form de teste de login
+        document.getElementById('formTesteLogin')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('emailTeste').value;
+            const senha = document.getElementById('senhaTeste').value;
+            const resultado = document.getElementById('resultadoLogin');
+            
+            resultado.innerHTML = '<p class="log-info">Fazendo login...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8089/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nmEmail: email,
+                        nmSenha: senha
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultado.innerHTML = '<p class="log-success">✅ Login bem-sucedido!</p>';
+                    resultado.innerHTML += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    
+                    // Salvar no localStorage
+                    localStorage.setItem('futmax_user', JSON.stringify(data));
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    const error = await response.text();
+                    resultado.innerHTML = `<p class="log-error">❌ Erro: ${response.status} - ${error}</p>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<p class="log-error">❌ Erro: ${error.message}</p>`;
+            }
+        });
+
+        // Executar diagnóstico ao carregar
+        diagnosticar();
+    </script>
+</body>
+</html>

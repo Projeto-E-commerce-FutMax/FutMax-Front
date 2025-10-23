@@ -53,6 +53,8 @@ const API_ENDPOINTS = {
     }
 };
 
+// ===== FUNÇÕES DE AUTENTICAÇÃO =====
+
 // Função para obter o token JWT do localStorage
 function getAuthToken() {
     const user = localStorage.getItem('futmax_user');
@@ -67,6 +69,68 @@ function getAuthToken() {
     return null;
 }
 
+// Função para obter dados do usuário logado
+function getLoggedUser() {
+    const user = localStorage.getItem('futmax_user');
+    if (user) {
+        try {
+            return JSON.parse(user);
+        } catch (e) {
+            return null;
+        }
+    }
+    return null;
+}
+
+// Verificar se o usuário está logado
+function isLoggedIn() {
+    const token = getAuthToken();
+    if (!token) return false;
+    
+    // Verificar se o token está expirado
+    if (isTokenExpired()) {
+        logout();
+        return false;
+    }
+    
+    return true;
+}
+
+// Verificar se o usuário é admin
+function isAdmin() {
+    const userData = getLoggedUser();
+    if (!userData || !userData.usuario || !userData.usuario.roleModels) {
+        return false;
+    }
+    return userData.usuario.roleModels.some(role => 
+        role.nmRole === 'ROLE_ADMIN' || role.nmRole === 'ADMIN'
+    );
+}
+
+// Fazer logout
+function logout() {
+    localStorage.removeItem('futmax_user');
+    localStorage.removeItem('futmax_cart');
+    window.location.href = '/html/login.html';
+}
+
+// Verificar expiração do token
+function isTokenExpired() {
+    const userData = getLoggedUser();
+    if (!userData || !userData.token) return true;
+    
+    try {
+        // Decodificar JWT (payload é a segunda parte)
+        const payload = JSON.parse(atob(userData.token.split('.')[1]));
+        const expiry = payload.exp * 1000; // converter para milissegundos
+        return Date.now() >= expiry;
+    } catch (e) {
+        return true;
+    }
+}
+
+// ===== REQUISIÇÕES À API =====
+
 // Função principal para fazer requisições à API
 async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = true) {
     const url = `${API_CONFIG.baseURL}${endpoint}`;
@@ -78,9 +142,12 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
     // Adicionar token JWT se necessário
     if (requiresAuth) {
         const token = getAuthToken();
-        console.log('🔑 Token sendo enviado:', token); // DEBUG
         if (token) {
             options.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            // Se requer auth mas não tem token, redirecionar para login
+            window.location.href = '/html/login.html';
+            throw new Error('Não autenticado');
         }
     }
 
@@ -88,26 +155,18 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
         options.body = JSON.stringify(data);
     }
 
-    console.log('📡 Fazendo requisição:', { url, method, headers: options.headers }); // DEBUG
-
     try {
         const response = await fetch(url, options);
         
-        console.log('📥 Resposta recebida:', response.status); // DEBUG
-        
-        // Se não autorizado, redirecionar para login
+        // Se não autorizado, fazer logout e redirecionar
         if (response.status === 401 || response.status === 403) {
-            console.error('❌ Não autorizado! Status:', response.status); // DEBUG
-            localStorage.removeItem('futmax_user');
-            if (window.location.pathname !== '/html/login.html' && window.location.pathname !== '/login.html') {
-                window.location.href = '/html/login.html';
-            }
+            console.error('❌ Não autorizado! Token expirado ou inválido');
+            logout();
             throw new Error('Não autorizado');
         }
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            console.error('❌ Erro na resposta:', errorData); // DEBUG
             throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
 
@@ -115,9 +174,7 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
             return null;
         }
 
-        const responseData = await response.json();
-        console.log('✅ Dados recebidos:', responseData); // DEBUG
-        return responseData;
+        return await response.json();
         
     } catch (error) {
         console.error('💥 API Error:', error);
@@ -166,7 +223,8 @@ const estoqueAPI = {
     atualizar: (id, data) => apiRequest(API_ENDPOINTS.estoque.atualizar(id), 'PUT', data, true)
 };
 
-// Funções utilitárias
+// ===== FUNÇÕES UTILITÁRIAS =====
+
 function formatarMoeda(valor) {
     return new Intl.NumberFormat('pt-BR', {
         style: 'currency',

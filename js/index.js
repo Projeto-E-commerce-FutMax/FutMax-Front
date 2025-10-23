@@ -1,9 +1,53 @@
 // Script para página inicial
 document.addEventListener('DOMContentLoaded', async () => {
+    verificarEAtualizarLogin();
     await carregarProdutosDestaque();
     setupSearch();
     setupNewsletter();
 });
+
+// Verificar se usuário está logado e atualizar UI
+function verificarEAtualizarLogin() {
+    const userButton = document.getElementById('userButton');
+    
+    if (!userButton) return;
+    
+    if (isLoggedIn()) {
+        const userData = getLoggedUser();
+        
+        if (userData && userData.usuario) {
+            // Extrair primeiro nome
+            const primeiroNome = userData.usuario.nmUsuario.split(' ')[0];
+            
+            // Atualizar botão
+            userButton.innerHTML = `
+                <i class="bi bi-person-circle"></i> 
+                <span class="d-none d-lg-inline">${primeiroNome}</span>
+            `;
+            userButton.href = '#';
+            
+            // Adicionar dropdown menu
+            const userDropdown = document.createElement('div');
+            userDropdown.className = 'dropdown d-inline-block';
+            userDropdown.innerHTML = `
+                <a class="btn btn-link text-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle"></i> 
+                    <span class="d-none d-lg-inline">${primeiroNome}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Meu Perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-bag"></i> Meus Pedidos</a></li>
+                    ${isAdmin() ? '<li><hr class="dropdown-divider"></li><li><a class="dropdown-item" href="/html/admin.html"><i class="bi bi-shield-lock"></i> Painel Admin</a></li>' : ''}
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sair</a></li>
+                </ul>
+            `;
+            
+            // Substituir botão por dropdown
+            userButton.replaceWith(userDropdown);
+        }
+    }
+}
 
 // Carregar produtos em destaque
 async function carregarProdutosDestaque() {
@@ -113,28 +157,3 @@ function setupNewsletter() {
         });
     }
 }
-
-// Verificar se usuário está logado e atualizar UI
-function checkUserLogin() {
-    const user = localStorage.getItem('futmax_user');
-    const userButton = document.getElementById('userButton');
-    
-    if (user && userButton) {
-        const userData = JSON.parse(user);
-        userButton.innerHTML = `
-            <i class="bi bi-person-circle"></i> 
-            <span class="d-none d-lg-inline">${userData.nmUsuario.split(' ')[0]}</span>
-        `;
-        userButton.href = '#';
-        userButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm('Deseja sair?')) {
-                localStorage.removeItem('futmax_user');
-                window.location.reload();
-            }
-        });
-    }
-}
-
-// Executar verificação de login
-checkUserLogin();

@@ -6,10 +6,15 @@
     <title>Admin - FutMax</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/admin.css">
+    
+    <!-- IMPORTANTE: Carregar config.js ANTES do auth-guard -->
+    <script src="../js/config.js"></script>
+    <script src="../js/auth-guard.js"></script>
 </head>
 <body class="bg-light">
+    <!-- NAVBAR ADMIN -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand" href="admin.html">
@@ -51,14 +56,15 @@
                         <i class="bi bi-person-circle"></i> 
                         <span id="adminName">Administrador</span>
                     </span>
-                    <a href="index.html" class="btn btn-outline-light btn-sm">
+                    <button onclick="logout()" class="btn btn-outline-light btn-sm">
                         <i class="bi bi-box-arrow-left"></i> Sair
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- DASHBOARD -->
     <div class="container-fluid py-4">
         <div class="row mb-4">
             <div class="col">
@@ -67,6 +73,7 @@
             </div>
         </div>
 
+        <!-- CARDS DE ESTATÍSTICAS -->
         <div class="row g-4 mb-4">
             <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm h-100">
@@ -133,6 +140,7 @@
             </div>
         </div>
 
+        <!-- AÇÕES RÁPIDAS -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
@@ -165,6 +173,7 @@
             </div>
         </div>
 
+        <!-- PRODUTOS RECENTES E ESTOQUE BAIXO -->
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm">
@@ -216,7 +225,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/config.js"></script>
     <script src="../js/admin.js"></script>
 </body>
 </html>
