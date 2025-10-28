@@ -746,3 +746,40 @@ body {
     display: flex;
     align-items: center;
 }
+
+.nav-pills .nav-link.active {
+    background-color: var(--primary-color);
+    color: white !important;
+}
+
+.nav-pills .nav-link {
+    color: var(--text-dark);
+}
+
+.nav-pills .nav-link:focus,
+.nav-pills .nav-link:active {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.nav-pills .nav-link:focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+body.dark-theme .nav-pills .nav-link {
+    color: #ccc;
+}
+
+body.dark-theme .nav-pills .nav-link.active {
+    background-color: var(--primary-color);
+    color: white !important;
+}
+
+.nav-pills .nav-link:hover:not(.active) {
+    background-color: rgba(255, 87, 51, 0.1);
+}
+
+body.dark-theme .nav-pills .nav-link:hover:not(.active) {
+    background-color: rgba(255, 87, 51, 0.1);
+}
