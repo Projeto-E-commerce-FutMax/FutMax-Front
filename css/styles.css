@@ -210,6 +210,30 @@ body.dark-theme .icon-box {
     background-color: rgba(255, 87, 51, 0.2);
 }
 
+body.dark-theme .card-destaque .text-dark {
+    color: #f5f5f5 !important;
+}
+
+body.dark-theme .card-destaque h5 {
+    color: #f5f5f5 !important;
+}
+
+body.dark-theme .categoria-card h6 {
+    color: #f5f5f5 !important;
+}
+
+body.dark-theme .categoria-card p {
+    color: #ccc !important;
+}
+
+body.dark-theme .text-dark {
+    color: #f5f5f5 !important;
+}
+
+body.dark-theme .text-muted {
+    color: #999 !important;
+}
+
 body.dark-theme .badge.bg-light {
     background-color: #2a2a2a !important;
     color: #f5f5f5 !important;
