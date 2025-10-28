@@ -34,8 +34,14 @@ function setupLoginForm() {
             
             showToast('Login realizado com sucesso!', 'success');
             
-            // Redirecionar após 1 segundo
+            // Redirecionar após 1 segundo (se for ADMIN, vai para admin)
             setTimeout(() => {
+                const roles = (response.usuario && response.usuario.roleModels) ? Array.from(response.usuario.roleModels).map(r => r.nmRole || r) : [];
+                const isAdmin = roles.some(r => String(r).includes('ADMIN'));
+                if (isAdmin) {
+                    window.location.href = 'admin.html';
+                    return;
+                }
                 const returnUrl = new URLSearchParams(window.location.search).get('return') || 'index.html';
                 window.location.href = returnUrl;
             }, 1000);

@@ -28,8 +28,8 @@ async function carregarProdutosDestaque() {
         container.innerHTML = produtosAtivos.map(produto => `
             <div class="col-md-6 col-lg-3">
                 <div class="produto-card" onclick="verProduto(${produto.cdProduto})">
-                    <div class="produto-img">
-                        <i class="bi bi-image" style="font-size: 3rem;"></i>
+                    <div class="produto-img d-flex align-items-center justify-content-center">
+                        ${produto.imgUrl ? `<img src="${API_CONFIG.baseURL}${produto.imgUrl}" alt="${produto.nmProduto}" class="img-fluid" style="max-height:140px; object-fit:contain;">` : `<i class="bi bi-image" style="font-size: 3rem;"></i>`}
                     </div>
                     <h6 class="fw-bold mt-3">${produto.nmProduto}</h6>
                     <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
