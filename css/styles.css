@@ -723,3 +723,10 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-color);
 }
+
+.img-navbar {
+    margin: 0 auto;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
