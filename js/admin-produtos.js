@@ -69,6 +69,11 @@ function abrirModalNovo() {
     document.getElementById('formProduto').reset();
     document.getElementById('cdProduto').value = '';
     document.getElementById('flAtivo').checked = true;
+    const preview = document.getElementById('previewImagem');
+    if (preview) {
+        preview.src = '';
+        preview.classList.add('d-none');
+    }
 }
 
 // Editar produto
@@ -121,25 +126,86 @@ async function reativarProduto(cdProduto) {
 // Setup formulário
 function setupFormulario() {
     const form = document.getElementById('formProduto');
+    const inputImagem = document.getElementById('imagemProduto');
+
+    if (inputImagem) {
+        inputImagem.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            const preview = document.getElementById('previewImagem');
+            
+            if (file) {
+                // Validar tamanho (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Arquivo muito grande. Máximo 5MB.');
+                    e.target.value = '';
+                    return;
+                }
+                
+                // Validar tipo
+                if (!file.type.startsWith('image/')) {
+                    alert('Apenas arquivos de imagem são permitidos.');
+                    e.target.value = '';
+                    return;
+                }
+                
+                if (preview) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.classList.remove('d-none');
+                }
+            }
+        });
+    }
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const dados = {
-            nmProduto: document.getElementById('nmProduto').value,
-            vlProduto: parseFloat(document.getElementById('vlProduto').value),
-            dsProduto: document.getElementById('dsProduto').value,
-            flAtivo: document.getElementById('flAtivo').checked
-        };
+        const nmProduto = document.getElementById('nmProduto').value;
+        const vlProduto = parseFloat(document.getElementById('vlProduto').value);
+        const dsProduto = document.getElementById('dsProduto').value;
+        const flAtivo = document.getElementById('flAtivo').checked;
+        const imagem = inputImagem && inputImagem.files ? inputImagem.files[0] : null;
         
         try {
             if (produtoEditando) {
-                // Atualizar
-                await produtoAPI.atualizar(produtoEditando.cdProduto, dados);
+                if (imagem) {
+                    const fd = new FormData();
+                    fd.append('nmProduto', nmProduto);
+                    fd.append('vlProduto', vlProduto);
+                    fd.append('dsProduto', dsProduto);
+                    fd.append('flAtivo', flAtivo);
+                    fd.append('imagem', imagem);
+                    
+                    console.log('📤 Atualizando produto com imagem:', {
+                        cdProduto: produtoEditando.cdProduto,
+                        nmProduto, vlProduto, dsProduto, flAtivo,
+                        imagem: { name: imagem.name, size: imagem.size, type: imagem.type }
+                    });
+                    
+                    await produtoAPI.atualizarComImagem(produtoEditando.cdProduto, fd);
+                } else {
+                    const dados = { nmProduto, vlProduto, dsProduto, flAtivo };
+                    await produtoAPI.atualizar(produtoEditando.cdProduto, dados);
+                }
                 mostrarToast('Produto atualizado com sucesso!', 'success');
             } else {
-                // Criar novo
-                await produtoAPI.cadastrar(dados);
+                if (imagem) {
+                    const fd = new FormData();
+                    fd.append('nmProduto', nmProduto);
+                    fd.append('vlProduto', vlProduto);
+                    fd.append('dsProduto', dsProduto);
+                    fd.append('flAtivo', flAtivo);
+                    fd.append('imagem', imagem);
+                    
+                    console.log('📤 Enviando produto com imagem:', {
+                        nmProduto, vlProduto, dsProduto, flAtivo,
+                        imagem: { name: imagem.name, size: imagem.size, type: imagem.type }
+                    });
+                    
+                    await produtoAPI.cadastrarComImagem(fd);
+                } else {
+                    const dados = { nmProduto, vlProduto, dsProduto, flAtivo };
+                    await produtoAPI.cadastrar(dados);
+                }
                 mostrarToast('Produto cadastrado com sucesso!', 'success');
             }
             
@@ -150,6 +216,11 @@ function setupFormulario() {
             
         } catch (error) {
             console.error('Erro ao salvar produto:', error);
+            console.error('Detalhes do erro:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
             mostrarToast('Erro ao salvar produto: ' + error.message, 'error');
         }
     });

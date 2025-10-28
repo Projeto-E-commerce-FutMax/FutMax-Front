@@ -131,7 +131,7 @@ async function desativarEstoque(cdEstoque) {
     if (!confirm('Deseja realmente desativar este estoque?')) return;
     
     try {
-        await apiRequest(`/estoque/desativar/${cdEstoque}`, 'DELETE');
+        await estoqueAPI.desativar(cdEstoque);
         mostrarToast('Estoque desativado com sucesso!', 'success');
         await carregarEstoques();
     } catch (error) {
@@ -142,7 +142,7 @@ async function desativarEstoque(cdEstoque) {
 
 async function reativarEstoque(cdEstoque) {
     try {
-        await apiRequest(`/estoque/reativar/${cdEstoque}`, 'PUT');
+        await estoqueAPI.reativar(cdEstoque);
         mostrarToast('Estoque reativado com sucesso!', 'success');
         await carregarEstoques();
     } catch (error) {

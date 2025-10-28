@@ -16,7 +16,9 @@ const API_ENDPOINTS = {
         listar: '/produto/buscar/todos',
         buscar: (id) => `/produto/buscar/${id}`,
         cadastrar: '/produto/cadastrar',
+        cadastrarComImagem: '/produto/cadastrar-com-imagem',
         atualizar: (id) => `/produto/atualizar/${id}`,
+        atualizarComImagem: (id) => `/produto/atualizar-com-imagem/${id}`,
         desativar: (id) => `/produto/desativar/${id}`,
         reativar: (id) => `/produto/reativar/${id}`
     },
@@ -65,6 +67,31 @@ function getAuthToken() {
         }
     }
     return null;
+}
+
+// Utilitários de autenticação
+function getLoggedUser() {
+    const raw = localStorage.getItem('futmax_user');
+    if (!raw) return null;
+    try {
+        return JSON.parse(raw);
+    } catch {
+        return null;
+    }
+}
+
+function isLoggedIn() {
+    const data = getLoggedUser();
+    return !!(data && data.token);
+}
+
+function isAdmin() {
+    const data = getLoggedUser();
+    if (!data || !data.usuario) return false;
+    const roles = Array.isArray(data.usuario.roleModels)
+        ? data.usuario.roleModels.map(r => r.nmRole || r)
+        : [];
+    return roles.some(r => String(r).includes('ADMIN'));
 }
 
 // Função principal para fazer requisições à API
@@ -125,6 +152,34 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
     }
 }
 
+// Requisição multipart (FormData)
+async function apiRequestMultipart(endpoint, method = 'POST', formData, requiresAuth = true) {
+    const url = `${API_CONFIG.baseURL}${endpoint}`;
+    const options = { method, headers: {} };
+    if (requiresAuth) {
+        const token = getAuthToken();
+        if (token) options.headers['Authorization'] = `Bearer ${token}`;
+    }
+    options.body = formData;
+
+    const response = await fetch(url, options);
+    
+    console.log('📥 Resposta multipart:', response.status, response.statusText);
+    
+    if (response.status === 401 || response.status === 403) {
+        console.error('❌ Não autorizado! Status:', response.status);
+        localStorage.removeItem('futmax_user');
+        window.location.href = '/html/login.html';
+        throw new Error('Não autorizado');
+    }
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('❌ Erro na resposta multipart:', errorData);
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+}
+
 // API de Autenticação
 const authAPI = {
     login: async (credentials) => {
@@ -137,7 +192,9 @@ const produtoAPI = {
     listar: () => apiRequest(API_ENDPOINTS.produtos.listar, 'GET', null, false),
     buscar: (id) => apiRequest(API_ENDPOINTS.produtos.buscar(id), 'GET', null, false),
     cadastrar: (data) => apiRequest(API_ENDPOINTS.produtos.cadastrar, 'POST', data, true),
+    cadastrarComImagem: (formData) => apiRequestMultipart(API_ENDPOINTS.produtos.cadastrarComImagem, 'POST', formData, true),
     atualizar: (id, data) => apiRequest(API_ENDPOINTS.produtos.atualizar(id), 'PUT', data, true),
+    atualizarComImagem: (id, formData) => apiRequestMultipart(API_ENDPOINTS.produtos.atualizarComImagem(id), 'POST', formData, true),
     desativar: (id) => apiRequest(API_ENDPOINTS.produtos.desativar(id), 'DELETE', null, true),
     reativar: (id) => apiRequest(API_ENDPOINTS.produtos.reativar(id), 'PUT', null, true)
 };
@@ -160,10 +217,12 @@ const pedidoAPI = {
 
 // API de Estoque
 const estoqueAPI = {
-    listar: () => apiRequest(API_ENDPOINTS.estoque.listar, 'GET', null, false),
-    buscar: (id) => apiRequest(API_ENDPOINTS.estoque.buscar(id), 'GET', null, false),
+    listar: () => apiRequest(API_ENDPOINTS.estoque.listar, 'GET', null, true),
+    buscar: (id) => apiRequest(API_ENDPOINTS.estoque.buscar(id), 'GET', null, true),
     cadastrar: (data) => apiRequest(API_ENDPOINTS.estoque.cadastrar, 'POST', data, true),
-    atualizar: (id, data) => apiRequest(API_ENDPOINTS.estoque.atualizar(id), 'PUT', data, true)
+    atualizar: (id, data) => apiRequest(API_ENDPOINTS.estoque.atualizar(id), 'PUT', data, true),
+    desativar: (id) => apiRequest(API_ENDPOINTS.estoque.desativar(id), 'DELETE', null, true),
+    reativar: (id) => apiRequest(API_ENDPOINTS.estoque.reativar(id), 'PUT', null, true)
 };
 
 // Funções utilitárias
