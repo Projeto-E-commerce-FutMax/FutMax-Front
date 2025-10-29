@@ -172,18 +172,11 @@ function setupFinalizarPedido() {
             btnConfirmar.disabled = true;
             btnConfirmar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processando...';
             
-            console.log('🛒 Finalizando pedido...');
-            console.log('📦 Itens do carrinho:', items);
-            
             // Atualizar estoque para cada item usando o endpoint fictício
             for (const item of items) {
-                console.log(`📉 Baixando estoque para ${item.nmProduto}: ${item.quantidade} unidades`);
-                
                 try {
                     // Usar o novo endpoint que não requer autenticação
                     await estoqueAPI.baixarEstoqueFicticio(item.cdProduto, item.quantidade);
-                    console.log(`✅ Estoque baixado para ${item.nmProduto}: ${item.quantidade} unidades`);
-                    
                 } catch (error) {
                     console.error(`❌ Erro ao baixar estoque para ${item.nmProduto}:`, error);
                     throw new Error(`Erro ao processar ${item.nmProduto}: ${error.message || 'Estoque insuficiente'}`);
@@ -207,11 +200,7 @@ function setupFinalizarPedido() {
             
         } catch (error) {
             console.error('❌ Erro ao finalizar pedido:', error);
-            
-            // Mostrar erro
             mostrarToast('Erro ao finalizar pedido: ' + (error.message || 'Erro desconhecido'), 'error');
-            
-            // Reabilitar botão
             btnConfirmar.disabled = false;
             btnConfirmar.innerHTML = '<i class="bi bi-check-circle me-2"></i>Confirmar Pedido';
         }

@@ -89,7 +89,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
     // Adicionar token JWT se necessário
     if (requiresAuth) {
         const token = getAuthToken();
-        console.log('🔑 Token sendo enviado:', token); // DEBUG
         if (token) {
             options.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -99,16 +98,12 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
         options.body = JSON.stringify(data);
     }
 
-    console.log('📡 Fazendo requisição:', { url, method, headers: options.headers }); // DEBUG
-
     try {
         const response = await fetch(url, options);
         
-        console.log('📥 Resposta recebida:', response.status); // DEBUG
-        
         // Se não autorizado, redirecionar para login
         if (response.status === 401 || response.status === 403) {
-            console.error('❌ Não autorizado! Status:', response.status); // DEBUG
+            console.error('❌ Não autorizado! Status:', response.status);
             localStorage.removeItem('futmax_user');
             const currentPath = window.location.pathname;
             if (!currentPath.includes('login.html')) {
@@ -119,7 +114,7 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            console.error('❌ Erro na resposta:', errorData); // DEBUG
+            console.error('❌ Erro na resposta:', errorData);
             throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
 
@@ -128,7 +123,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
         }
 
         const responseData = await response.json();
-        console.log('✅ Dados recebidos:', responseData); // DEBUG
         return responseData;
         
     } catch (error) {
@@ -148,8 +142,6 @@ async function apiRequestMultipart(endpoint, method = 'POST', formData, requires
     options.body = formData;
 
     const response = await fetch(url, options);
-    
-    console.log('📥 Resposta multipart:', response.status, response.statusText);
     
     if (response.status === 401 || response.status === 403) {
         console.error('❌ Não autorizado! Status:', response.status);

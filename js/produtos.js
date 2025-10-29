@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await carregarProdutosPagina();
     setupFiltrosProdutos();
     updateCartCount();
-    setupEstoqueUpdateListener();
 });
 
 // Função auxiliar para construir URL da imagem
@@ -27,23 +26,17 @@ async function carregarProdutosPagina() {
     const grid = document.getElementById('productsGrid');
     const empty = document.getElementById('emptyState');
     try {
-        console.log('🔄 Carregando produtos...');
         const produtos = await produtoAPI.listar();
-        console.log('📦 Produtos recebidos:', produtos);
         
         const produtosAtivos = Array.isArray(produtos) ? produtos.filter(p => p.flAtivo) : [];
-        console.log('✅ Produtos ativos:', produtosAtivos);
         
         // Os produtos já vêm com estoque do backend (qtEstoque)
         const produtosComEstoque = produtosAtivos.map(produto => {
-            console.log(`📊 Produto ${produto.nmProduto}: qtEstoque = ${produto.qtEstoque}`);
             return {
                 ...produto,
                 estoque: produto.qtEstoque || 0
             };
         });
-        
-        console.log('🎯 Produtos com estoque:', produtosComEstoque);
         
         listaProdutos = produtosComEstoque;
         produtosVisiveis = [...listaProdutos];
@@ -51,8 +44,6 @@ async function carregarProdutosPagina() {
         document.getElementById('productCount').textContent = `${produtosVisiveis.length} produtos`;
         grid.classList.remove('d-none');
         empty.classList.add('d-none');
-        
-        console.log('✅ Produtos carregados com sucesso!');
     } catch (e) {
         console.error('❌ Erro ao listar produtos:', e);
         grid.classList.add('d-none');
@@ -69,11 +60,6 @@ function renderProdutos() {
     }
     document.getElementById('emptyState').classList.add('d-none');
     
-    // Debug: verificar estoque dos produtos
-    console.log('🎨 Renderizando produtos...');
-    produtosVisiveis.forEach(p => {
-        console.log(`📦 ${p.nmProduto}: estoque = ${p.estoque}, qtEstoque = ${p.qtEstoque}`);
-    });
     grid.innerHTML = produtosVisiveis.map(produto => `
         <div class="col-sm-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100">
@@ -83,24 +69,14 @@ function renderProdutos() {
                 <div class="card-body d-flex flex-column">
                     <h6 class="fw-bold mb-1">${produto.nmProduto}</h6>
                     <p class="text-muted small mb-2" style="min-height:40px;">${produto.dsProduto}</p>
-                    <div class="mb-2">
-                        <span class="badge ${produto.estoque > 0 ? 'bg-success' : 'bg-danger'}">
-                            ${produto.estoque > 0 ? `${produto.estoque} em estoque` : 'Sem estoque'}
-                        </span>
-                    </div>
                     <div class="mt-auto d-flex justify-content-between align-items-center">
                         <div>
                             <div class="fw-bold text-primary">${formatarMoeda(produto.vlProduto)}</div>
                             <div class="text-muted small">${calcularParcelamento(produto.vlProduto)}</div>
                         </div>
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-outline-primary btn-sm" onclick="verProduto(${produto.cdProduto})" title="Ver detalhes">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                            <button class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''} title="Adicionar ao carrinho">
-                                <i class="bi bi-cart-plus"></i>
-                            </button>
-                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''} title="Adicionar ao carrinho">
+                            <i class="bi bi-cart-plus"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -192,59 +168,29 @@ function verProduto(cdProduto) {
 
 // Adicionar produto ao carrinho
 function adicionarAoCarrinho(cdProduto) {
-    console.log('🛒 Tentando adicionar produto ao carrinho:', cdProduto);
-    console.log('📦 Lista de produtos disponível:', listaProdutos);
-    
     const produto = listaProdutos.find(p => p.cdProduto === cdProduto);
-    console.log('🔍 Produto encontrado:', produto);
     
     if (!produto) {
         console.error('❌ Produto não encontrado na lista');
-        if (typeof showToast === 'function') {
-            showToast('Produto não encontrado!', 'error');
-        } else if (typeof mostrarToast === 'function') {
-            mostrarToast('Produto não encontrado!', 'error');
-        } else {
-            alert('Produto não encontrado!');
-        }
+        mostrarToast('Produto não encontrado!', 'error');
         return;
     }
     
     if (produto.estoque === 0) {
-        console.log('⚠️ Produto sem estoque');
-        if (typeof showToast === 'function') {
-            showToast('Produto sem estoque!', 'warning');
-        } else if (typeof mostrarToast === 'function') {
-            mostrarToast('Produto sem estoque!', 'warning');
-        } else {
-            alert('Produto sem estoque!');
-        }
+        mostrarToast('Produto sem estoque!', 'warning');
         return;
     }
     
-    console.log('✅ Produto válido, adicionando ao carrinho...');
-    
     // Verificar se já existe no carrinho
     let carrinho = JSON.parse(localStorage.getItem('futmax_carrinho') || '[]');
-    console.log('🛒 Carrinho atual:', carrinho);
-    
     const itemExistente = carrinho.find(item => item.cdProduto === cdProduto);
-    console.log('🔍 Item existente:', itemExistente);
     
     if (itemExistente) {
         if (itemExistente.quantidade >= produto.estoque) {
-            console.log('⚠️ Quantidade máxima atingida');
-            if (typeof showToast === 'function') {
-                showToast('Quantidade máxima em estoque atingida!', 'warning');
-            } else if (typeof mostrarToast === 'function') {
-                mostrarToast('Quantidade máxima em estoque atingida!', 'warning');
-            } else {
-                alert('Quantidade máxima em estoque atingida!');
-            }
+            mostrarToast('Quantidade máxima em estoque atingida!', 'warning');
             return;
         }
         itemExistente.quantidade += 1;
-        console.log('➕ Quantidade aumentada para:', itemExistente.quantidade);
     } else {
         const novoItem = {
             cdProduto: produto.cdProduto,
@@ -254,24 +200,11 @@ function adicionarAoCarrinho(cdProduto) {
             quantidade: 1
         };
         carrinho.push(novoItem);
-        console.log('➕ Novo item adicionado:', novoItem);
     }
     
     localStorage.setItem('futmax_carrinho', JSON.stringify(carrinho));
-    console.log('💾 Carrinho salvo:', carrinho);
-    
-    // Usar showToast do config.js se disponível, senão usar alert
-    if (typeof showToast === 'function') {
-        showToast(`${produto.nmProduto} adicionado ao carrinho!`, 'success');
-    } else if (typeof mostrarToast === 'function') {
-        mostrarToast(`${produto.nmProduto} adicionado ao carrinho!`, 'success');
-    } else {
-        alert(`${produto.nmProduto} adicionado ao carrinho!`);
-    }
-    
-    // Atualizar contador do carrinho
+    mostrarToast(`${produto.nmProduto} adicionado ao carrinho!`, 'success');
     updateCartCount();
-    console.log('✅ Produto adicionado com sucesso!');
 }
 
 // Atualizar contador do carrinho
@@ -281,93 +214,6 @@ function updateCartCount() {
     const cartCount = document.getElementById('cartCount');
     if (cartCount) {
         cartCount.textContent = totalItens;
-    }
-}
-
-// Configurar listener para atualizações de estoque
-function setupEstoqueUpdateListener() {
-    // Verificar se há sinal para forçar atualização
-    const forcarAtualizacao = localStorage.getItem('forcar_atualizacao_produtos');
-    const ultimaVerificacao = localStorage.getItem('ultima_verificacao_produtos') || '0';
-    
-    if (forcarAtualizacao && parseInt(forcarAtualizacao) > parseInt(ultimaVerificacao)) {
-        // Houve atualização, mostrar aviso
-        mostrarAvisoAtualizacao();
-        localStorage.setItem('ultima_verificacao_produtos', forcarAtualizacao);
-    }
-    
-    // Verificar atualizações a cada 10 segundos (mais frequente)
-    setInterval(async () => {
-        const novaAtualizacao = localStorage.getItem('forcar_atualizacao_produtos');
-        if (novaAtualizacao && parseInt(novaAtualizacao) > parseInt(ultimaVerificacao)) {
-            mostrarAvisoAtualizacao();
-            localStorage.setItem('ultima_verificacao_produtos', novaAtualizacao);
-        }
-    }, 10000);
-}
-
-// Mostrar aviso de atualização disponível
-function mostrarAvisoAtualizacao() {
-    // Criar notificação toast se não existir
-    let toastContainer = document.getElementById('toast-container');
-    if (!toastContainer) {
-        toastContainer = document.createElement('div');
-        toastContainer.id = 'toast-container';
-        toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
-        toastContainer.style.zIndex = '9999';
-        document.body.appendChild(toastContainer);
-    }
-    
-    const toastId = 'aviso-toast-' + Date.now();
-    const toastHtml = `
-        <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-info text-white">
-                <i class="bi bi-info-circle-fill me-2"></i>
-                <strong class="me-auto">Estoque Atualizado</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body">
-                O estoque foi atualizado! Clique em "Atualizar" para ver as mudanças.
-                <div class="mt-2">
-                    <button class="btn btn-sm btn-primary" onclick="atualizarProdutos(); bootstrap.Toast.getInstance(document.getElementById('${toastId}')).hide();">
-                        <i class="bi bi-arrow-clockwise"></i> Atualizar Agora
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
-    const toastElement = document.getElementById(toastId);
-    const toast = new bootstrap.Toast(toastElement, { delay: 15000 }); // 15 segundos
-    toast.show();
-    
-    // Remover o elemento após ser escondido
-    toastElement.addEventListener('hidden.bs.toast', () => {
-        toastElement.remove();
-    });
-}
-
-// Função para atualizar produtos manualmente
-async function atualizarProdutos() {
-    const btnAtualizar = document.querySelector('button[onclick="atualizarProdutos()"]');
-    const iconAtualizar = btnAtualizar.querySelector('i');
-    
-    // Mostrar loading no botão
-    btnAtualizar.disabled = true;
-    iconAtualizar.className = 'bi bi-arrow-clockwise spin';
-    
-    try {
-        await carregarProdutosPagina();
-        mostrarToast('Produtos atualizados com sucesso!', 'success');
-    } catch (error) {
-        console.error('Erro ao atualizar produtos:', error);
-        mostrarToast('Erro ao atualizar produtos', 'error');
-    } finally {
-        // Restaurar botão
-        btnAtualizar.disabled = false;
-        iconAtualizar.className = 'bi bi-arrow-clockwise';
     }
 }
 
