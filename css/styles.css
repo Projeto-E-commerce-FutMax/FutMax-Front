@@ -191,3 +191,10 @@
         height: 200px;
     }
 }
+
+.img-navbar {
+    margin: 0 auto;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
