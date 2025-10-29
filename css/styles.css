@@ -1,27 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+/* ===== CORES ORIGINAIS ===== */
 :root {
-    --primary-color: #FF5733;
-    --secondary-color: #FF0000;
-    --gradient: linear-gradient(135deg, #FF0000 0%, #FF5733 50%, #FF8C42 100%);
-    --text-dark: #333;
-    --text-medium: #555;
-    --text-light: #999;
-    --bg-light: #F5F5F5;
-    --bg-white: #ffffff;
-    --card-bg: #ffffff;
-    --border-color: #e0e0e0;
-    --success: #28a745;
-    --warning: #FF5733;
-    --danger: #dc3545;
-    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --bs-primary: #FF5733;
+    --bs-primary-rgb: 255, 87, 51;
+    --bs-secondary: #FF0000;
+    --bs-secondary-rgb: 255, 0, 0;
+    --bs-success: #28a745;
+    --bs-danger: #dc3545;
+    --bs-warning: #FF5733;
 }
 
+/* ===== TIPOGRAFIA ===== */
 * {
     font-family: "Poppins", sans-serif;
 }
 
+<<<<<<< HEAD
 body.dark-theme {
     --text-dark: #f5f5f5;
     --text-medium: #ccc;
@@ -295,36 +290,30 @@ body {
     background-color: #ffffff !important;
 }
 
+=======
+>>>>>>> ajustes
 .navbar-brand {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-color) !important;
     font-style: italic;
     text-transform: uppercase;
     letter-spacing: -1px;
 }
 
-.nav-link {
-    color: var(--text-medium) !important;
-    font-weight: 500;
-    transition: color 0.3s ease;
-    padding: 0.5rem 1rem !important;
+/* ===== BOTÕES PERSONALIZADOS ===== */
+.btn-primary {
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-secondary);
+    --bs-btn-hover-border-color: var(--bs-secondary);
 }
 
-.nav-link:hover,
-.nav-link.active {
-    color: var(--primary-color) !important;
-}
-
-.search-box {
-    width: 250px;
-}
-
-.search-input {
-    padding-left: 40px;
-    border-radius: 25px;
-    background-color: var(--bg-light);
+.btn-comprar {
+    background-color: white;
+    color: var(--bs-primary);
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    font-weight: 700;
     border: none;
+<<<<<<< HEAD
     color: var(--text-dark);
 }
 
@@ -372,18 +361,25 @@ body {
     padding: 4rem 0;
     position: relative;
     overflow: hidden;
+=======
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
 }
 
+.btn-comprar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    color: var(--bs-primary);
+>>>>>>> ajustes
+}
+
+/* ===== BADGES PERSONALIZADOS ===== */
 .badge-oferta {
     background-color: #FFD700;
     color: #333;
     padding: 0.5rem 1.5rem;
     border-radius: 25px;
     font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .badge-info {
@@ -392,36 +388,44 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 25px;
     font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
     backdrop-filter: blur(10px);
 }
 
-.btn-comprar {
-    background-color: white;
-    color: var(--primary-color);
-    padding: 0.8rem 2rem;
-    border-radius: 30px;
+.badge-desconto {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--bs-secondary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
     font-weight: 700;
-    border: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
+    z-index: 10;
 }
 
-.btn-comprar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    color: var(--primary-color);
+/* ===== PREÇOS ===== */
+.preco-antigo {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9rem;
 }
 
+.preco-novo {
+    color: var(--bs-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    background: linear-gradient(135deg, #FF0000 0%, #FF5733 50%, #FF8C42 100%);
+    color: white;
+    padding: 4rem 0;
+}
+
+/* ===== CARDS ===== */
 .card-destaque {
-    background: var(--card-bg);
     border-radius: 15px;
-    padding: 1rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
 }
@@ -430,6 +434,7 @@ body {
     transform: translateY(-5px);
 }
 
+<<<<<<< HEAD
 .badge-desconto {
     position: absolute;
     top: 10px;
@@ -454,33 +459,26 @@ body {
     font-weight: 700;
 }
 
+=======
+>>>>>>> ajustes
 .produto-card {
-    background: var(--card-bg);
     border-radius: 15px;
-    padding: 1rem;
-    box-shadow: var(--shadow-sm);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
 }
 
 .produto-card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .produto-img {
-    width: 100%;
     height: 250px;
-    object-fit: cover;
     border-radius: 10px;
-    background-color: var(--bg-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-light);
     overflow: hidden;
 }
 
+<<<<<<< HEAD
 .produto-img img {
     width: 100%;
     height: 100%;
@@ -578,34 +576,26 @@ body {
     border-bottom: none;
 }
 
+=======
+/* ===== CARRINHO ===== */
+>>>>>>> ajustes
 .cart-item-img {
     width: 80px;
     height: 80px;
-    object-fit: cover;
-    border-radius: 10px;
-    background-color: var(--bg-light);
+    border-radius: 8px;
 }
 
-.quantity-control {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+/* ===== ANIMAÇÕES ===== */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-.quantity-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid var(--border-color);
-    background: var(--card-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: var(--text-dark);
+.spin {
+    animation: spin 1s linear infinite;
 }
 
+<<<<<<< HEAD
 .quantity-btn:hover {
     background-color: var(--primary-color);
     color: white;
@@ -701,12 +691,13 @@ body {
     }
 }
 
+=======
+>>>>>>> ajustes
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -718,6 +709,7 @@ body {
     animation: fadeIn 0.5s ease;
 }
 
+<<<<<<< HEAD
 .spinner-border {
     width: 3rem;
     height: 3rem;
@@ -725,17 +717,32 @@ body {
 
 ::-webkit-scrollbar {
     width: 10px;
+=======
+/* ===== NAVBAR Z-INDEX ===== */
+.navbar.sticky-top {
+    z-index: 1020; /* Bootstrap default para sticky-top, abaixo de modais (1055) */
 }
 
-::-webkit-scrollbar-track {
-    background: var(--bg-light);
+/* ===== TEMA ESCURO ===== */
+/* Forçar tema escuro em elementos com data-bs-theme="dark" */
+[data-bs-theme="dark"] nav[data-bs-theme="light"] {
+    background-color: var(--bs-dark-bg-subtle) !important;
+>>>>>>> ajustes
 }
 
-::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 5px;
+[data-bs-theme="dark"] .navbar:not([data-bs-theme="light"]) {
+    background-color: var(--bs-dark-bg-subtle) !important;
+    border-bottom: 1px solid var(--bs-border-color);
 }
 
+[data-bs-theme="dark"] .navbar .navbar-brand,
+[data-bs-theme="dark"] .navbar .nav-link,
+[data-bs-theme="dark"] .navbar .btn-link,
+[data-bs-theme="dark"] .navbar span {
+    color: var(--bs-body-color) !important;
+}
+
+<<<<<<< HEAD
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-color);
 }
@@ -892,3 +899,28 @@ body.dark-theme .carousel-indicators .active {
         height: 35px;
     }
 }
+=======
+[data-bs-theme="dark"] .navbar .nav-link.active {
+    color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .navbar .btn-outline-secondary {
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .navbar .btn-link:hover {
+    color: var(--bs-primary) !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .produto-img {
+        height: 200px;
+    }
+}
+>>>>>>> ajustes

@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 /* ===== PÁGINA DE LOGIN - TEMA ESCURO ===== */
 
 /* Garantir hierarquia de z-index correta */
+=======
+/* ===== PÁGINA DE LOGIN - APENAS AJUSTES ESPECÍFICOS ===== */
+/* Bootstrap Dark Mode cuida dos temas automaticamente via data-bs-theme="dark" */
+
+/* Garantir z-index correto para área do gradiente */
+>>>>>>> ajustes
 .gradient-login-area {
     position: relative;
     z-index: 1;
@@ -19,6 +26,7 @@
 .nav-pills .nav-link {
     position: relative;
     z-index: 10;
+<<<<<<< HEAD
 }
 
 .card.border-0.shadow-sm {
@@ -242,4 +250,6 @@ body.dark-theme hr {
     body.dark-theme .col-lg-6.p-5 {
         padding: 2rem !important;
     }
+=======
+>>>>>>> ajustes
 }

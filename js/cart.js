@@ -7,12 +7,15 @@ class CartManager {
 
     // Carregar carrinho do localStorage
     loadCart() {
-        const cartData = localStorage.getItem('futmax_cart');
+        // Tentar carregar de ambas as chaves para compatibilidade
+        const cartData = localStorage.getItem('futmax_carrinho') || localStorage.getItem('futmax_cart');
         return cartData ? JSON.parse(cartData) : [];
     }
 
     // Salvar carrinho no localStorage
     saveCart() {
+        // Salvar em ambas as chaves para compatibilidade
+        localStorage.setItem('futmax_carrinho', JSON.stringify(this.cart));
         localStorage.setItem('futmax_cart', JSON.stringify(this.cart));
         this.updateCartCount();
     }
@@ -28,7 +31,8 @@ class CartManager {
                 cdProduto: produto.cdProduto,
                 nmProduto: produto.nmProduto,
                 vlProduto: produto.vlProduto,
-                dsProduto: produto.dsProduto,
+                dsProduto: produto.dsProduto || '',
+                imgUrl: produto.imgUrl || '',
                 quantidade: quantidade
             });
         }

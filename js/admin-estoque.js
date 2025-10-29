@@ -170,6 +170,14 @@ function setupFormularios() {
             
             await carregarEstoques();
             
+            // Forçar atualização das páginas de produtos
+            localStorage.setItem('forcar_atualizacao_produtos', Date.now().toString());
+            
+            // Mostrar instrução para o usuário
+            setTimeout(() => {
+                mostrarToast('Para ver o estoque atualizado, vá para a página de produtos e clique em "Atualizar"', 'info');
+            }, 2000);
+            
         } catch (error) {
             console.error('Erro ao adicionar estoque:', error);
             mostrarToast('Erro ao adicionar estoque: ' + error.message, 'error');
@@ -198,6 +206,14 @@ function setupFormularios() {
             modal.hide();
             
             await carregarEstoques();
+            
+            // Forçar atualização das páginas de produtos
+            localStorage.setItem('forcar_atualizacao_produtos', Date.now().toString());
+            
+            // Mostrar instrução para o usuário
+            setTimeout(() => {
+                mostrarToast('Para ver o estoque atualizado, vá para a página de produtos e clique em "Atualizar"', 'info');
+            }, 2000);
             
         } catch (error) {
             console.error('Erro ao atualizar estoque:', error);
@@ -245,16 +261,41 @@ function limparFiltros() {
 }
 
 function mostrarToast(mensagem, tipo = 'success') {
-    const toastEl = document.getElementById('toast');
-    const toastIcon = document.getElementById('toastIcon');
-    const toastMessage = document.getElementById('toastMessage');
+    // Criar notificação toast se não existir
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+        toastContainer.style.zIndex = '9999';
+        document.body.appendChild(toastContainer);
+    }
     
-    toastIcon.className = tipo === 'success' 
-        ? 'bi bi-check-circle-fill text-success me-2'
-        : 'bi bi-exclamation-circle-fill text-danger me-2';
+    const toastId = 'admin-toast-' + Date.now();
+    const bgClass = tipo === 'success' ? 'bg-success' : tipo === 'error' ? 'bg-danger' : tipo === 'info' ? 'bg-info' : 'bg-warning';
+    const iconClass = tipo === 'success' ? 'bi-check-circle-fill' : tipo === 'error' ? 'bi-exclamation-circle-fill' : tipo === 'info' ? 'bi-info-circle-fill' : 'bi-exclamation-triangle-fill';
     
-    toastMessage.textContent = mensagem;
+    const toastHtml = `
+        <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header ${bgClass} text-white">
+                <i class="bi ${iconClass} me-2"></i>
+                <strong class="me-auto">${tipo === 'success' ? 'Sucesso' : tipo === 'error' ? 'Erro' : tipo === 'info' ? 'Informação' : 'Aviso'}</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                ${mensagem}
+            </div>
+        </div>
+    `;
     
-    const toast = new bootstrap.Toast(toastEl);
+    toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+    
+    const toastElement = document.getElementById(toastId);
+    const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
     toast.show();
+    
+    // Remover o elemento após ser escondido
+    toastElement.addEventListener('hidden.bs.toast', () => {
+        toastElement.remove();
+    });
 }

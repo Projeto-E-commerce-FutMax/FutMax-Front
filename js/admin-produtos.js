@@ -25,7 +25,7 @@ function exibirProdutos() {
     const tbody = document.getElementById('tabelaProdutos');
     
     if (produtosFiltrados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted">Nenhum produto encontrado</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted">Nenhum produto encontrado</td></tr>';
         return;
     }
 
@@ -37,6 +37,9 @@ function exibirProdutos() {
                     <strong>${produto.nmProduto}</strong>
                     <p class="text-muted small mb-0">${produto.dsProduto}</p>
                 </div>
+            </td>
+            <td>
+                <span class="badge bg-info">${produto.nmCategoria || 'N/A'}</span>
             </td>
             <td class="fw-bold">${formatarMoeda(produto.vlProduto)}</td>
             <td>
@@ -69,6 +72,7 @@ function abrirModalNovo() {
     document.getElementById('formProduto').reset();
     document.getElementById('cdProduto').value = '';
     document.getElementById('flAtivo').checked = true;
+    document.getElementById('nmCategoria').value = '';
     const preview = document.getElementById('previewImagem');
     if (preview) {
         preview.src = '';
@@ -87,6 +91,7 @@ async function editarProduto(cdProduto) {
         document.getElementById('vlProduto').value = produtoEditando.vlProduto;
         document.getElementById('dsProduto').value = produtoEditando.dsProduto;
         document.getElementById('flAtivo').checked = produtoEditando.flAtivo;
+        document.getElementById('nmCategoria').value = produtoEditando.nmCategoria || '';
         
         const modal = new bootstrap.Modal(document.getElementById('modalProduto'));
         modal.show();
@@ -163,49 +168,26 @@ function setupFormulario() {
         const vlProduto = parseFloat(document.getElementById('vlProduto').value);
         const dsProduto = document.getElementById('dsProduto').value;
         const flAtivo = document.getElementById('flAtivo').checked;
+        const nmCategoria = document.getElementById('nmCategoria').value;
         const imagem = inputImagem && inputImagem.files ? inputImagem.files[0] : null;
         
         try {
+            // Sempre usar FormData (imagem é opcional)
+            const fd = new FormData();
+            fd.append('nmProduto', nmProduto);
+            fd.append('vlProduto', vlProduto);
+            fd.append('dsProduto', dsProduto);
+            fd.append('flAtivo', flAtivo);
+            fd.append('nmCategoria', nmCategoria);
+            if (imagem) {
+                fd.append('imagem', imagem);
+            }
+            
             if (produtoEditando) {
-                if (imagem) {
-                    const fd = new FormData();
-                    fd.append('nmProduto', nmProduto);
-                    fd.append('vlProduto', vlProduto);
-                    fd.append('dsProduto', dsProduto);
-                    fd.append('flAtivo', flAtivo);
-                    fd.append('imagem', imagem);
-                    
-                    console.log('📤 Atualizando produto com imagem:', {
-                        cdProduto: produtoEditando.cdProduto,
-                        nmProduto, vlProduto, dsProduto, flAtivo,
-                        imagem: { name: imagem.name, size: imagem.size, type: imagem.type }
-                    });
-                    
-                    await produtoAPI.atualizarComImagem(produtoEditando.cdProduto, fd);
-                } else {
-                    const dados = { nmProduto, vlProduto, dsProduto, flAtivo };
-                    await produtoAPI.atualizar(produtoEditando.cdProduto, dados);
-                }
+                await produtoAPI.atualizar(produtoEditando.cdProduto, fd);
                 mostrarToast('Produto atualizado com sucesso!', 'success');
             } else {
-                if (imagem) {
-                    const fd = new FormData();
-                    fd.append('nmProduto', nmProduto);
-                    fd.append('vlProduto', vlProduto);
-                    fd.append('dsProduto', dsProduto);
-                    fd.append('flAtivo', flAtivo);
-                    fd.append('imagem', imagem);
-                    
-                    console.log('📤 Enviando produto com imagem:', {
-                        nmProduto, vlProduto, dsProduto, flAtivo,
-                        imagem: { name: imagem.name, size: imagem.size, type: imagem.type }
-                    });
-                    
-                    await produtoAPI.cadastrarComImagem(fd);
-                } else {
-                    const dados = { nmProduto, vlProduto, dsProduto, flAtivo };
-                    await produtoAPI.cadastrar(dados);
-                }
+                await produtoAPI.cadastrar(fd);
                 mostrarToast('Produto cadastrado com sucesso!', 'success');
             }
             
@@ -229,10 +211,12 @@ function setupFormulario() {
 // Setup filtros
 function setupFiltros() {
     const filtroNome = document.getElementById('filtroNome');
+    const filtroCategoria = document.getElementById('filtroCategoria');
     const filtroStatus = document.getElementById('filtroStatus');
     const filtroOrdenacao = document.getElementById('filtroOrdenacao');
     
     filtroNome.addEventListener('input', aplicarFiltros);
+    filtroCategoria.addEventListener('change', aplicarFiltros);
     filtroStatus.addEventListener('change', aplicarFiltros);
     filtroOrdenacao.addEventListener('change', aplicarFiltros);
 }
@@ -240,14 +224,16 @@ function setupFiltros() {
 // Aplicar filtros
 function aplicarFiltros() {
     const nome = document.getElementById('filtroNome').value.toLowerCase();
+    const categoria = document.getElementById('filtroCategoria').value;
     const status = document.getElementById('filtroStatus').value;
     const ordenacao = document.getElementById('filtroOrdenacao').value;
     
     // Filtrar
     produtosFiltrados = todosProdutos.filter(produto => {
         const matchNome = produto.nmProduto.toLowerCase().includes(nome);
+        const matchCategoria = categoria === '' || (produto.nmCategoria && produto.nmCategoria === categoria);
         const matchStatus = status === '' || produto.flAtivo.toString() === status;
-        return matchNome && matchStatus;
+        return matchNome && matchCategoria && matchStatus;
     });
     
     // Ordenar
@@ -272,6 +258,7 @@ function aplicarFiltros() {
 // Limpar filtros
 function limparFiltros() {
     document.getElementById('filtroNome').value = '';
+    document.getElementById('filtroCategoria').value = '';
     document.getElementById('filtroStatus').value = '';
     document.getElementById('filtroOrdenacao').value = 'nome';
     aplicarFiltros();

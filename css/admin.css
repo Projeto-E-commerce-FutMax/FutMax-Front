@@ -1,14 +1,30 @@
+<<<<<<< HEAD
 .navbar-dark .navbar-brand {
+=======
+/* ===== ADMIN STYLES - OPTIMIZED ===== */
+
+/* Navbar Admin - Apenas customizações essenciais */
+.navbar .navbar-brand {
+>>>>>>> ajustes
     font-weight: 700;
     font-style: italic;
 }
 
-.navbar-dark .nav-link:hover,
-.navbar-dark .nav-link.active {
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
 }
 
+<<<<<<< HEAD
+=======
+[data-bs-theme="dark"] .navbar .nav-link:hover,
+[data-bs-theme="dark"] .navbar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dashboard Icons - Gradientes não disponíveis no Bootstrap */
+>>>>>>> ajustes
 .icon-dashboard {
     width: 60px;
     height: 60px;
@@ -101,6 +117,7 @@
     }
 }
 
+<<<<<<< HEAD
 body.dark-theme .navbar-dark {
     background-color: #1a1a1a !important;
 }
@@ -142,3 +159,6 @@ body.dark-theme .form-select:focus {
     border-color: #0d6efd;
     color: #f5f5f5;
 }
+=======
+/* Bootstrap Dark Mode já cuida dos temas, apenas ajustes específicos se necessário */
+>>>>>>> ajustes

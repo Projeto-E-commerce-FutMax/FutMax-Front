@@ -1,4 +1,4 @@
-// Gerenciamento de Tema Claro/Escuro
+// Gerenciamento de Tema Claro/Escuro usando Bootstrap Dark Mode
 class ThemeManager {
     constructor() {
         this.theme = this.loadTheme();
@@ -24,41 +24,30 @@ class ThemeManager {
         localStorage.setItem('futmax_theme', this.theme);
     }
 
-    // Aplicar tema ao body e elementos principais
+    // Aplicar tema usando Bootstrap data-bs-theme
     applyTheme() {
+        const html = document.documentElement;
         const body = document.body;
         
         if (this.theme === 'dark') {
-            body.classList.add('dark-theme');
-            
-            // Adicionar classe aos elementos que precisam de tema escuro
-            this.applyDarkThemeToElements();
+            html.setAttribute('data-bs-theme', 'dark');
+            body.setAttribute('data-bs-theme', 'dark');
+            // Atualizar navbar para remover data-bs-theme="light" se existir
+            const nav = document.querySelector('nav[data-bs-theme="light"]');
+            if (nav) {
+                nav.removeAttribute('data-bs-theme');
+            }
         } else {
-            body.classList.remove('dark-theme');
+            html.setAttribute('data-bs-theme', 'light');
+            body.setAttribute('data-bs-theme', 'light');
+            // Restaurar navbar light se necessário
+            const nav = document.querySelector('nav.navbar');
+            if (nav && !nav.hasAttribute('data-bs-theme')) {
+                nav.setAttribute('data-bs-theme', 'light');
+            }
         }
         
         this.updateToggleIcon();
-    }
-
-    // Aplicar tema escuro a elementos específicos
-    applyDarkThemeToElements() {
-        // Selecionar todos os elementos que precisam de ajuste
-        const elementsToUpdate = [
-            '.navbar',
-            '.card',
-            '.modal-content',
-            '.bg-light',
-            '.bg-white',
-            '.footer-custom'
-        ];
-
-        elementsToUpdate.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => {
-                // Adicionar atributo para forçar o estilo
-                el.setAttribute('data-theme', 'dark');
-            });
-        });
     }
 
     // Alternar tema
@@ -68,9 +57,9 @@ class ThemeManager {
         this.applyTheme();
         
         // Adicionar animação suave
-        document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+        document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
         setTimeout(() => {
-            document.body.style.transition = '';
+            document.documentElement.style.transition = '';
         }, 300);
     }
 
@@ -106,26 +95,11 @@ class ThemeManager {
             });
         });
     }
-
-    // Observar mudanças no DOM para aplicar tema em novos elementos
-    observeDOM() {
-        const observer = new MutationObserver((mutations) => {
-            if (this.theme === 'dark') {
-                this.applyDarkThemeToElements();
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
 }
 
 // Inicializar tema ao carregar
 document.addEventListener('DOMContentLoaded', () => {
     const themeManager = new ThemeManager();
-    themeManager.observeDOM();
 });
 
 // Detectar mudança na preferência do sistema
