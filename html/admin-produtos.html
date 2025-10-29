@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +9,8 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/admin.css">
 </head>
-<<<<<<< HEAD
-
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-=======
 <body>
     <nav class="navbar navbar-expand-lg sticky-top shadow-sm" data-bs-theme="light">
->>>>>>> ajustes
         <div class="container-fluid">
             <a class="navbar-brand" href="admin.html">
                 <i class="bi bi-shield-lock-fill"></i> FutMax Admin
@@ -75,26 +68,20 @@
                 <p class="text-muted mb-0">Cadastre e gerencie os produtos da loja</p>
             </div>
             <div class="col-auto">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProduto"
-                    onclick="abrirModalNovo()">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProduto" onclick="abrirModalNovo()">
                     <i class="bi bi-plus-circle"></i> Novo Produto
                 </button>
             </div>
         </div>
 
+        <!-- FILTROS -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <div class="row g-3">
-<<<<<<< HEAD
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" id="filtroNome"
-                                    placeholder="Buscar por nome...">
-=======
                             <div class="col-md-3">
                                 <input type="text" class="form-control" id="filtroNome" placeholder="Buscar por nome...">
->>>>>>> ajustes
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" id="filtroCategoria">
@@ -131,6 +118,7 @@
             </div>
         </div>
 
+        <!-- TABELA DE PRODUTOS -->
         <div class="row">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
@@ -174,24 +162,21 @@
                 <form id="formProduto">
                     <div class="modal-body">
                         <input type="hidden" id="cdProduto">
-
+                        
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <label class="form-label fw-semibold">Nome do Produto *</label>
-                                <input type="text" class="form-control" id="nmProduto" required maxlength="100"
-                                    placeholder="Digite o nome do produto">
+                                <input type="text" class="form-control" id="nmProduto" required maxlength="100" placeholder="Digite o nome do produto">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label fw-semibold">Preço (R$) *</label>
-                                <input type="number" class="form-control" id="vlProduto" required min="0.01" step="0.01"
-                                    placeholder="0,00">
+                                <input type="number" class="form-control" id="vlProduto" required min="100" step="0.01" placeholder="0,00">
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Descrição *</label>
-                            <textarea class="form-control" id="dsProduto" rows="3" required maxlength="255"
-                                placeholder="Descreva o produto"></textarea>
+                            <textarea class="form-control" id="dsProduto" rows="3" required maxlength="255" placeholder="Descreva o produto"></textarea>
                             <small class="text-muted">Máximo 255 caracteres</small>
                         </div>
 
@@ -213,8 +198,7 @@
                                 <small class="text-muted">Opcional. JPG/PNG/WEBP</small>
                             </div>
                             <div class="col-md-4 d-flex align-items-end">
-                                <img id="previewImagem" src="" alt="Pré-visualização" class="img-fluid rounded d-none"
-                                    style="max-height: 100px;">
+                                <img id="previewImagem" src="" alt="Pré-visualização" class="img-fluid rounded d-none" />
                             </div>
                         </div>
 
@@ -237,6 +221,7 @@
         </div>
     </div>
 
+    <!-- TOAST -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="toast" class="toast" role="alert">
             <div class="toast-header">
@@ -254,5 +239,4 @@
     <script src="../js/theme.js"></script>
     <script src="../js/admin-produtos.js"></script>
 </body>
-
 </html>
