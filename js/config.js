@@ -16,9 +16,7 @@ const API_ENDPOINTS = {
         listar: '/produto/buscar/todos',
         buscar: (id) => `/produto/buscar/${id}`,
         cadastrar: '/produto/cadastrar',
-        cadastrarComImagem: '/produto/cadastrar-com-imagem',
         atualizar: (id) => `/produto/atualizar/${id}`,
-        atualizarComImagem: (id) => `/produto/atualizar-com-imagem/${id}`,
         desativar: (id) => `/produto/desativar/${id}`,
         reativar: (id) => `/produto/reativar/${id}`
     },
@@ -29,29 +27,15 @@ const API_ENDPOINTS = {
         desativar: (id) => `/usuarios/desativar/${id}`,
         reativar: (id) => `/usuarios/reativar/${id}`
     },
-    // Pedidos
-    pedidos: {
-        criar: '/pedidos/cadastrar',
-        buscar: (id) => `/pedidos/buscar/${id}`,
-        listar: '/pedidos/buscar/todos',
-        itens: (id) => `/pedidos/${id}/itens`
-    },
     // Estoque
     estoque: {
         listar: '/estoque/buscar/todos',
-        buscar: (id) => `/estoque/buscar/${id}`,
+        buscarPorProduto: (id) => `/estoque/produto/${id}`,
+        baixarEstoqueFicticio: (cdProduto, quantidade) => `/estoque/baixar-estoque-ficticio/${cdProduto}?quantidade=${quantidade}`,
         cadastrar: '/estoque/cadastrar',
         atualizar: (id) => `/estoque/atualizar/${id}`,
         desativar: (id) => `/estoque/desativar/${id}`,
         reativar: (id) => `/estoque/reativar/${id}`
-    },
-    // Roles
-    roles: {
-        listar: '/role/buscar/todos',
-        buscar: (id) => `/role/buscar/${id}`,
-        cadastrar: '/role/cadastrar',
-        atualizar: (id) => `/role/atualizar/${id}`,
-        deletar: (id) => `/role/deletar/${id}`
     }
 };
 
@@ -126,8 +110,9 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
         if (response.status === 401 || response.status === 403) {
             console.error('❌ Não autorizado! Status:', response.status); // DEBUG
             localStorage.removeItem('futmax_user');
-            if (window.location.pathname !== '/html/login.html' && window.location.pathname !== '/login.html') {
-                window.location.href = '/html/login.html';
+            const currentPath = window.location.pathname;
+            if (!currentPath.includes('login.html')) {
+                window.location.href = 'login.html';
             }
             throw new Error('Não autorizado');
         }
@@ -169,7 +154,7 @@ async function apiRequestMultipart(endpoint, method = 'POST', formData, requires
     if (response.status === 401 || response.status === 403) {
         console.error('❌ Não autorizado! Status:', response.status);
         localStorage.removeItem('futmax_user');
-        window.location.href = '/html/login.html';
+        window.location.href = 'login.html';
         throw new Error('Não autorizado');
     }
     if (!response.ok) {
@@ -191,10 +176,8 @@ const authAPI = {
 const produtoAPI = {
     listar: () => apiRequest(API_ENDPOINTS.produtos.listar, 'GET', null, false),
     buscar: (id) => apiRequest(API_ENDPOINTS.produtos.buscar(id), 'GET', null, false),
-    cadastrar: (data) => apiRequest(API_ENDPOINTS.produtos.cadastrar, 'POST', data, true),
-    cadastrarComImagem: (formData) => apiRequestMultipart(API_ENDPOINTS.produtos.cadastrarComImagem, 'POST', formData, true),
-    atualizar: (id, data) => apiRequest(API_ENDPOINTS.produtos.atualizar(id), 'PUT', data, true),
-    atualizarComImagem: (id, formData) => apiRequestMultipart(API_ENDPOINTS.produtos.atualizarComImagem(id), 'POST', formData, true),
+    cadastrar: (formData) => apiRequestMultipart(API_ENDPOINTS.produtos.cadastrar, 'POST', formData, true),
+    atualizar: (id, formData) => apiRequestMultipart(API_ENDPOINTS.produtos.atualizar(id), 'PUT', formData, true),
     desativar: (id) => apiRequest(API_ENDPOINTS.produtos.desativar(id), 'DELETE', null, true),
     reativar: (id) => apiRequest(API_ENDPOINTS.produtos.reativar(id), 'PUT', null, true)
 };
@@ -207,18 +190,11 @@ const usuarioAPI = {
     reativar: (id) => apiRequest(API_ENDPOINTS.usuarios.reativar(id), 'PUT', null, true)
 };
 
-// API de Pedidos
-const pedidoAPI = {
-    criar: (data) => apiRequest(API_ENDPOINTS.pedidos.criar, 'POST', data, true),
-    buscar: (id) => apiRequest(API_ENDPOINTS.pedidos.buscar(id), 'GET', null, true),
-    listar: () => apiRequest(API_ENDPOINTS.pedidos.listar, 'GET', null, true),
-    buscarItens: (id) => apiRequest(API_ENDPOINTS.pedidos.itens(id), 'GET', null, true)
-};
-
 // API de Estoque
 const estoqueAPI = {
     listar: () => apiRequest(API_ENDPOINTS.estoque.listar, 'GET', null, true),
-    buscar: (id) => apiRequest(API_ENDPOINTS.estoque.buscar(id), 'GET', null, true),
+    buscarPorProduto: (id) => apiRequest(API_ENDPOINTS.estoque.buscarPorProduto(id), 'GET', null, false),
+    baixarEstoqueFicticio: (cdProduto, quantidade) => apiRequest(API_ENDPOINTS.estoque.baixarEstoqueFicticio(cdProduto, quantidade), 'PUT', null, false),
     cadastrar: (data) => apiRequest(API_ENDPOINTS.estoque.cadastrar, 'POST', data, true),
     atualizar: (id, data) => apiRequest(API_ENDPOINTS.estoque.atualizar(id), 'PUT', data, true),
     desativar: (id) => apiRequest(API_ENDPOINTS.estoque.desativar(id), 'DELETE', null, true),
@@ -340,3 +316,28 @@ function togglePassword(inputId) {
         icon.classList.replace('bi-eye-slash', 'bi-eye');
     }
 }
+
+// Verificar se usuário está logado e atualizar UI
+function checkUserLogin() {
+    const user = localStorage.getItem('futmax_user');
+    const userButton = document.getElementById('userButton');
+    
+    if (user && userButton) {
+        const userData = JSON.parse(user);
+        userButton.innerHTML = `
+            <i class="bi bi-person-circle"></i> 
+            <span class="d-none d-lg-inline">${userData.usuario.nmUsuario.split(' ')[0]}</span>
+        `;
+        userButton.href = '#';
+        userButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('Deseja sair?')) {
+                localStorage.removeItem('futmax_user');
+                window.location.reload();
+            }
+        });
+    }
+}
+
+// Executar verificação de login automaticamente
+document.addEventListener('DOMContentLoaded', checkUserLogin);

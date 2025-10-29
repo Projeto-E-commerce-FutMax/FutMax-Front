@@ -4,14 +4,14 @@
     if (!isLoggedIn()) {
         console.warn('⚠️ Usuário não autenticado. Redirecionando para login...');
         const currentPage = window.location.pathname;
-        window.location.href = `/html/login.html?return=${encodeURIComponent(currentPage)}`;
+        window.location.href = `login.html?return=${encodeURIComponent(currentPage)}`;
         return;
     }
     
     if (window.location.pathname.includes('admin') && !isAdmin()) {
         console.warn('⚠️ Usuário sem permissão de admin. Redirecionando...');
         alert('Você não tem permissão para acessar esta página.');
-        window.location.href = '/html/index.html';
+        window.location.href = 'index.html';
         return;
     }
     
