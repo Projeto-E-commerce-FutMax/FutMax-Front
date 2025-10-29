@@ -14,6 +14,14 @@
     font-family: "Poppins", sans-serif;
 }
 
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+*:where(img, video, iframe, canvas, svg) {
+    transition: none;
+}
+
 .navbar-brand {
     font-style: italic;
     text-transform: uppercase;
@@ -61,11 +69,21 @@
     backdrop-filter: blur(10px);
 }
 
+@media (max-width: 576px) {
+
+    .badge-oferta,
+    .badge-info,
+    .badge-desconto {
+        font-size: 0.75rem;
+        padding: 0.375rem 1rem;
+    }
+}
+
 .badge-desconto {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: var(--bs-secondary);
+    background-color: var(--bs-primary);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 25px;
@@ -95,6 +113,7 @@
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
+    background: linear-gradient(135deg, #999 0%, #fff 50%, #bebdbd 100%);
 }
 
 .card-destaque:hover {
@@ -125,12 +144,33 @@
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .spin {
     animation: spin 1s linear infinite;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.produto-card {
+    animation: fadeInUp 0.5s ease;
 }
 
 @keyframes fadeIn {
@@ -138,6 +178,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -150,7 +191,7 @@
 }
 
 .navbar.sticky-top {
-    z-index: 1020; 
+    z-index: 1020;
 }
 
 [data-bs-theme="dark"] nav[data-bs-theme="light"] {
@@ -186,7 +227,7 @@
     .hero-section {
         padding: 2rem 0;
     }
-    
+
     .produto-img {
         height: 200px;
     }
@@ -197,4 +238,97 @@
     justify-content: center;
     display: flex;
     align-items: center;
+}
+
+.btn-add-cart {
+    background-color: var(--bs-primary);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-add-cart:hover:not(:disabled) {
+    background-color: var(--bs-secondary);
+    transform: scale(1.1);
+}
+
+.btn-add-cart:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-action {
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+}
+
+.categoria-card {
+    padding: 1.5rem;
+    border-radius: 15px;
+    background-color: var(--bs-light);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+[data-bs-theme="dark"] .categoria-card {
+    background-color: var(--bs-dark);
+}
+
+.categoria-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 87, 51, 0.3);
+}
+
+.categoria-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bs-primary), var(--bs-secondary));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.icon-diferencial {
+    font-size: 2.5rem;
+    color: var(--bs-primary);
+}
+
+.icon-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(255, 87, 51, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+[data-bs-theme="dark"] .icon-box {
+    background-color: rgba(255, 87, 51, 0.2);
+}
+
+footer .btn-outline-secondary {
+    border-color: var(--bs-border-color);
+    color: var(--bs-body-color);
+}
+
+footer .btn-outline-secondary:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
 }

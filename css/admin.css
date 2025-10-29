@@ -6,6 +6,7 @@
 .navbar .nav-link:hover,
 .navbar .nav-link.active {
     background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
     border-radius: 5px;
 }
 
@@ -46,18 +47,21 @@
 }
 
 .badge-nivel-baixo {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: #fbbf24;
+    color: #78350f;
+    font-weight: 600;
 }
 
 .badge-nivel-normal {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: #10b981;
+    color: white;
+    font-weight: 600;
 }
 
 .badge-nivel-zerado {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: #ef4444;
+    color: white;
+    font-weight: 600;
 }
 
 .form-control:focus,
@@ -67,8 +71,13 @@
 }
 
 @keyframes skeleton-loading {
-    0% { background-color: hsl(200, 20%, 80%); }
-    100% { background-color: hsl(200, 20%, 95%); }
+    0% {
+        background-color: hsl(200, 20%, 80%);
+    }
+
+    100% {
+        background-color: hsl(200, 20%, 95%);
+    }
 }
 
 .skeleton {
@@ -82,4 +91,3 @@
         font-size: 1.5rem;
     }
 }
-
