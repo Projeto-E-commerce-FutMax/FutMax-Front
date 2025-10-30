@@ -25,6 +25,15 @@
     --bs-primary-border-subtle: #ffb5a5; 
 }
 
+/* Forçar mesma paleta também no tema escuro para evitar azul nativo */
+[data-bs-theme="dark"] {
+    --bs-primary: #FF5733;
+    --bs-primary-rgb: 255, 87, 51;
+    --bs-link-color: var(--bs-primary);
+    --bs-link-hover-color: #ff6a3f;
+    --bs-focus-ring-color: rgba(var(--bs-primary-rgb), .25);
+}
+
 /* Navbar clara: fundo, borda e leve sombra para separar do conteúdo */
 [data-bs-theme="light"] .navbar:not([data-bs-theme="dark"]) {
     background-color: var(--bs-body-bg) !important;
@@ -69,6 +78,28 @@
     --bs-btn-border-color: var(--bs-primary);
     --bs-btn-hover-bg: var(--bs-secondary);
     --bs-btn-hover-border-color: var(--bs-secondary);
+}
+
+/* Cards de produtos: garantir botão laranja */
+#productsGrid .btn.btn-primary {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+#productsGrid .btn.btn-primary:hover:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
+}
+
+/* Botões/cores dos cards do destaque no index */
+#produtosDestaque .btn.btn-primary {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+#produtosDestaque .btn.btn-primary:hover:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
 }
 
 .btn-comprar {
