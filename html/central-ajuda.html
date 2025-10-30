@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Ajuda - FutMax</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg shadow-sm sticky-top" data-bs-theme="light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FutMax</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sobre-nos.html">Sobre nós</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="position-relative d-none d-lg-block" style="width: 250px;">
+                        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+                            style="z-index: 10;"></i>
+                        <input type="text" id="searchInput" class="form-control ps-5 rounded-pill border-0"
+                            placeholder="Buscar camisas...">
+                    </div>
+                    <button class="btn btn-link" id="themeToggle" title="Alternar tema">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+                    <a href="login.html" class="btn btn-link" id="userButton">
+                        <i class="bi bi-box-arrow-in-right"></i> <span class="d-none d-lg-inline">Entrar</span>
+                    </a>
+                    <a href="carrinho.html" class="btn btn-link position-relative">
+                        <i class="bi bi-cart3 fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            id="cartCount">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5" style="background-color: var(--bs-secondary-bg);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold mb-3">Central de Ajuda</h1>
+                <p class="text-muted">Encontre respostas para suas dúvidas</p>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="bi bi-truck fs-1 text-primary"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Entregas</h5>
+                            <p class="text-muted small">Informações sobre prazos, rastreamento e frete grátis</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="bi bi-credit-card fs-1 text-primary"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Pagamentos</h5>
+                            <p class="text-muted small">Formas de pagamento, parcelamento e segurança</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="bi bi-box-seam fs-1 text-primary"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Produtos</h5>
+                            <p class="text-muted small">Tamanhos, modelos e autenticidade das camisas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item mb-3 border-0 shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    <i class="bi bi-truck me-2 text-primary"></i> Qual o prazo de entrega?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    O prazo de entrega varia de acordo com sua região. Para o Sudeste, o prazo médio é de 3 a 5 dias úteis. Para outras regiões, pode variar entre 5 a 10 dias úteis. Você pode acompanhar seu pedido através do código de rastreamento enviado por e-mail.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item mb-3 border-0 shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    <i class="bi bi-credit-card me-2 text-primary"></i> Quais formas de pagamento são aceitas?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Aceitamos cartões de crédito (Visa, Mastercard, Elo, American Express) em até 12x sem juros, PIX com 5% de desconto, e boleto bancário. Todas as transações são processadas com segurança.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item mb-3 border-0 shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    <i class="bi bi-shield-check me-2 text-primary"></i> As camisas são originais?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Sim! Todas as nossas camisas são 100% originais e oficiais, com etiquetas e certificados de autenticidade. Trabalhamos diretamente com fornecedores autorizados dos clubes e marcas esportivas.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item mb-3 border-0 shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    <i class="bi bi-rulers me-2 text-primary"></i> Como escolher o tamanho correto?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Cada produto possui uma tabela de medidas detalhada na página. Recomendamos medir uma camisa que você já possui e comparar com nossas medidas. Em caso de dúvida, nossa equipe está disponível para ajudar.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item mb-3 border-0 shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                    <i class="bi bi-arrow-repeat me-2 text-primary"></i> Posso trocar ou devolver?
+                                </button>
+                            </h2>
+                            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Sim! Você tem até 7 dias após o recebimento para solicitar troca ou devolução, conforme o Código de Defesa do Consumidor. O produto deve estar sem uso, com etiquetas e na embalagem original. Consulte nossa página de <a href="trocas-devolucoes.html" class="text-primary">Trocas e Devoluções</a> para mais detalhes.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item mb-3 border-0 shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                    <i class="bi bi-gift me-2 text-primary"></i> A partir de qual valor tenho frete grátis?
+                                </button>
+                            </h2>
+                            <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Oferecemos frete grátis para todo o Brasil em compras acima de R$ 200,00. Para valores abaixo, o frete é calculado de acordo com seu CEP no momento da finalização do pedido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mt-5">
+                        <div class="card-body text-center p-5">
+                            <i class="bi bi-headset fs-1 text-primary mb-3"></i>
+                            <h4 class="fw-bold mb-3">Ainda tem dúvidas?</h4>
+                            <p class="text-muted mb-4">Nossa equipe está pronta para ajudar você!</p>
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="mailto:contato@futmax.com.br" class="btn btn-primary">
+                                    <i class="bi bi-envelope-fill me-2"></i> E-mail
+                                </a>
+                                <a href="https://wa.me/5511999999999" class="btn btn-success">
+                                    <i class="bi bi-whatsapp me-2"></i> WhatsApp
+                                </a>
+                            </div>
+                            <p class="text-muted small mt-3 mb-0">Atendimento de segunda a sexta, das 9h às 18h</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-5" style="background-color: var(--bs-secondary-bg);">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3 text-primary">FutMax</h5>
+                    <p class="text-muted small">A maior loja de camisas de futebol do Brasil. Qualidade garantida e entrega rápida.</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="https://www.facebook.com/profile.php?id=61583138668466" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/futmax101/" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-instagram"></i></a>
+                        <a href="https://x.com/FutMax101" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-twitter"></i></a>
+                        <a href="https://www.youtube.com/@FutMax101" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Categorias</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="produtos.html?categoria=nacional" class="text-muted text-decoration-none small">Camisas Nacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=internacional" class="text-muted text-decoration-none small">Internacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=selecoes" class="text-muted text-decoration-none small">Seleções</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=retro" class="text-muted text-decoration-none small">Retrô</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Atendimento</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="central-ajuda.html" class="text-muted text-decoration-none small">Central de Ajuda</a></li>
+                        <li class="mb-2"><a href="trocas-devolucoes.html" class="text-muted text-decoration-none small">Trocas e Devoluções</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Fale Conosco</a></li>
+                        <li class="mb-2"><a href="sobre-nos.html" class="text-muted text-decoration-none small">Sobre Nós</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Pagamento</h6>
+                    <p class="text-muted small mb-3">Aceitamos:</p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge" style="background-color: var(--bs-secondary-bg);"><i class="bi bi-credit-card"></i> Cartão</span>
+                        <span class="badge" style="background-color: var(--bs-secondary-bg);"><i class="bi bi-upc-scan"></i> Boleto</span>
+                        <span class="badge" style="background-color: var(--bs-secondary-bg);">PIX</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="text-center text-muted small mb-0">
+                © 2025 <span class="text-primary fw-bold">FutMax</span>. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/theme.js"></script>
+</body>
+
+</html>

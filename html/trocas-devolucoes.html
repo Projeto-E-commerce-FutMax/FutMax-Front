@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trocas e Devoluções - FutMax</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg shadow-sm sticky-top" data-bs-theme="light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FutMax</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sobre-nos.html">Sobre nós</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="position-relative d-none d-lg-block" style="width: 250px;">
+                        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+                            style="z-index: 10;"></i>
+                        <input type="text" id="searchInput" class="form-control ps-5 rounded-pill border-0"
+                            placeholder="Buscar camisas...">
+                    </div>
+                    <button class="btn btn-link" id="themeToggle" title="Alternar tema">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+                    <a href="login.html" class="btn btn-link" id="userButton">
+                        <i class="bi bi-box-arrow-in-right"></i> <span class="d-none d-lg-inline">Entrar</span>
+                    </a>
+                    <a href="carrinho.html" class="btn btn-link position-relative">
+                        <i class="bi bi-cart3 fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            id="cartCount">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5" style="background-color: var(--bs-secondary-bg);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold mb-3">Trocas e Devoluções</h1>
+                <p class="text-muted">Política de troca e devolução simplificada</p>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                                    <i class="bi bi-clock-history fs-4 text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-2">Prazo de 7 dias</h5>
+                                    <p class="text-muted mb-0">Você tem até 7 dias corridos após o recebimento do produto para solicitar troca ou devolução, conforme estabelecido pelo Código de Defesa do Consumidor.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Como solicitar troca ou devolução?</h5>
+                            
+                            <div class="d-flex mb-4">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <strong>1</strong>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="fw-bold mb-2">Entre em contato</h6>
+                                    <p class="text-muted mb-0">Envie um e-mail para trocas@futmax.com.br ou entre em contato pelo WhatsApp (11) 99999-9999 informando seu número de pedido e o motivo da troca/devolução.</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex mb-4">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <strong>2</strong>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="fw-bold mb-2">Aguarde a autorização</h6>
+                                    <p class="text-muted mb-0">Nossa equipe analisará sua solicitação e enviará as instruções de postagem em até 24 horas úteis.</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex mb-4">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <strong>3</strong>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="fw-bold mb-2">Embale o produto</h6>
+                                    <p class="text-muted mb-0">Coloque o produto na embalagem original, sem uso, com todas as etiquetas anexadas. Não é necessário ter a nota fiscal (guardaremos uma cópia).</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <strong>4</strong>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="fw-bold mb-2">Envie o produto</h6>
+                                    <p class="text-muted mb-0">Envie o produto pelos Correios para o endereço fornecido. A FutMax arcará com os custos de frete da devolução.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Condições para troca e devolução</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <span class="text-muted">Produto sem uso, sem manchas e sem odores</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <span class="text-muted">Embalagem original em perfeito estado</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <span class="text-muted">Etiquetas originais anexadas ao produto</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <span class="text-muted">Solicitação dentro do prazo de 7 dias após o recebimento</span>
+                                </li>
+                                <li class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                    <span class="text-muted">Produtos personalizados podem ter restrições específicas</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4 text-center">
+                                    <i class="bi bi-arrow-repeat fs-1 text-primary mb-3"></i>
+                                    <h6 class="fw-bold mb-3">Troca por outro tamanho</h6>
+                                    <p class="text-muted small mb-0">Escolheu o tamanho errado? Você pode trocar por outro tamanho do mesmo produto sem custo adicional. O prazo para receber o novo produto é de 7 a 14 dias úteis.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4 text-center">
+                                    <i class="bi bi-cash-coin fs-1 text-primary mb-3"></i>
+                                    <h6 class="fw-bold mb-3">Devolução com reembolso</h6>
+                                    <p class="text-muted small mb-0">Não ficou satisfeito? Você pode solicitar a devolução e terá o valor total reembolsado em até 10 dias úteis após recebermos o produto de volta em nossas instalações.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-exclamation-triangle-fill me-3 fs-5"></i>
+                            <div>
+                                <h6 class="fw-bold mb-2">Importante</h6>
+                                <p class="mb-0 small">Produtos com sinais de uso, lavagem, customizações não autorizadas ou sem embalagem original não serão aceitos para troca ou devolução. Camisas personalizadas com nome e número podem ter restrições adicionais.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-3">Defeito de fabricação</h5>
+                            <p class="text-muted mb-3">Se você recebeu um produto com defeito de fabricação, entre em contato imediatamente. Neste caso:</p>
+                            <ul class="text-muted">
+                                <li class="mb-2">O prazo para troca é de 30 dias</li>
+                                <li class="mb-2">Enviaremos um novo produto com urgência</li>
+                                <li class="mb-2">Todo o custo do frete será por nossa conta</li>
+                                <li>Você receberá acompanhamento prioritário do seu caso</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mt-5">
+                        <div class="card-body text-center p-5">
+                            <i class="bi bi-headset fs-1 text-primary mb-3"></i>
+                            <h4 class="fw-bold mb-3">Precisa de ajuda?</h4>
+                            <p class="text-muted mb-4">Nossa equipe está pronta para auxiliar em qualquer dúvida sobre trocas e devoluções</p>
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="mailto:trocas@futmax.com.br" class="btn btn-primary">
+                                    <i class="bi bi-envelope-fill me-2"></i> trocas@futmax.com.br
+                                </a>
+                                <a href="https://wa.me/5511999999999" class="btn btn-success">
+                                    <i class="bi bi-whatsapp me-2"></i> (11) 99999-9999
+                                </a>
+                            </div>
+                            <p class="text-muted small mt-3 mb-0">Atendimento de segunda a sexta, das 9h às 18h</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-5" style="background-color: var(--bs-secondary-bg);">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3 text-primary">FutMax</h5>
+                    <p class="text-muted small">A maior loja de camisas de futebol do Brasil. Qualidade garantida e entrega rápida.</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="https://www.facebook.com/profile.php?id=61583138668466" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/futmax101/" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-instagram"></i></a>
+                        <a href="https://x.com/FutMax101" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-twitter"></i></a>
+                        <a href="https://www.youtube.com/@FutMax101" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Categorias</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="produtos.html?categoria=nacional" class="text-muted text-decoration-none small">Camisas Nacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=internacional" class="text-muted text-decoration-none small">Internacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=selecoes" class="text-muted text-decoration-none small">Seleções</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=retro" class="text-muted text-decoration-none small">Retrô</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Atendimento</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="central-ajuda.html" class="text-muted text-decoration-none small">Central de Ajuda</a></li>
+                        <li class="mb-2"><a href="trocas-devolucoes.html" class="text-muted text-decoration-none small">Trocas e Devoluções</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Fale Conosco</a></li>
+                        <li class="mb-2"><a href="sobre-nos.html" class="text-muted text-decoration-none small">Sobre Nós</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Pagamento</h6>
+                    <p class="text-muted small mb-3">Aceitamos:</p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge" style="background-color: var(--bs-secondary-bg);"><i class="bi bi-credit-card"></i> Cartão</span>
+                        <span class="badge" style="background-color: var(--bs-secondary-bg);"><i class="bi bi-upc-scan"></i> Boleto</span>
+                        <span class="badge" style="background-color: var(--bs-secondary-bg);">PIX</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="text-center text-muted small mb-0">
+                © 2025 <span class="text-primary fw-bold">FutMax</span>. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/theme.js"></script>
+</body>
+
+</html>
