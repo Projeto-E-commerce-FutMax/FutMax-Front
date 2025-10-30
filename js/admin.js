@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     await carregarEstatisticas();
+    await carregarProdutosRecentes();
     await carregarEstoqueBaixo();
 });
 
@@ -12,6 +13,7 @@ async function carregarEstatisticas() {
         const totalEstoque = estoques.reduce((acc, item) => acc + item.qtEstoque, 0);
         document.getElementById('totalEstoque').textContent = totalEstoque;
 
+        
         try {
             const usuarios = await usuarioAPI.listar();
             const usuariosAtivos = usuarios.filter(u => u.flAtivo).length;
@@ -22,6 +24,37 @@ async function carregarEstatisticas() {
 
     } catch (error) {
         console.error('Erro ao carregar estatísticas:', error);
+    }
+}
+
+async function carregarProdutosRecentes() {
+    const tbody = document.querySelector('#tabelaProdutosRecentes tbody');
+    
+    try {
+        const produtos = await produtoAPI.listar();
+        const produtosRecentes = produtos.slice(0, 5);
+
+        if (produtosRecentes.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">Nenhum produto cadastrado</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = produtosRecentes.map(produto => `
+            <tr>
+                <td>#${produto.cdProduto}</td>
+                <td>${produto.nmProduto}</td>
+                <td class="fw-bold">${formatarMoeda(produto.vlProduto)}</td>
+                <td>
+                    <span class="badge ${produto.flAtivo ? 'bg-success' : 'bg-danger'}">
+                        ${produto.flAtivo ? 'Ativo' : 'Inativo'}
+                    </span>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        console.error('Erro ao carregar produtos recentes:', error);
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-danger">Erro ao carregar dados</td></tr>';
     }
 }
 

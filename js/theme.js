@@ -27,6 +27,7 @@ class ThemeManager {
         if (this.theme === 'dark') {
             html.setAttribute('data-bs-theme', 'dark');
             body.setAttribute('data-bs-theme', 'dark');
+
             const nav = document.querySelector('nav[data-bs-theme="light"]');
             if (nav) {
                 nav.removeAttribute('data-bs-theme');
@@ -34,6 +35,7 @@ class ThemeManager {
         } else {
             html.setAttribute('data-bs-theme', 'light');
             body.setAttribute('data-bs-theme', 'light');
+
             const nav = document.querySelector('nav.navbar');
             if (nav && !nav.hasAttribute('data-bs-theme')) {
                 nav.setAttribute('data-bs-theme', 'light');
@@ -43,13 +45,11 @@ class ThemeManager {
         this.updateToggleIcon();
     }
 
-    // Alternar tema
     toggleTheme() {
         this.theme = this.theme === 'light' ? 'dark' : 'light';
         this.saveTheme();
         this.applyTheme();
         
-        // Adicionar animação suave
         document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
         setTimeout(() => {
             document.documentElement.style.transition = '';
@@ -68,7 +68,6 @@ class ThemeManager {
             }
         });
 
-        // Atualizar título do botão
         const buttons = document.querySelectorAll('#themeToggle');
         buttons.forEach(button => {
             button.setAttribute('title', 
@@ -77,7 +76,6 @@ class ThemeManager {
         });
     }
 
-    // Configurar botão de alternância
     setupToggleButton() {
         const toggleButtons = document.querySelectorAll('#themeToggle');
         toggleButtons.forEach(button => {
@@ -89,13 +87,14 @@ class ThemeManager {
     }
 }
 
-
-
-
-
-// Inicializar o gerenciador de tema quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
-    if (!window.themeManager) {
-        window.themeManager = new ThemeManager();
-    }
+    const themeManager = new ThemeManager();
 });
+
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('futmax_theme')) {
+            const themeManager = new ThemeManager();
+        }
+    });
+}

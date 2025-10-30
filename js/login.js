@@ -1,4 +1,3 @@
-// Script para página de login
 document.addEventListener('DOMContentLoaded', () => {
     setupLoginForm();
     setupRegisterForm();
@@ -18,23 +17,19 @@ function setupLoginForm() {
         };
         
         try {
-            // Fazer login usando o endpoint correto
             const response = await authAPI.login(data);
             
             console.log('Login bem-sucedido:', response);
             
-            // Verificar se o usuário está ativo
             if (!response.usuario.flAtivo) {
                 showToast('Usuário inativo. Entre em contato com o suporte.', 'error');
                 return;
             }
             
-            // Salvar token e dados do usuário no localStorage
             localStorage.setItem('futmax_user', JSON.stringify(response));
             
             showToast('Login realizado com sucesso!', 'success');
             
-            // Redirecionar após 1 segundo (se for ADMIN, vai para admin)
             setTimeout(() => {
                 const roles = (response.usuario && response.usuario.roleModels) ? Array.from(response.usuario.roleModels).map(r => r.nmRole || r) : [];
                 const isAdmin = roles.some(r => String(r).includes('ADMIN'));
@@ -49,7 +44,6 @@ function setupLoginForm() {
         } catch (error) {
             console.error('Erro no login:', error);
             
-            // Mensagens de erro mais específicas
             if (error.message.includes('401') || error.message.includes('Unauthorized')) {
                 showToast('E-mail ou senha incorretos', 'error');
             } else if (error.message.includes('403')) {
@@ -75,7 +69,13 @@ function setupRegisterForm() {
             showToast('A senha deve conter: maiúscula, minúscula, número e caractere especial', 'error');
             return;
         }
-
+        
+        const cpf = formData.get('nmCpf').replace(/\D/g, '');
+        if (!validarCPF(cpf)) {
+            showToast('CPF inválido', 'error');
+            return;
+        }
+        
         const data = {
             nmUsuario: formData.get('nmUsuario'),
             nmEmail: formData.get('nmEmail'),
@@ -94,7 +94,6 @@ function setupRegisterForm() {
             
             localStorage.setItem('futmax_user', JSON.stringify(response));
             
-            // Redirecionar após 1 segundo
             setTimeout(() => {
                 window.location.href = 'index.html';
             }, 1000);
@@ -113,9 +112,7 @@ function setupRegisterForm() {
     });
 }
 
-// Configurar máscaras
 function setupMasks() {
-    // Máscara CPF
     const cpfInputs = document.querySelectorAll('input[name="nmCpf"]');
     cpfInputs.forEach(input => {
         input.addEventListener('input', (e) => {
@@ -123,7 +120,6 @@ function setupMasks() {
         });
     });
     
-    // Máscara Telefone
     const telInputs = document.querySelectorAll('input[name="nmTelefone"]');
     telInputs.forEach(input => {
         input.addEventListener('input', (e) => {
@@ -132,13 +128,11 @@ function setupMasks() {
     });
 }
 
-// Validar senha forte
 function validarSenha(senha) {
     const regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{6,}$/;
     return regex.test(senha);
 }
 
-// Exibir toast
 function showToast(message, type = 'success') {
     const toastEl = document.getElementById('notificationToast');
     if (!toastEl) return;

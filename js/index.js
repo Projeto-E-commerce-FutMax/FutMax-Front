@@ -1,34 +1,26 @@
 document.addEventListener('DOMContentLoaded', async () => {
     await carregarProdutosDestaque();
     setupSearch();
+    setupNewsletter();
     updateCartCount();
 });
 
 function construirUrlImagem(imgUrl) {
     if (!imgUrl) return null;
     if (imgUrl.startsWith('/api/')) {
-        return API_CONFIG.baseURL.replace(/\/$/, '') + '/' + imgUrl.substring(5);
+        return API_CONFIG.baseURL + imgUrl.substring(4); 
     }
     if (imgUrl.startsWith('/')) {
-        return API_CONFIG.baseURL.replace(/\/$/, '') + imgUrl;
+        return API_CONFIG.baseURL + imgUrl;
     }
-    return API_CONFIG.baseURL.replace(/\/$/, '') + '/' + imgUrl.replace(/^\/?/, '');
+    return API_CONFIG.baseURL + '/api/' + imgUrl;
 }
 
 async function carregarProdutosDestaque() {
     const container = document.getElementById('produtosDestaque');
     
     try {
-        const resp = await produtoAPI.listar();
-        const produtos = Array.isArray(resp)
-            ? resp
-            : Array.isArray(resp?.content)
-                ? resp.content
-                : Array.isArray(resp?.data)
-                    ? resp.data
-                    : Array.isArray(resp?.items)
-                        ? resp.items
-                        : [];
+        const produtos = await produtoAPI.listar();
         
         if (!produtos || produtos.length === 0) {
             container.innerHTML = `
@@ -40,38 +32,35 @@ async function carregarProdutosDestaque() {
             return;
         }
 
-        // Filtrar apenas produtos ativos e pegar os primeiros 4
-        const produtosAtivos = produtos.filter(p => p.flAtivo === true || p.flAtivo === 'true' || p.ativo === true).slice(0, 4);
+        const produtosAtivos = produtos.filter(p => p.flAtivo).slice(0, 4);
         
-        // Determinar estoque a partir de possíveis formatos
-        const produtosComEstoque = produtosAtivos.map(produto => ({
-            ...produto,
-            estoque: Number(
-                produto.qtEstoque ??
-                produto.estoque?.qtEstoque ??
-                produto.estoque ??
-                0
-            ) || 0
-        }));
+        const produtosComEstoque = produtosAtivos.map(produto => {
+            return {
+                ...produto,
+                estoque: produto.qtEstoque || 0
+            };
+        });
         
-        // Armazenar globalmente para uso na função adicionarAoCarrinho
         window.listaProdutosComEstoque = produtosComEstoque;
 
         container.innerHTML = produtosComEstoque.map(produto => `
-            <div class="col-sm-6 col-lg-3">
-                <div class="card border-0 shadow-sm h-100" onclick="verProduto(${produto.cdProduto})" style="cursor:pointer;">
-                    <div class="p-3 d-flex align-items-center justify-content-center" style="height:200px;background: var(--bs-secondary-bg);">
-                        ${produto.imgUrl ? `<img src="${construirUrlImagem(produto.imgUrl)}" alt="${produto.nmProduto}" class="img-fluid" style="max-height:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><i class=\"bi bi-image\" style=\"font-size:3rem; display:none;\"></i>` : `<i class=\"bi bi-image\" style=\"font-size:3rem;\"></i>`}
+            <div class="col-md-6 col-lg-3">
+                <div class="produto-card" onclick="verProduto(${produto.cdProduto})">
+                    <div class="produto-img d-flex align-items-center justify-content-center">
+                        ${produto.imgUrl ? `<img src="${construirUrlImagem(produto.imgUrl)}" alt="${produto.nmProduto}" class="img-fluid" style="max-height:140px; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><i class="bi bi-image" style="font-size: 3rem; display:none;"></i>` : `<i class="bi bi-image" style="font-size: 3rem;"></i>`}
                     </div>
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="fw-bold mb-1">${produto.nmProduto}</h6>
-                        <p class="text-muted small mb-2" style="min-height:40px;">${produto.dsProduto || ''}</p>
-                        <div class="mt-auto d-flex justify-content-between align-items-center">
-                            <div class="fw-bold text-primary">${formatarMoeda(produto.vlProduto)}</div>
-                            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''} title="Adicionar ao carrinho">
-                                <i class="bi bi-cart-plus"></i>
-                            </button>
+                    <h6 class="fw-bold mt-3">${produto.nmProduto}</h6>
+                    <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
+                        ${produto.dsProduto}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="preco-novo mb-0">${formatarMoeda(produto.vlProduto)}</p>
+                            <p class="text-muted small mb-0">${calcularParcelamento(produto.vlProduto)}</p>
                         </div>
+                        <button class="btn-add-cart" onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''}>
+                            <i class="bi bi-cart-plus"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -88,12 +77,10 @@ async function carregarProdutosDestaque() {
     }
 }
 
-// Ver detalhes do produto
 function verProduto(cdProduto) {
     window.location.href = `produtos.html?id=${cdProduto}`;
 }
 
-// Adicionar produto ao carrinho
 function adicionarAoCarrinho(cdProduto) {
     const produto = window.listaProdutosComEstoque?.find(p => p.cdProduto === cdProduto);
     
@@ -108,7 +95,6 @@ function adicionarAoCarrinho(cdProduto) {
         return;
     }
     
-    // Verificar se já existe no carrinho
     let carrinho = JSON.parse(localStorage.getItem('futmax_carrinho') || '[]');
     const itemExistente = carrinho.find(item => item.cdProduto === cdProduto);
     
@@ -144,7 +130,7 @@ function updateCartCount() {
 }
 
 function mostrarToast(mensagem, tipo = 'success') {
-    // Criar notificação toast se não existir
+
     let toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
         toastContainer = document.createElement('div');
@@ -177,7 +163,6 @@ function mostrarToast(mensagem, tipo = 'success') {
     const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
     toast.show();
     
-    // Remover o elemento após ser escondido
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });
@@ -194,6 +179,21 @@ function setupSearch() {
                     window.location.href = `produtos.html?search=${encodeURIComponent(searchTerm)}`;
                 }
             }
+        });
+    }
+}
+
+function setupNewsletter() {
+    const form = document.getElementById('newsletterForm');
+    
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = form.querySelector('input[type="email"]').value;
+            
+            alert(`Obrigado por se inscrever! Confirme seu e-mail: ${email}`);
+            form.reset();
         });
     }
 }

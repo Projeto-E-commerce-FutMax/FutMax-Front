@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function construirUrlImagem(imgUrl) {
     if (!imgUrl) return null;
     if (imgUrl.startsWith('/api/')) {
-        return API_CONFIG.baseURL + imgUrl.substring(4);
+        return API_CONFIG.baseURL + imgUrl.substring(4); // Remove '/api' e mantém o resto
     }
     if (imgUrl.startsWith('/')) {
         return API_CONFIG.baseURL + imgUrl;
@@ -154,11 +154,9 @@ function setupFinalizarPedido() {
             btnConfirmar.disabled = true;
             btnConfirmar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processando...';
             
-            // Atualizar estoque para cada item usando o endpoint fictício
             for (const item of items) {
                 try {
-                    // Usar o novo endpoint que não requer autenticação
-                    await estoqueAPI.baixarEstoque(item.cdProduto, item.quantidade);
+                    await estoqueAPI.baixarEstoqueFicticio(item.cdProduto, item.quantidade);
                 } catch (error) {
                     console.error(`❌ Erro ao baixar estoque para ${item.nmProduto}:`, error);
                     throw new Error(`Erro ao processar ${item.nmProduto}: ${error.message || 'Estoque insuficiente'}`);
@@ -185,7 +183,6 @@ function setupFinalizarPedido() {
 }
 
 function mostrarToast(mensagem, tipo = 'success') {
-    // Criar notificação toast se não existir
     let toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
         toastContainer = document.createElement('div');

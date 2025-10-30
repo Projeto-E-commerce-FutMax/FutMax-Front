@@ -8,9 +8,9 @@ class CartManager {
         const cartData = localStorage.getItem('futmax_carrinho') || localStorage.getItem('futmax_cart');
         return cartData ? JSON.parse(cartData) : [];
     }
+    
 
     saveCart() {
-        // Salvar em ambas as chaves para compatibilidade
         localStorage.setItem('futmax_carrinho', JSON.stringify(this.cart));
         localStorage.setItem('futmax_cart', JSON.stringify(this.cart));
         this.updateCartCount();
@@ -66,16 +66,18 @@ class CartManager {
         return calcularFrete(subtotal);
     }
 
+    // Calcular total
     getTotal() {
         return this.getSubtotal() + this.getShipping();
     }
 
+    // Limpar carrinho
     clear() {
         this.cart = [];
         this.saveCart();
     }
 
-    // Atualizar  no header
+    // Atualizar contador no header
     updateCartCount() {
         const cartCountElements = document.querySelectorAll('#cartCount');
         const totalItems = this.getTotalItems();
@@ -86,6 +88,7 @@ class CartManager {
         });
     }
 
+    // Preparar dados para envio ao backend
     prepareOrderData(cdUsuario) {
         return {
             cdUsuario: cdUsuario,
@@ -96,7 +99,9 @@ class CartManager {
         };
     }
 
+    // Mostrar notificação
     showNotification(message) {
+        // Criar elemento de toast se não existir
         let toastContainer = document.querySelector('.toast-container');
         if (!toastContainer) {
             toastContainer = document.createElement('div');
@@ -105,6 +110,7 @@ class CartManager {
             document.body.appendChild(toastContainer);
         }
 
+        // Criar toast
         const toastId = 'toast-' + Date.now();
         const toastHTML = `
             <div id="${toastId}" class="toast" role="alert">
@@ -130,6 +136,7 @@ class CartManager {
     }
 }
 
+// Instância global do carrinho
 const cart = new CartManager();
 
 // Atualizar contador ao carregar a página

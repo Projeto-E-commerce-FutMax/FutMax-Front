@@ -4,18 +4,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateCartCount();
 });
 
-// Função auxiliar para construir URL da imagem
 function construirUrlImagem(imgUrl) {
     if (!imgUrl) return null;
-    // Se já começa com /api/, remove o /api/ inicial para evitar duplicação
     if (imgUrl.startsWith('/api/')) {
-        return API_CONFIG.baseURL + imgUrl.substring(4); // Remove '/api' e mantém o resto
+        return API_CONFIG.baseURL + imgUrl.substring(4); o
     }
-    // Se começa com /, adiciona o baseURL diretamente
     if (imgUrl.startsWith('/')) {
         return API_CONFIG.baseURL + imgUrl;
     }
-    // Se não começa com /, adiciona /api/ + imgUrl
     return API_CONFIG.baseURL + '/api/' + imgUrl;
 }
 
@@ -30,7 +26,6 @@ async function carregarProdutosPagina() {
         
         const produtosAtivos = Array.isArray(produtos) ? produtos.filter(p => p.flAtivo) : [];
         
-        // Os produtos já vêm com estoque do backend (qtEstoque)
         const produtosComEstoque = produtosAtivos.map(produto => {
             return {
                 ...produto,
@@ -72,6 +67,7 @@ function renderProdutos() {
                     <div class="mt-auto d-flex justify-content-between align-items-center">
                         <div>
                             <div class="fw-bold text-primary">${formatarMoeda(produto.vlProduto)}</div>
+                            <div class="text-muted small">${calcularParcelamento(produto.vlProduto)}</div>
                         </div>
                         <button class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''} title="Adicionar ao carrinho">
                             <i class="bi bi-cart-plus"></i>
@@ -93,12 +89,11 @@ function setupFiltrosProdutos() {
     const apply = document.getElementById('applyFilters');
     const clear = document.getElementById('clearFilters');
 
-    // Pré-selecionar categoria pela querystring (?categoria=)
     try {
         const params = new URLSearchParams(window.location.search);
         const cat = (params.get('categoria') || '').toUpperCase();
         if (cat && category) {
-            // Normalizar possíveis aliases
+
             const map = {
                 'NACIONAL': 'NACIONAL',
                 'INTERNACIONAL': 'INTERNACIONAL',
@@ -156,16 +151,13 @@ function setupFiltrosProdutos() {
         applyFilters();
     });
 
-    // Aplicar automaticamente ao carregar (considerando querystring)
     applyFilters();
 }
 
-// Ver detalhes do produto
 function verProduto(cdProduto) {
     window.location.href = `produtos.html?id=${cdProduto}`;
 }
 
-// Adicionar produto ao carrinho
 function adicionarAoCarrinho(cdProduto) {
     const produto = listaProdutos.find(p => p.cdProduto === cdProduto);
     
@@ -180,7 +172,6 @@ function adicionarAoCarrinho(cdProduto) {
         return;
     }
     
-    // Verificar se já existe no carrinho
     let carrinho = JSON.parse(localStorage.getItem('futmax_carrinho') || '[]');
     const itemExistente = carrinho.find(item => item.cdProduto === cdProduto);
     
@@ -206,7 +197,6 @@ function adicionarAoCarrinho(cdProduto) {
     updateCartCount();
 }
 
-// Atualizar contador do carrinho
 function updateCartCount() {
     const carrinho = JSON.parse(localStorage.getItem('futmax_carrinho') || '[]');
     const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
@@ -216,9 +206,8 @@ function updateCartCount() {
     }
 }
 
-// Função para mostrar toast
 function mostrarToast(mensagem, tipo = 'success') {
-    // Criar notificação toast se não existir
+
     let toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
         toastContainer = document.createElement('div');
@@ -251,7 +240,6 @@ function mostrarToast(mensagem, tipo = 'success') {
     const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
     toast.show();
     
-    // Remover o elemento após ser escondido
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });

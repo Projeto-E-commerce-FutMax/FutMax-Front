@@ -27,7 +27,7 @@ const API_ENDPOINTS = {
     estoque: {
         listar: '/estoque/buscar/todos',
         buscarPorProduto: (id) => `/estoque/produto/${id}`,
-        baixarEstoque: (cdProduto, quantidade) => `/estoque/baixar-estoque-ficticio/${cdProduto}?quantidade=${quantidade}`,
+        baixarEstoqueFicticio: (cdProduto, quantidade) => `/estoque/baixar-estoque-ficticio/${cdProduto}?quantidade=${quantidade}`,
         cadastrar: '/estoque/cadastrar',
         atualizar: (id) => `/estoque/atualizar/${id}`,
         desativar: (id) => `/estoque/desativar/${id}`,
@@ -171,7 +171,8 @@ const usuarioAPI = {
 
 const estoqueAPI = {
     listar: () => apiRequest(API_ENDPOINTS.estoque.listar, 'GET', null, true),
-    baixarEstoque: (cdProduto, quantidade) => apiRequest(API_ENDPOINTS.estoque.baixarEstoque(cdProduto, quantidade), 'PUT', null, false),
+    buscarPorProduto: (id) => apiRequest(API_ENDPOINTS.estoque.buscarPorProduto(id), 'GET', null, false),
+    baixarEstoqueFicticio: (cdProduto, quantidade) => apiRequest(API_ENDPOINTS.estoque.baixarEstoqueFicticio(cdProduto, quantidade), 'PUT', null, false),
     cadastrar: (data) => apiRequest(API_ENDPOINTS.estoque.cadastrar, 'POST', data, true),
     atualizar: (id, data) => apiRequest(API_ENDPOINTS.estoque.atualizar(id), 'PUT', data, true),
     desativar: (id) => apiRequest(API_ENDPOINTS.estoque.desativar(id), 'DELETE', null, true),
@@ -185,6 +186,16 @@ function formatarMoeda(valor) {
     }).format(valor);
 }
 
+function formatarData(data) {
+    return new Date(data).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
 function calcularFrete(vlItens) {
     if (vlItens >= 200.0) {
         return 0.0;
@@ -195,10 +206,40 @@ function calcularFrete(vlItens) {
     }
 }
 
+function calcularParcelamento(valor, parcelas = 12) {
+    const valorParcela = valor / parcelas;
+    return `${parcelas}x de ${formatarMoeda(valorParcela)} sem juros`;
+}
 
+function validarCPF(cpf) {
+    cpf = cpf.replace(/[^\d]/g, '');
+    
+    if (cpf.length !== 11) return false;
+    if (/^(\d)\1+$/.test(cpf)) return false;
+    
+    let soma = 0;
+    let resto;
+    
+    for (let i = 1; i <= 9; i++) {
+        soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+    
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+    
+    soma = 0;
+    for (let i = 1; i <= 10; i++) {
+        soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+    
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+    
+    return true;
+}
 
-
-// Máscara para CPF
 function mascaraCPF(value) {
     return value
         .replace(/\D/g, '')
@@ -208,7 +249,6 @@ function mascaraCPF(value) {
         .replace(/(-\d{2})\d+?$/, '$1');
 }
 
-// Máscara para telefone
 function mascaraTelefone(value) {
     return value
         .replace(/\D/g, '')
@@ -217,7 +257,23 @@ function mascaraTelefone(value) {
         .replace(/(-\d{4})\d+?$/, '$1');
 }
 
-// Alternar visualização de senha
+function showToast(message, type = 'success') {
+    const toastEl = document.getElementById('notificationToast');
+    if (!toastEl) return;
+    
+    const toastBody = document.getElementById('toastMessage');
+    const toastIcon = toastEl.querySelector('.toast-header i');
+    
+    toastBody.textContent = message;
+    
+    toastIcon.className = type === 'success' 
+        ? 'bi bi-check-circle-fill text-success me-2'
+        : 'bi bi-exclamation-circle-fill text-danger me-2';
+    
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+}
+
 function togglePassword(inputId) {
     const input = document.getElementById(inputId);
     const icon = input.nextElementSibling.querySelector('i');
@@ -231,7 +287,6 @@ function togglePassword(inputId) {
     }
 }
 
-// Verificar se usuário está logado e atualizar UI
 function checkUserLogin() {
     const user = localStorage.getItem('futmax_user');
     const userButton = document.getElementById('userButton');

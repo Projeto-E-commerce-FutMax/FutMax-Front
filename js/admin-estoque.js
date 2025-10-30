@@ -166,7 +166,11 @@ function setupFormularios() {
             await carregarEstoques();
             
             localStorage.setItem('forcar_atualizacao_produtos', Date.now().toString());
-
+            
+            setTimeout(() => {
+                mostrarToast('Para ver o estoque atualizado, vá para a página de produtos e clique em "Atualizar"', 'info');
+            }, 2000);
+            
         } catch (error) {
             console.error('Erro ao adicionar estoque:', error);
             mostrarToast('Erro ao adicionar estoque: ' + error.message, 'error');
@@ -196,10 +200,8 @@ function setupFormularios() {
             
             await carregarEstoques();
             
-            // Forçar atualização das páginas de produtos
             localStorage.setItem('forcar_atualizacao_produtos', Date.now().toString());
             
-            // Mostrar instrução para o usuário
             setTimeout(() => {
                 mostrarToast('Para ver o estoque atualizado, vá para a página de produtos e clique em "Atualizar"', 'info');
             }, 2000);
