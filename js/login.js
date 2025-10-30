@@ -62,7 +62,6 @@ function setupLoginForm() {
 }
 
 
-// Configurar formulário de cadastro
 function setupRegisterForm() {
     const form = document.getElementById('registerForm');
     
@@ -71,20 +70,12 @@ function setupRegisterForm() {
         
         const formData = new FormData(form);
         
-        // Validar senha
         const senha = formData.get('nmSenha');
         if (!validarSenha(senha)) {
             showToast('A senha deve conter: maiúscula, minúscula, número e caractere especial', 'error');
             return;
         }
-        
-        // Validar CPF
-        const cpf = formData.get('nmCpf').replace(/\D/g, '');
-        if (!validarCPF(cpf)) {
-            showToast('CPF inválido', 'error');
-            return;
-        }
-        
+
         const data = {
             nmUsuario: formData.get('nmUsuario'),
             nmEmail: formData.get('nmEmail'),
@@ -101,7 +92,6 @@ function setupRegisterForm() {
             
             showToast('Cadastro realizado com sucesso!', 'success');
             
-            // Fazer login automaticamente
             localStorage.setItem('futmax_user', JSON.stringify(response));
             
             // Redirecionar após 1 segundo

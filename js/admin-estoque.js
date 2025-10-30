@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupFormularios();
 });
 
-// Carregar produtos para o select
 async function carregarProdutos() {
     try {
         todosProdutos = await produtoAPI.listar();
@@ -97,7 +96,6 @@ function exibirEstoques() {
     }).join('');
 }
 
-// Atualizar contadores
 function atualizarContadores() {
     const estoqueBaixo = todosEstoques.filter(e => e.qtEstoque > 0 && e.qtEstoque < 10 && e.flAtivo).length;
     const estoqueNormal = todosEstoques.filter(e => e.qtEstoque >= 10 && e.flAtivo).length;
@@ -108,14 +106,12 @@ function atualizarContadores() {
     document.getElementById('countSemEstoque').textContent = semEstoque;
 }
 
-// Abrir modal novo
 function abrirModalNovo() {
     document.getElementById('modalEstoqueTitle').textContent = 'Adicionar Estoque';
     document.getElementById('formEstoque').reset();
     document.getElementById('cdEstoque').value = '';
 }
 
-// Abrir ajuste rápido
 function abrirAjusteRapido(cdEstoque, nomeProduto, quantidadeAtual) {
     document.getElementById('cdEstoqueAjuste').value = cdEstoque;
     document.getElementById('nomeProdutoAjuste').textContent = nomeProduto;
@@ -126,7 +122,6 @@ function abrirAjusteRapido(cdEstoque, nomeProduto, quantidadeAtual) {
     modal.show();
 }
 
-// Desativar estoque
 async function desativarEstoque(cdEstoque) {
     if (!confirm('Deseja realmente desativar este estoque?')) return;
     
@@ -170,14 +165,8 @@ function setupFormularios() {
             
             await carregarEstoques();
             
-            // Forçar atualização das páginas de produtos
             localStorage.setItem('forcar_atualizacao_produtos', Date.now().toString());
-            
-            // Mostrar instrução para o usuário
-            setTimeout(() => {
-                mostrarToast('Para ver o estoque atualizado, vá para a página de produtos e clique em "Atualizar"', 'info');
-            }, 2000);
-            
+
         } catch (error) {
             console.error('Erro ao adicionar estoque:', error);
             mostrarToast('Erro ao adicionar estoque: ' + error.message, 'error');
@@ -261,7 +250,6 @@ function limparFiltros() {
 }
 
 function mostrarToast(mensagem, tipo = 'success') {
-    // Criar notificação toast se não existir
     let toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
         toastContainer = document.createElement('div');
@@ -294,7 +282,6 @@ function mostrarToast(mensagem, tipo = 'success') {
     const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
     toast.show();
     
-    // Remover o elemento após ser escondido
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });

@@ -1,26 +1,17 @@
-// Script para Dashboard Admin
 document.addEventListener('DOMContentLoaded', async () => {
     await carregarEstatisticas();
-    await carregarProdutosRecentes();
     await carregarEstoqueBaixo();
 });
 
-// Carregar estatísticas
 async function carregarEstatisticas() {
     try {
-        // Total de Produtos
         const produtos = await produtoAPI.listar();
         document.getElementById('totalProdutos').textContent = produtos.length;
 
-        // Total de Estoque
         const estoques = await estoqueAPI.listar();
         const totalEstoque = estoques.reduce((acc, item) => acc + item.qtEstoque, 0);
         document.getElementById('totalEstoque').textContent = totalEstoque;
 
-        // Pedidos (mock por enquanto, se tiver endpoint implementar)
-        document.getElementById('pedidosHoje').textContent = '0';
-
-        // Usuários Ativos
         try {
             const usuarios = await usuarioAPI.listar();
             const usuariosAtivos = usuarios.filter(u => u.flAtivo).length;
@@ -34,39 +25,6 @@ async function carregarEstatisticas() {
     }
 }
 
-// Carregar produtos recentes
-async function carregarProdutosRecentes() {
-    const tbody = document.querySelector('#tabelaProdutosRecentes tbody');
-    
-    try {
-        const produtos = await produtoAPI.listar();
-        const produtosRecentes = produtos.slice(0, 5);
-
-        if (produtosRecentes.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">Nenhum produto cadastrado</td></tr>';
-            return;
-        }
-
-        tbody.innerHTML = produtosRecentes.map(produto => `
-            <tr>
-                <td>#${produto.cdProduto}</td>
-                <td>${produto.nmProduto}</td>
-                <td class="fw-bold">${formatarMoeda(produto.vlProduto)}</td>
-                <td>
-                    <span class="badge ${produto.flAtivo ? 'bg-success' : 'bg-danger'}">
-                        ${produto.flAtivo ? 'Ativo' : 'Inativo'}
-                    </span>
-                </td>
-            </tr>
-        `).join('');
-
-    } catch (error) {
-        console.error('Erro ao carregar produtos recentes:', error);
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-danger">Erro ao carregar dados</td></tr>';
-    }
-}
-
-// Carregar estoque baixo
 async function carregarEstoqueBaixo() {
     const container = document.getElementById('estoqueBaixo');
     

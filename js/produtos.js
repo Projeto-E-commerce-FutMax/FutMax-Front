@@ -72,7 +72,6 @@ function renderProdutos() {
                     <div class="mt-auto d-flex justify-content-between align-items-center">
                         <div>
                             <div class="fw-bold text-primary">${formatarMoeda(produto.vlProduto)}</div>
-                            <div class="text-muted small">${calcularParcelamento(produto.vlProduto)}</div>
                         </div>
                         <button class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''} title="Adicionar ao carrinho">
                             <i class="bi bi-cart-plus"></i>
