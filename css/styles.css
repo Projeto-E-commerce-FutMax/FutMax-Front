@@ -11,6 +11,7 @@
     --bs-link-color: var(--bs-primary);
     --bs-link-hover-color: #e14e2e;
     --bs-focus-ring-color: rgba(var(--bs-primary-rgb), .25);
+    
 }
 
 [data-bs-theme="light"] {
