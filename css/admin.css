@@ -3,11 +3,13 @@
     font-style: italic;
 }
 
-.navbar .nav-link:hover,
 .navbar .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    border-radius: 5px;
+    color: var(--bs-primary) !important;
+}
+
+/* Remover hovers chamativos nas telas admin */
+.navbar .nav-link:hover {
+    text-decoration: none;
 }
 
 [data-bs-theme="dark"] .navbar .nav-link:hover,
@@ -38,13 +40,7 @@
     background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
 }
 
-.card {
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-}
+.card { /* sem hover animado no admin */ }
 
 .badge-nivel-baixo {
     background-color: #fbbf24;
@@ -66,8 +62,8 @@
 
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--primary-color, #0d6efd);
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
 }
 
 @keyframes skeleton-loading {

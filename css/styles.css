@@ -8,6 +8,41 @@
     --bs-success: #28a745;
     --bs-danger: #dc3545;
     --bs-warning: #FF5733;
+    --bs-link-color: var(--bs-primary);
+    --bs-link-hover-color: #e14e2e;
+    --bs-focus-ring-color: rgba(var(--bs-primary-rgb), .25);
+}
+
+[data-bs-theme="light"] {
+    --bs-primary: #FF5733;
+    --bs-primary-rgb: 255, 87, 51;
+    --bs-link-color: var(--bs-primary);
+    --bs-link-hover-color: #e14e2e;
+    --bs-focus-ring-color: rgba(var(--bs-primary-rgb), .25);
+    --bs-primary-text-emphasis: #a23a28; 
+    --bs-primary-bg-subtle: #ffe2db;    
+    --bs-primary-border-subtle: #ffb5a5; 
+}
+
+/* Navbar clara: fundo, borda e leve sombra para separar do conteúdo */
+[data-bs-theme="light"] .navbar:not([data-bs-theme="dark"]) {
+    background-color: var(--bs-body-bg) !important;
+    border-bottom: 1px solid var(--bs-border-color);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+[data-bs-theme="light"] .navbar .btn-link,
+[data-bs-theme="light"] .navbar .btn-link i,
+[data-bs-theme="light"] .navbar .btn-link .bi,
+[data-bs-theme="light"] .navbar a.btn-link {
+    color: var(--bs-body-color) !important;
+    text-decoration: none;
+}
+
+[data-bs-theme="light"] .navbar a.btn-link:hover,
+[data-bs-theme="light"] .navbar .btn-link:hover {
+    color: var(--bs-body-color) !important;
+    text-decoration: none;
 }
 
 * {
@@ -155,9 +190,19 @@
 }
 
 .produto-img {
-    height: 250px;
+    height: 220px;
     border-radius: 10px;
     overflow: hidden;
+    background-color: var(--bs-secondary-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.produto-img img {
+    max-height: 180px;
+    width: auto;
+    object-fit: contain;
 }
 
 .cart-item-img {
@@ -237,6 +282,11 @@
     color: var(--bs-primary) !important;
 }
 
+/* Ativo laranja também no tema claro */
+[data-bs-theme="light"] .navbar .nav-link.active {
+    color: var(--bs-primary) !important;
+}
+
 [data-bs-theme="dark"] .navbar .btn-outline-secondary {
     color: var(--bs-body-color) !important;
     border-color: var(--bs-border-color);
@@ -244,6 +294,14 @@
 
 [data-bs-theme="dark"] .navbar .btn-link:hover {
     color: var(--bs-primary) !important;
+}
+
+/* Remover sublinhado do usuário (e btn-link) no tema escuro */
+[data-bs-theme="dark"] .navbar a.btn-link,
+[data-bs-theme="dark"] .navbar a.btn-link:hover,
+[data-bs-theme="dark"] .navbar #userButton,
+[data-bs-theme="dark"] .navbar #userButton:hover {
+    text-decoration: none;
 }
 
 @media (max-width: 768px) {
