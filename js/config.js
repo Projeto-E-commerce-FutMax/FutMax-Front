@@ -7,11 +7,9 @@ const API_CONFIG = {
 };
 
 const API_ENDPOINTS = {
-    // Autenticação
     auth: {
         login: '/auth/login'
     },
-    // Produtos
     produtos: {
         listar: '/produto/buscar/todos',
         buscar: (id) => `/produto/buscar/${id}`,
@@ -20,18 +18,16 @@ const API_ENDPOINTS = {
         desativar: (id) => `/produto/desativar/${id}`,
         reativar: (id) => `/produto/reativar/${id}`
     },
-    // Usuários
     usuarios: {
         cadastrar: '/usuarios/cadastrar',
         listar: '/usuarios/buscar/todos',
         desativar: (id) => `/usuarios/desativar/${id}`,
         reativar: (id) => `/usuarios/reativar/${id}`
     },
-    // Estoque
     estoque: {
         listar: '/estoque/buscar/todos',
         buscarPorProduto: (id) => `/estoque/produto/${id}`,
-        baixarEstoqueFicticio: (cdProduto, quantidade) => `/estoque/baixar-estoque-ficticio/${cdProduto}?quantidade=${quantidade}`,
+        baixarEstoque: (cdProduto, quantidade) => `/estoque/baixar-estoque-ficticio/${cdProduto}?quantidade=${quantidade}`,
         cadastrar: '/estoque/cadastrar',
         atualizar: (id) => `/estoque/atualizar/${id}`,
         desativar: (id) => `/estoque/desativar/${id}`,
@@ -39,7 +35,6 @@ const API_ENDPOINTS = {
     }
 };
 
-// Função para obter o token JWT do localStorage
 function getAuthToken() {
     const user = localStorage.getItem('futmax_user');
     if (user) {
@@ -53,7 +48,6 @@ function getAuthToken() {
     return null;
 }
 
-// Utilitários de autenticação
 function getLoggedUser() {
     const raw = localStorage.getItem('futmax_user');
     if (!raw) return null;
@@ -78,7 +72,6 @@ function isAdmin() {
     return roles.some(r => String(r).includes('ADMIN'));
 }
 
-// Função principal para fazer requisições à API
 async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = true) {
     const url = `${API_CONFIG.baseURL}${endpoint}`;
     const options = {
@@ -86,7 +79,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
         headers: { ...API_CONFIG.headers }
     };
 
-    // Adicionar token JWT se necessário
     if (requiresAuth) {
         const token = getAuthToken();
         if (token) {
@@ -101,7 +93,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
     try {
         const response = await fetch(url, options);
         
-        // Se não autorizado, redirecionar para login
         if (response.status === 401 || response.status === 403) {
             console.error('❌ Não autorizado! Status:', response.status);
             localStorage.removeItem('futmax_user');
@@ -131,7 +122,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
     }
 }
 
-// Requisição multipart (FormData)
 async function apiRequestMultipart(endpoint, method = 'POST', formData, requiresAuth = true) {
     const url = `${API_CONFIG.baseURL}${endpoint}`;
     const options = { method, headers: {} };
@@ -157,14 +147,12 @@ async function apiRequestMultipart(endpoint, method = 'POST', formData, requires
     return response.json();
 }
 
-// API de Autenticação
 const authAPI = {
     login: async (credentials) => {
         return apiRequest(API_ENDPOINTS.auth.login, 'POST', credentials, false);
     }
 };
 
-// API de Produtos
 const produtoAPI = {
     listar: () => apiRequest(API_ENDPOINTS.produtos.listar, 'GET', null, false),
     buscar: (id) => apiRequest(API_ENDPOINTS.produtos.buscar(id), 'GET', null, false),
@@ -174,7 +162,6 @@ const produtoAPI = {
     reativar: (id) => apiRequest(API_ENDPOINTS.produtos.reativar(id), 'PUT', null, true)
 };
 
-// API de Usuários
 const usuarioAPI = {
     cadastrar: (data) => apiRequest(API_ENDPOINTS.usuarios.cadastrar, 'POST', data, false),
     listar: () => apiRequest(API_ENDPOINTS.usuarios.listar, 'GET', null, true),
@@ -182,33 +169,20 @@ const usuarioAPI = {
     reativar: (id) => apiRequest(API_ENDPOINTS.usuarios.reativar(id), 'PUT', null, true)
 };
 
-// API de Estoque
 const estoqueAPI = {
     listar: () => apiRequest(API_ENDPOINTS.estoque.listar, 'GET', null, true),
-    buscarPorProduto: (id) => apiRequest(API_ENDPOINTS.estoque.buscarPorProduto(id), 'GET', null, false),
-    baixarEstoqueFicticio: (cdProduto, quantidade) => apiRequest(API_ENDPOINTS.estoque.baixarEstoqueFicticio(cdProduto, quantidade), 'PUT', null, false),
+    baixarEstoque: (cdProduto, quantidade) => apiRequest(API_ENDPOINTS.estoque.baixarEstoque(cdProduto, quantidade), 'PUT', null, false),
     cadastrar: (data) => apiRequest(API_ENDPOINTS.estoque.cadastrar, 'POST', data, true),
     atualizar: (id, data) => apiRequest(API_ENDPOINTS.estoque.atualizar(id), 'PUT', data, true),
     desativar: (id) => apiRequest(API_ENDPOINTS.estoque.desativar(id), 'DELETE', null, true),
     reativar: (id) => apiRequest(API_ENDPOINTS.estoque.reativar(id), 'PUT', null, true)
 };
 
-// Funções utilitárias
 function formatarMoeda(valor) {
     return new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL'
     }).format(valor);
-}
-
-function formatarData(data) {
-    return new Date(data).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
 }
 
 function calcularFrete(vlItens) {
@@ -221,41 +195,8 @@ function calcularFrete(vlItens) {
     }
 }
 
-// Calcular parcelamento
-function calcularParcelamento(valor, parcelas = 12) {
-    const valorParcela = valor / parcelas;
-    return `${parcelas}x de ${formatarMoeda(valorParcela)} sem juros`;
-}
 
-// Validação de CPF
-function validarCPF(cpf) {
-    cpf = cpf.replace(/[^\d]/g, '');
-    
-    if (cpf.length !== 11) return false;
-    if (/^(\d)\1+$/.test(cpf)) return false;
-    
-    let soma = 0;
-    let resto;
-    
-    for (let i = 1; i <= 9; i++) {
-        soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-    }
-    
-    resto = (soma * 10) % 11;
-    if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf.substring(9, 10))) return false;
-    
-    soma = 0;
-    for (let i = 1; i <= 10; i++) {
-        soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-    }
-    
-    resto = (soma * 10) % 11;
-    if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf.substring(10, 11))) return false;
-    
-    return true;
-}
+
 
 // Máscara para CPF
 function mascaraCPF(value) {
@@ -274,25 +215,6 @@ function mascaraTelefone(value) {
         .replace(/(\d{2})(\d)/, '($1) $2')
         .replace(/(\d{5})(\d)/, '$1-$2')
         .replace(/(-\d{4})\d+?$/, '$1');
-}
-
-// Exibir toast de notificação
-function showToast(message, type = 'success') {
-    const toastEl = document.getElementById('notificationToast');
-    if (!toastEl) return;
-    
-    const toastBody = document.getElementById('toastMessage');
-    const toastIcon = toastEl.querySelector('.toast-header i');
-    
-    toastBody.textContent = message;
-    
-    // Alterar ícone baseado no tipo
-    toastIcon.className = type === 'success' 
-        ? 'bi bi-check-circle-fill text-success me-2'
-        : 'bi bi-exclamation-circle-fill text-danger me-2';
-    
-    const toast = new bootstrap.Toast(toastEl);
-    toast.show();
 }
 
 // Alternar visualização de senha
@@ -331,5 +253,4 @@ function checkUserLogin() {
     }
 }
 
-// Executar verificação de login automaticamente
 document.addEventListener('DOMContentLoaded', checkUserLogin);

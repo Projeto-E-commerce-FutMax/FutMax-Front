@@ -28,10 +28,10 @@ function initializeCarousel() {
 
         addSmoothTransitions(carouselElement);
 
-        console.log('✅ Carrossel inicializado com sucesso!');
+        console.log(' Carrossel inicializado com sucesso!');
         
     } catch (error) {
-        console.error('❌ Erro ao inicializar carrossel:', error);
+        console.error(' Erro ao inicializar carrossel:', error);
     }
 }
 
