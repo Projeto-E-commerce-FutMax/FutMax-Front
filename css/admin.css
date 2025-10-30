@@ -40,8 +40,6 @@
     background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
 }
 
-.card { /* sem hover animado no admin */ }
-
 .badge-nivel-baixo {
     background-color: #fbbf24;
     color: #78350f;
