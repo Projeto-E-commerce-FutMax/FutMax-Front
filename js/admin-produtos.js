@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupFormulario();
 });
 
-// Carregar produtos
 async function carregarProdutos() {
     try {
         todosProdutos = await produtoAPI.listar();
@@ -20,7 +19,6 @@ async function carregarProdutos() {
     }
 }
 
-// Exibir produtos na tabela
 function exibirProdutos() {
     const tbody = document.getElementById('tabelaProdutos');
     
@@ -65,7 +63,6 @@ function exibirProdutos() {
     `).join('');
 }
 
-// Abrir modal para novo produto
 function abrirModalNovo() {
     produtoEditando = null;
     document.getElementById('modalProdutoTitle').textContent = 'Novo Produto';
@@ -80,7 +77,6 @@ function abrirModalNovo() {
     }
 }
 
-// Editar produto
 async function editarProduto(cdProduto) {
     try {
         produtoEditando = await produtoAPI.buscar(cdProduto);
@@ -102,7 +98,6 @@ async function editarProduto(cdProduto) {
     }
 }
 
-// Desativar produto
 async function desativarProduto(cdProduto) {
     if (!confirm('Deseja realmente desativar este produto?')) return;
     
@@ -116,7 +111,6 @@ async function desativarProduto(cdProduto) {
     }
 }
 
-// Reativar produto
 async function reativarProduto(cdProduto) {
     try {
         await produtoAPI.reativar(cdProduto);
@@ -128,7 +122,6 @@ async function reativarProduto(cdProduto) {
     }
 }
 
-// Setup formulário
 function setupFormulario() {
     const form = document.getElementById('formProduto');
     const inputImagem = document.getElementById('imagemProduto');
@@ -139,14 +132,12 @@ function setupFormulario() {
             const preview = document.getElementById('previewImagem');
             
             if (file) {
-                // Validar tamanho (5MB max)
                 if (file.size > 5 * 1024 * 1024) {
                     alert('Arquivo muito grande. Máximo 5MB.');
                     e.target.value = '';
                     return;
                 }
                 
-                // Validar tipo
                 if (!file.type.startsWith('image/')) {
                     alert('Apenas arquivos de imagem são permitidos.');
                     e.target.value = '';
@@ -172,7 +163,6 @@ function setupFormulario() {
         const imagem = inputImagem && inputImagem.files ? inputImagem.files[0] : null;
         
         try {
-            // Sempre usar FormData (imagem é opcional)
             const fd = new FormData();
             fd.append('nmProduto', nmProduto);
             fd.append('vlProduto', vlProduto);
@@ -208,7 +198,6 @@ function setupFormulario() {
     });
 }
 
-// Setup filtros
 function setupFiltros() {
     const filtroNome = document.getElementById('filtroNome');
     const filtroCategoria = document.getElementById('filtroCategoria');
@@ -221,14 +210,12 @@ function setupFiltros() {
     filtroOrdenacao.addEventListener('change', aplicarFiltros);
 }
 
-// Aplicar filtros
 function aplicarFiltros() {
     const nome = document.getElementById('filtroNome').value.toLowerCase();
     const categoria = document.getElementById('filtroCategoria').value;
     const status = document.getElementById('filtroStatus').value;
     const ordenacao = document.getElementById('filtroOrdenacao').value;
     
-    // Filtrar
     produtosFiltrados = todosProdutos.filter(produto => {
         const matchNome = produto.nmProduto.toLowerCase().includes(nome);
         const matchCategoria = categoria === '' || (produto.nmCategoria && produto.nmCategoria === categoria);
@@ -236,7 +223,6 @@ function aplicarFiltros() {
         return matchNome && matchCategoria && matchStatus;
     });
     
-    // Ordenar
     switch (ordenacao) {
         case 'nome':
             produtosFiltrados.sort((a, b) => a.nmProduto.localeCompare(b.nmProduto));
@@ -255,7 +241,6 @@ function aplicarFiltros() {
     exibirProdutos();
 }
 
-// Limpar filtros
 function limparFiltros() {
     document.getElementById('filtroNome').value = '';
     document.getElementById('filtroCategoria').value = '';
@@ -264,7 +249,6 @@ function limparFiltros() {
     aplicarFiltros();
 }
 
-// Mostrar toast
 function mostrarToast(mensagem, tipo = 'success') {
     const toastEl = document.getElementById('toast');
     const toastIcon = document.getElementById('toastIcon');

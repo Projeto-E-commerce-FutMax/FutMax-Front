@@ -1,4 +1,3 @@
-// Gerenciamento de Tema Claro/Escuro usando Bootstrap Dark Mode
 class ThemeManager {
     constructor() {
         this.theme = this.loadTheme();
@@ -6,25 +5,21 @@ class ThemeManager {
         this.setupToggleButton();
     }
 
-    // Carregar tema salvo ou usar tema do sistema
     loadTheme() {
         const savedTheme = localStorage.getItem('futmax_theme');
         if (savedTheme) {
             return savedTheme;
         }
-        // Detectar preferência do sistema
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             return 'dark';
         }
         return 'light';
     }
 
-    // Salvar tema
     saveTheme() {
         localStorage.setItem('futmax_theme', this.theme);
     }
 
-    // Aplicar tema usando Bootstrap data-bs-theme
     applyTheme() {
         const html = document.documentElement;
         const body = document.body;
@@ -32,7 +27,6 @@ class ThemeManager {
         if (this.theme === 'dark') {
             html.setAttribute('data-bs-theme', 'dark');
             body.setAttribute('data-bs-theme', 'dark');
-            // Atualizar navbar para remover data-bs-theme="light" se existir
             const nav = document.querySelector('nav[data-bs-theme="light"]');
             if (nav) {
                 nav.removeAttribute('data-bs-theme');
@@ -40,7 +34,6 @@ class ThemeManager {
         } else {
             html.setAttribute('data-bs-theme', 'light');
             body.setAttribute('data-bs-theme', 'light');
-            // Restaurar navbar light se necessário
             const nav = document.querySelector('nav.navbar');
             if (nav && !nav.hasAttribute('data-bs-theme')) {
                 nav.setAttribute('data-bs-theme', 'light');
@@ -63,7 +56,6 @@ class ThemeManager {
         }, 300);
     }
 
-    // Atualizar ícone do botão
     updateToggleIcon() {
         const toggleButtons = document.querySelectorAll('#themeToggle i');
         toggleButtons.forEach(icon => {
@@ -97,17 +89,13 @@ class ThemeManager {
     }
 }
 
-// Inicializar tema ao carregar
-document.addEventListener('DOMContentLoaded', () => {
-    const themeManager = new ThemeManager();
-});
 
-// Detectar mudança na preferência do sistema
-if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        // Só mudar automaticamente se o usuário não tiver definido preferência manual
-        if (!localStorage.getItem('futmax_theme')) {
-            const themeManager = new ThemeManager();
-        }
-    });
-}
+
+
+
+// Inicializar o gerenciador de tema quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    if (!window.themeManager) {
+        window.themeManager = new ThemeManager();
+    }
+});

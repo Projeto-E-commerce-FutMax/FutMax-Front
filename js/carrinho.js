@@ -1,25 +1,19 @@
-// Script para página de carrinho
 document.addEventListener('DOMContentLoaded', () => {
     carregarCarrinho();
     setupFinalizarPedido();
 });
 
-// Função auxiliar para construir URL da imagem
 function construirUrlImagem(imgUrl) {
     if (!imgUrl) return null;
-    // Se já começa com /api/, remove o /api/ inicial para evitar duplicação
     if (imgUrl.startsWith('/api/')) {
-        return API_CONFIG.baseURL + imgUrl.substring(4); // Remove '/api' e mantém o resto
+        return API_CONFIG.baseURL + imgUrl.substring(4);
     }
-    // Se começa com /, adiciona o baseURL diretamente
     if (imgUrl.startsWith('/')) {
         return API_CONFIG.baseURL + imgUrl;
     }
-    // Se não começa com /, adiciona /api/ + imgUrl
     return API_CONFIG.baseURL + '/api/' + imgUrl;
 }
 
-// Carregar itens do carrinho
 function carregarCarrinho() {
     const container = document.getElementById('cartItems');
     const emptyCart = document.getElementById('emptyCart');
@@ -38,7 +32,6 @@ function carregarCarrinho() {
     emptyCart.classList.add('d-none');
     finalizarButton.disabled = false;
     
-    // Renderizar itens
     container.innerHTML = items.map(item => `
         <div class="cart-item d-flex align-items-center gap-3 p-3 border-bottom" data-product-id="${item.cdProduto}">
             <div class="cart-item-img bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; border-radius: 8px;">
@@ -83,7 +76,6 @@ function carregarCarrinho() {
     atualizarResumo();
 }
 
-// Aumentar quantidade
 function aumentarQuantidade(cdProduto) {
     const item = cart.getItems().find(i => i.cdProduto === cdProduto);
     if (item) {
@@ -92,7 +84,6 @@ function aumentarQuantidade(cdProduto) {
     }
 }
 
-// Diminuir quantidade
 function diminuirQuantidade(cdProduto) {
     const item = cart.getItems().find(i => i.cdProduto === cdProduto);
     if (item && item.quantidade > 1) {
@@ -101,7 +92,6 @@ function diminuirQuantidade(cdProduto) {
     }
 }
 
-// Atualizar quantidade manualmente
 function atualizarQuantidade(cdProduto, quantidade) {
     const qtd = parseInt(quantidade);
     if (qtd > 0) {
@@ -110,7 +100,6 @@ function atualizarQuantidade(cdProduto, quantidade) {
     }
 }
 
-// Remover item
 function removerItem(cdProduto) {
     if (confirm('Deseja remover este item do carrinho?')) {
         cart.removeItem(cdProduto);
@@ -118,7 +107,6 @@ function removerItem(cdProduto) {
     }
 }
 
-// Atualizar resumo do pedido
 function atualizarResumo() {
     const subtotal = cart.getSubtotal();
     const frete = cart.getShipping();
@@ -128,7 +116,6 @@ function atualizarResumo() {
     document.getElementById('shipping').textContent = frete === 0 ? 'Grátis' : formatarMoeda(frete);
     document.getElementById('total').textContent = formatarMoeda(total);
     
-    // Mostrar/ocultar alerta de frete grátis
     const freteGratisAlert = document.getElementById('freteGratisAlert');
     if (subtotal >= 200) {
         freteGratisAlert.classList.remove('alert-success');
@@ -142,7 +129,6 @@ function atualizarResumo() {
     }
 }
 
-// Configurar botão de finalizar pedido
 function setupFinalizarPedido() {
     const finalizarButton = document.getElementById('finalizarPedido');
     const modalConfirmar = new bootstrap.Modal(document.getElementById('modalConfirmarPedido'));
@@ -155,20 +141,16 @@ function setupFinalizarPedido() {
             return;
         }
         
-        // Preencher modal com resumo
         preencherModalConfirmacao(items);
         
-        // Mostrar modal
         modalConfirmar.show();
     });
     
-    // Botão de confirmação no modal
     document.getElementById('btnConfirmarFinalizar').addEventListener('click', async () => {
         const items = cart.getItems();
         const btnConfirmar = document.getElementById('btnConfirmarFinalizar');
         
         try {
-            // Desabilitar botão durante o processamento
             btnConfirmar.disabled = true;
             btnConfirmar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processando...';
             
@@ -176,26 +158,21 @@ function setupFinalizarPedido() {
             for (const item of items) {
                 try {
                     // Usar o novo endpoint que não requer autenticação
-                    await estoqueAPI.baixarEstoqueFicticio(item.cdProduto, item.quantidade);
+                    await estoqueAPI.baixarEstoque(item.cdProduto, item.quantidade);
                 } catch (error) {
                     console.error(`❌ Erro ao baixar estoque para ${item.nmProduto}:`, error);
                     throw new Error(`Erro ao processar ${item.nmProduto}: ${error.message || 'Estoque insuficiente'}`);
                 }
             }
             
-            // Gerar número do pedido
             const numeroPedido = 'PED' + Date.now();
             
-            // Calcular total antes de limpar o carrinho
             const totalPedido = cart.getTotal();
             
-            // Fechar modal de confirmação
             modalConfirmar.hide();
             
-            // Limpar carrinho
             cart.clear();
             
-            // Mostrar sucesso
             mostrarSucessoPedido(numeroPedido, items, totalPedido);
             
         } catch (error) {
@@ -207,7 +184,6 @@ function setupFinalizarPedido() {
     });
 }
 
-// Função para mostrar toast
 function mostrarToast(mensagem, tipo = 'success') {
     // Criar notificação toast se não existir
     let toastContainer = document.getElementById('toast-container');
@@ -242,13 +218,11 @@ function mostrarToast(mensagem, tipo = 'success') {
     const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
     toast.show();
     
-    // Remover o elemento após ser escondido
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });
 }
 
-// Preencher modal de confirmação
 function preencherModalConfirmacao(items) {
     const resumoHtml = items.map(item => `
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -264,7 +238,6 @@ function preencherModalConfirmacao(items) {
     document.getElementById('modalTotalPedido').textContent = formatarMoeda(cart.getTotal());
 }
 
-// Mostrar modal de sucesso do pedido
 function mostrarSucessoPedido(numeroPedido, items, totalPedido) {
     const modalHtml = `
         <div class="modal fade" id="sucessoModal" tabindex="-1">
@@ -322,20 +295,16 @@ function mostrarSucessoPedido(numeroPedido, items, totalPedido) {
         </div>
     `;
     
-    // Remover modal anterior se existir
     const existingModal = document.getElementById('sucessoModal');
     if (existingModal) {
         existingModal.remove();
     }
     
-    // Adicionar novo modal
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     
-    // Mostrar modal
     const modal = new bootstrap.Modal(document.getElementById('sucessoModal'));
     modal.show();
     
-    // Remover modal após fechar
     document.getElementById('sucessoModal').addEventListener('hidden.bs.modal', () => {
         document.getElementById('sucessoModal').remove();
     });

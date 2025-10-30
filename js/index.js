@@ -1,32 +1,34 @@
-// Script para página inicial
 document.addEventListener('DOMContentLoaded', async () => {
     await carregarProdutosDestaque();
     setupSearch();
-    setupNewsletter();
     updateCartCount();
 });
 
-// Função auxiliar para construir URL da imagem
 function construirUrlImagem(imgUrl) {
     if (!imgUrl) return null;
-    // Se já começa com /api/, remove o /api/ inicial para evitar duplicação
     if (imgUrl.startsWith('/api/')) {
-        return API_CONFIG.baseURL + imgUrl.substring(4); // Remove '/api' e mantém o resto
+        return API_CONFIG.baseURL.replace(/\/$/, '') + '/' + imgUrl.substring(5);
     }
-    // Se começa com /, adiciona o baseURL diretamente
     if (imgUrl.startsWith('/')) {
-        return API_CONFIG.baseURL + imgUrl;
+        return API_CONFIG.baseURL.replace(/\/$/, '') + imgUrl;
     }
-    // Se não começa com /, adiciona /api/ + imgUrl
-    return API_CONFIG.baseURL + '/api/' + imgUrl;
+    return API_CONFIG.baseURL.replace(/\/$/, '') + '/' + imgUrl.replace(/^\/?/, '');
 }
 
-// Carregar produtos em destaque
 async function carregarProdutosDestaque() {
     const container = document.getElementById('produtosDestaque');
     
     try {
-        const produtos = await produtoAPI.listar();
+        const resp = await produtoAPI.listar();
+        const produtos = Array.isArray(resp)
+            ? resp
+            : Array.isArray(resp?.content)
+                ? resp.content
+                : Array.isArray(resp?.data)
+                    ? resp.data
+                    : Array.isArray(resp?.items)
+                        ? resp.items
+                        : [];
         
         if (!produtos || produtos.length === 0) {
             container.innerHTML = `
@@ -39,15 +41,18 @@ async function carregarProdutosDestaque() {
         }
 
         // Filtrar apenas produtos ativos e pegar os primeiros 4
-        const produtosAtivos = produtos.filter(p => p.flAtivo).slice(0, 4);
+        const produtosAtivos = produtos.filter(p => p.flAtivo === true || p.flAtivo === 'true' || p.ativo === true).slice(0, 4);
         
-        // Os produtos já vêm com estoque do backend (qtEstoque)
-        const produtosComEstoque = produtosAtivos.map(produto => {
-            return {
-                ...produto,
-                estoque: produto.qtEstoque || 0
-            };
-        });
+        // Determinar estoque a partir de possíveis formatos
+        const produtosComEstoque = produtosAtivos.map(produto => ({
+            ...produto,
+            estoque: Number(
+                produto.qtEstoque ??
+                produto.estoque?.qtEstoque ??
+                produto.estoque ??
+                0
+            ) || 0
+        }));
         
         // Armazenar globalmente para uso na função adicionarAoCarrinho
         window.listaProdutosComEstoque = produtosComEstoque;
@@ -65,7 +70,6 @@ async function carregarProdutosDestaque() {
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="preco-novo mb-0">${formatarMoeda(produto.vlProduto)}</p>
-                            <p class="text-muted small mb-0">${calcularParcelamento(produto.vlProduto)}</p>
                         </div>
                         <button class="btn-add-cart" onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''}>
                             <i class="bi bi-cart-plus"></i>
@@ -132,7 +136,6 @@ function adicionarAoCarrinho(cdProduto) {
     updateCartCount();
 }
 
-// Atualizar contador do carrinho
 function updateCartCount() {
     const carrinho = JSON.parse(localStorage.getItem('futmax_carrinho') || '[]');
     const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
@@ -142,7 +145,6 @@ function updateCartCount() {
     }
 }
 
-// Função para mostrar toast
 function mostrarToast(mensagem, tipo = 'success') {
     // Criar notificação toast se não existir
     let toastContainer = document.getElementById('toast-container');
@@ -183,7 +185,6 @@ function mostrarToast(mensagem, tipo = 'success') {
     });
 }
 
-// Configurar busca
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     
@@ -195,23 +196,6 @@ function setupSearch() {
                     window.location.href = `produtos.html?search=${encodeURIComponent(searchTerm)}`;
                 }
             }
-        });
-    }
-}
-
-// Configurar newsletter
-function setupNewsletter() {
-    const form = document.getElementById('newsletterForm');
-    
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const email = form.querySelector('input[type="email"]').value;
-            
-            // Simular envio (aqui você implementaria a integração com backend)
-            alert(`Obrigado por se inscrever! Confirme seu e-mail: ${email}`);
-            form.reset();
         });
     }
 }
