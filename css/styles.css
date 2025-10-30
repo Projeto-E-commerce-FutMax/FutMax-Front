@@ -83,7 +83,7 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: var(--bs-primary);
+    background-color: var(--bs-primary) !important;
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 25px;
@@ -98,7 +98,7 @@
 }
 
 .preco-novo {
-    color: var(--bs-primary);
+    color: var(--bs-primary) !important;
     font-size: 1.5rem;
     font-weight: 700;
 }
@@ -113,11 +113,34 @@
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
-    background: linear-gradient(135deg, #999 0%, #fff 50%, #bebdbd 100%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+}
+
+[data-bs-theme="dark"] .card-destaque {
+    background: rgba(30, 30, 30, 0.95);
 }
 
 .card-destaque:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-destaque h5 {
+    color: #333 !important;
+}
+
+[data-bs-theme="dark"] .card-destaque h5 {
+    color: #fff !important;
+}
+
+.card-destaque .text-muted {
+    color: #666 !important;
+}
+
+[data-bs-theme="dark"] .card-destaque .text-muted {
+    color: #aaa !important;
 }
 
 .produto-card {
@@ -231,6 +254,18 @@
     .produto-img {
         height: 200px;
     }
+}
+
+.link-primary,
+a.link-primary,
+.text-primary,
+a.text-primary {
+    color: var(--bs-primary) !important;
+}
+
+.link-primary:hover,
+a.link-primary:hover {
+    color: var(--bs-secondary) !important;
 }
 
 .img-navbar {
