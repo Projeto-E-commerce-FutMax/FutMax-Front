@@ -61,23 +61,14 @@ class CartManager {
         return this.cart.reduce((total, item) => total + (item.vlProduto * item.quantidade), 0);
     }
 
-    getShipping() {
-        const subtotal = this.getSubtotal();
-        return calcularFrete(subtotal);
-    }
+    // Método removido: getShipping() - O backend calcula o frete
+    // Método removido: getTotal() - O backend calcula o total com frete
 
-    // Calcular total
-    getTotal() {
-        return this.getSubtotal() + this.getShipping();
-    }
-
-    // Limpar carrinho
     clear() {
         this.cart = [];
         this.saveCart();
     }
 
-    // Atualizar contador no header
     updateCartCount() {
         const cartCountElements = document.querySelectorAll('#cartCount');
         const totalItems = this.getTotalItems();
@@ -88,20 +79,7 @@ class CartManager {
         });
     }
 
-    // Preparar dados para envio ao backend
-    prepareOrderData(cdUsuario) {
-        return {
-            cdUsuario: cdUsuario,
-            itens: this.cart.map(item => ({
-                cdProduto: item.cdProduto,
-                qtItem: item.quantidade
-            }))
-        };
-    }
-
-    // Mostrar notificação
     showNotification(message) {
-        // Criar elemento de toast se não existir
         let toastContainer = document.querySelector('.toast-container');
         if (!toastContainer) {
             toastContainer = document.createElement('div');

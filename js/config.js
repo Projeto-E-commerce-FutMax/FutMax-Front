@@ -27,11 +27,17 @@ const API_ENDPOINTS = {
     estoque: {
         listar: '/estoque/buscar/todos',
         buscarPorProduto: (id) => `/estoque/produto/${id}`,
-        baixarEstoqueFicticio: (cdProduto, quantidade) => `/estoque/baixar-estoque-ficticio/${cdProduto}?quantidade=${quantidade}`,
+        baixarEstoque: (cdProduto, quantidade) => `/estoque/baixar-estoque/${cdProduto}?quantidade=${quantidade}`,
         cadastrar: '/estoque/cadastrar',
         atualizar: (id) => `/estoque/atualizar/${id}`,
         desativar: (id) => `/estoque/desativar/${id}`,
         reativar: (id) => `/estoque/reativar/${id}`
+    },
+    pedidos: {
+        criar: '/pedidos/cadastrar',
+        listarPorUsuario: (cdUsuario) => `/pedidos/usuario/${cdUsuario}`,
+        buscar: (id) => `/pedidos/buscar/${id}`,
+        listar: '/pedidos/buscar/todos'
     }
 };
 
@@ -94,18 +100,11 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
         const response = await fetch(url, options);
         
         if (response.status === 401 || response.status === 403) {
-            console.error('❌ Não autorizado! Status:', response.status);
-            localStorage.removeItem('futmax_user');
-            const currentPath = window.location.pathname;
-            if (!currentPath.includes('login.html')) {
-                window.location.href = 'login.html';
-            }
-            throw new Error('Não autorizado');
+            throw new Error('Não autorizado - Status: ' + response.status);
         }
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            console.error('❌ Erro na resposta:', errorData);
             throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
 
@@ -117,7 +116,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = 
         return responseData;
         
     } catch (error) {
-        console.error('💥 API Error:', error);
         throw error;
     }
 }
@@ -134,14 +132,12 @@ async function apiRequestMultipart(endpoint, method = 'POST', formData, requires
     const response = await fetch(url, options);
     
     if (response.status === 401 || response.status === 403) {
-        console.error('❌ Não autorizado! Status:', response.status);
         localStorage.removeItem('futmax_user');
         window.location.href = 'login.html';
         throw new Error('Não autorizado');
     }
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Erro na resposta multipart:', errorData);
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
     return response.json();
@@ -172,11 +168,18 @@ const usuarioAPI = {
 const estoqueAPI = {
     listar: () => apiRequest(API_ENDPOINTS.estoque.listar, 'GET', null, true),
     buscarPorProduto: (id) => apiRequest(API_ENDPOINTS.estoque.buscarPorProduto(id), 'GET', null, false),
-    baixarEstoqueFicticio: (cdProduto, quantidade) => apiRequest(API_ENDPOINTS.estoque.baixarEstoqueFicticio(cdProduto, quantidade), 'PUT', null, false),
+    baixarEstoque: (cdProduto, quantidade) => apiRequest(API_ENDPOINTS.estoque.baixarEstoque(cdProduto, quantidade), 'PUT', null, false),
     cadastrar: (data) => apiRequest(API_ENDPOINTS.estoque.cadastrar, 'POST', data, true),
     atualizar: (id, data) => apiRequest(API_ENDPOINTS.estoque.atualizar(id), 'PUT', data, true),
     desativar: (id) => apiRequest(API_ENDPOINTS.estoque.desativar(id), 'DELETE', null, true),
     reativar: (id) => apiRequest(API_ENDPOINTS.estoque.reativar(id), 'PUT', null, true)
+};
+
+const pedidoAPI = {
+    criar: (data) => apiRequest(API_ENDPOINTS.pedidos.criar, 'POST', data, true),
+    listarPorUsuario: (cdUsuario) => apiRequest(API_ENDPOINTS.pedidos.listarPorUsuario(cdUsuario), 'GET', null, true),
+    buscar: (id) => apiRequest(API_ENDPOINTS.pedidos.buscar(id), 'GET', null, true),
+    listar: () => apiRequest(API_ENDPOINTS.pedidos.listar, 'GET', null, true)
 };
 
 function formatarMoeda(valor) {
@@ -194,16 +197,6 @@ function formatarData(data) {
         hour: '2-digit',
         minute: '2-digit'
     });
-}
-
-function calcularFrete(vlItens) {
-    if (vlItens >= 200.0) {
-        return 0.0;
-    } else if (vlItens >= 100.0) {
-        return 10.0;
-    } else {
-        return 20.0;
-    }
 }
 
 function calcularParcelamento(valor, parcelas = 12) {
@@ -293,18 +286,48 @@ function checkUserLogin() {
     
     if (user && userButton) {
         const userData = JSON.parse(user);
+        const primeiroNome = userData.usuario.nmUsuario.split(' ')[0];
+        
         userButton.innerHTML = `
             <i class="bi bi-person-circle"></i> 
-            <span class="d-none d-lg-inline">${userData.usuario.nmUsuario.split(' ')[0]}</span>
+            <span class="d-none d-lg-inline">${primeiroNome}</span>
         `;
         userButton.href = '#';
-        userButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm('Deseja sair?')) {
-                localStorage.removeItem('futmax_user');
-                window.location.reload();
-            }
-        });
+        userButton.classList.add('dropdown-toggle');
+        userButton.setAttribute('data-bs-toggle', 'dropdown');
+        userButton.setAttribute('aria-expanded', 'false');
+        
+        // Verificar se é admin para adicionar link de administração
+        const adminMenuItem = isAdmin() 
+            ? '<li><a class="dropdown-item" href="admin.html"><i class="bi bi-shield-lock me-2"></i>Administração</a></li><li><hr class="dropdown-divider"></li>' 
+            : '';
+        
+        const dropdownMenu = document.createElement('ul');
+        dropdownMenu.className = 'dropdown-menu dropdown-menu-end';
+        dropdownMenu.innerHTML = `
+            ${adminMenuItem}
+            <li><a class="dropdown-item" href="meus-pedidos.html"><i class="bi bi-bag me-2"></i>Meus Pedidos</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+        `;
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'dropdown';
+        userButton.parentNode.insertBefore(wrapper, userButton);
+        wrapper.appendChild(userButton);
+        wrapper.appendChild(dropdownMenu);
+        
+        setTimeout(() => {
+            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+        }, 100);
+    }
+}
+
+function logout(event) {
+    event.preventDefault();
+    if (confirm('Deseja sair?')) {
+        localStorage.removeItem('futmax_user');
+        window.location.href = 'index.html';
     }
 }
 

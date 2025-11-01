@@ -44,23 +44,22 @@ async function carregarProdutosDestaque() {
         window.listaProdutosComEstoque = produtosComEstoque;
 
         container.innerHTML = produtosComEstoque.map(produto => `
-            <div class="col-md-6 col-lg-3">
-                <div class="produto-card" onclick="verProduto(${produto.cdProduto})">
-                    <div class="produto-img d-flex align-items-center justify-content-center">
-                        ${produto.imgUrl ? `<img src="${construirUrlImagem(produto.imgUrl)}" alt="${produto.nmProduto}" class="img-fluid" style="max-height:140px; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><i class="bi bi-image" style="font-size: 3rem; display:none;"></i>` : `<i class="bi bi-image" style="font-size: 3rem;"></i>`}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="p-3 d-flex align-items-center justify-content-center" style="height:200px;background:var(--bs-secondary-bg);cursor:pointer;" onclick="verProduto(${produto.cdProduto})">
+                        ${produto.imgUrl ? `<img src="${construirUrlImagem(produto.imgUrl)}" alt="${produto.nmProduto}" class="img-fluid" style="max-height:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><i class="bi bi-image" style="font-size:3rem; display:none;"></i>` : `<i class="bi bi-image" style="font-size:3rem;"></i>`}
                     </div>
-                    <h6 class="fw-bold mt-3">${produto.nmProduto}</h6>
-                    <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
-                        ${produto.dsProduto}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="preco-novo mb-0">${formatarMoeda(produto.vlProduto)}</p>
-                            <p class="text-muted small mb-0">${calcularParcelamento(produto.vlProduto)}</p>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="fw-bold mb-1">${produto.nmProduto}</h6>
+                        <p class="text-muted small mb-2" style="min-height:40px;">${produto.dsProduto || ''}</p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold text-primary">${formatarMoeda(produto.vlProduto)}</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''} title="Adicionar ao carrinho">
+                                <i class="bi bi-cart-plus"></i>
+                            </button>
                         </div>
-                        <button class="btn-add-cart" onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.cdProduto})" ${produto.estoque === 0 ? 'disabled' : ''}>
-                            <i class="bi bi-cart-plus"></i>
-                        </button>
                     </div>
                 </div>
             </div>

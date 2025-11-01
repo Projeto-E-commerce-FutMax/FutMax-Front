@@ -109,18 +109,16 @@ function removerItem(cdProduto) {
 
 function atualizarResumo() {
     const subtotal = cart.getSubtotal();
-    const frete = cart.getShipping();
-    const total = cart.getTotal();
     
     document.getElementById('subtotal').textContent = formatarMoeda(subtotal);
-    document.getElementById('shipping').textContent = frete === 0 ? 'Grátis' : formatarMoeda(frete);
-    document.getElementById('total').textContent = formatarMoeda(total);
+    document.getElementById('shipping').textContent = 'Calculado no checkout';
+    document.getElementById('total').textContent = formatarMoeda(subtotal);
     
     const freteGratisAlert = document.getElementById('freteGratisAlert');
     if (subtotal >= 200) {
         freteGratisAlert.classList.remove('alert-success');
         freteGratisAlert.classList.add('alert-info');
-        freteGratisAlert.innerHTML = '<i class="bi bi-check-circle"></i> Você ganhou frete grátis!';
+        freteGratisAlert.innerHTML = '<i class="bi bi-check-circle"></i> Compras acima de R$ 200,00 ganham frete grátis!';
     } else {
         const faltam = 200 - subtotal;
         freteGratisAlert.classList.remove('alert-info');
@@ -154,18 +152,34 @@ function setupFinalizarPedido() {
             btnConfirmar.disabled = true;
             btnConfirmar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processando...';
             
+            // 1. Verificar se usuário está logado
+            const user = getLoggedUser();
+            if (!user || !user.usuario || !user.usuario.cdUsuario) {
+                throw new Error('Você precisa estar logado para finalizar o pedido');
+            }
+            
+            // 2. Baixar estoque de cada item
             for (const item of items) {
                 try {
-                    await estoqueAPI.baixarEstoqueFicticio(item.cdProduto, item.quantidade);
+                    await estoqueAPI.baixarEstoque(item.cdProduto, item.quantidade);
                 } catch (error) {
-                    console.error(`❌ Erro ao baixar estoque para ${item.nmProduto}:`, error);
                     throw new Error(`Erro ao processar ${item.nmProduto}: ${error.message || 'Estoque insuficiente'}`);
                 }
             }
             
-            const numeroPedido = 'PED' + Date.now();
+            // 3. Criar pedido no banco (backend calcula frete e total automaticamente)
+            const pedidoData = {
+                cdUsuario: user.usuario.cdUsuario,
+                itens: items.map(item => ({
+                    cdProduto: item.cdProduto,
+                    qtItem: item.quantidade
+                }))
+            };
             
-            const totalPedido = cart.getTotal();
+            const pedidoCriado = await pedidoAPI.criar(pedidoData);
+            
+            const numeroPedido = pedidoCriado.cdPedido || 'PED' + Date.now();
+            const totalPedido = pedidoCriado.vlTotalPedido || 0;
             
             modalConfirmar.hide();
             
@@ -174,7 +188,6 @@ function setupFinalizarPedido() {
             mostrarSucessoPedido(numeroPedido, items, totalPedido);
             
         } catch (error) {
-            console.error('❌ Erro ao finalizar pedido:', error);
             mostrarToast('Erro ao finalizar pedido: ' + (error.message || 'Erro desconhecido'), 'error');
             btnConfirmar.disabled = false;
             btnConfirmar.innerHTML = '<i class="bi bi-check-circle me-2"></i>Confirmar Pedido';
@@ -232,7 +245,7 @@ function preencherModalConfirmacao(items) {
     `).join('');
     
     document.getElementById('modalResumoItens').innerHTML = resumoHtml;
-    document.getElementById('modalTotalPedido').textContent = formatarMoeda(cart.getTotal());
+    document.getElementById('modalTotalPedido').textContent = formatarMoeda(cart.getSubtotal());
 }
 
 function mostrarSucessoPedido(numeroPedido, items, totalPedido) {
@@ -279,7 +292,7 @@ function mostrarSucessoPedido(numeroPedido, items, totalPedido) {
                         <div class="alert alert-info mt-3">
                             <i class="bi bi-info-circle me-2"></i>
                             <strong>Obrigado pela sua compra!</strong><br>
-                            O estoque foi atualizado automaticamente. Você receberá um e-mail de confirmação em breve.
+                            Você receberá um e-mail de confirmação em breve.
                         </div>
                     </div>
                     <div class="modal-footer border-0">

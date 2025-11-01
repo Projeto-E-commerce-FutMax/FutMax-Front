@@ -13,7 +13,6 @@ async function carregarEstatisticas() {
         const totalEstoque = estoques.reduce((acc, item) => acc + item.qtEstoque, 0);
         document.getElementById('totalEstoque').textContent = totalEstoque;
 
-        
         try {
             const usuarios = await usuarioAPI.listar();
             const usuariosAtivos = usuarios.filter(u => u.flAtivo).length;
@@ -23,12 +22,15 @@ async function carregarEstatisticas() {
         }
 
     } catch (error) {
-        console.error('Erro ao carregar estatísticas:', error);
+        // Erro ao carregar estatísticas
     }
 }
 
 async function carregarProdutosRecentes() {
     const tbody = document.querySelector('#tabelaProdutosRecentes tbody');
+    
+    // Se a tabela não existir no HTML, apenas retorna
+    if (!tbody) return;
     
     try {
         const produtos = await produtoAPI.listar();
@@ -53,8 +55,9 @@ async function carregarProdutosRecentes() {
         `).join('');
 
     } catch (error) {
-        console.error('Erro ao carregar produtos recentes:', error);
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-danger">Erro ao carregar dados</td></tr>';
+        if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-danger">Erro ao carregar dados</td></tr>';
+        }
     }
 }
 
@@ -83,7 +86,6 @@ async function carregarEstoqueBaixo() {
         `).join('');
 
     } catch (error) {
-        console.error('Erro ao carregar estoque baixo:', error);
         container.innerHTML = '<p class="text-danger small">Erro ao carregar</p>';
     }
 }
