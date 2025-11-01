@@ -22,16 +22,14 @@ async function carregarEstatisticas() {
         }
 
     } catch (error) {
-        // Erro ao carregar estatísticas
     }
 }
 
 async function carregarProdutosRecentes() {
     const tbody = document.querySelector('#tabelaProdutosRecentes tbody');
-    
-    // Se a tabela não existir no HTML, apenas retorna
+
     if (!tbody) return;
-    
+
     try {
         const produtos = await produtoAPI.listar();
         const produtosRecentes = produtos.slice(0, 5);
@@ -63,7 +61,7 @@ async function carregarProdutosRecentes() {
 
 async function carregarEstoqueBaixo() {
     const container = document.getElementById('estoqueBaixo');
-    
+
     try {
         const estoques = await estoqueAPI.listar();
         const estoqueBaixo = estoques.filter(e => e.qtEstoque < 10 && e.flAtivo);

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function construirUrlImagem(imgUrl) {
     if (!imgUrl) return null;
     if (imgUrl.startsWith('/api/')) {
-        return API_CONFIG.baseURL + imgUrl.substring(4); // Remove '/api' e mantém o resto
+        return API_CONFIG.baseURL + imgUrl.substring(4);
     }
     if (imgUrl.startsWith('/')) {
         return API_CONFIG.baseURL + imgUrl;
@@ -18,28 +18,28 @@ function carregarCarrinho() {
     const container = document.getElementById('cartItems');
     const emptyCart = document.getElementById('emptyCart');
     const finalizarButton = document.getElementById('finalizarPedido');
-    
+
     const items = cart.getItems();
-    
+
     if (items.length === 0) {
         container.parentElement.classList.add('d-none');
         emptyCart.classList.remove('d-none');
         finalizarButton.disabled = true;
         return;
     }
-    
+
     container.parentElement.classList.remove('d-none');
     emptyCart.classList.add('d-none');
     finalizarButton.disabled = false;
-    
+
     container.innerHTML = items.map(item => `
         <div class="cart-item d-flex align-items-center gap-3 p-3 border-bottom" data-product-id="${item.cdProduto}">
             <div class="cart-item-img bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; border-radius: 8px;">
-                ${item.imgUrl ? 
-                    `<img src="${construirUrlImagem(item.imgUrl)}" alt="${item.nmProduto}" class="img-fluid" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                     <i class="bi bi-image text-muted" style="font-size: 2rem; display:none;"></i>` : 
-                    `<i class="bi bi-image text-muted" style="font-size: 2rem;"></i>`
-                }
+                ${item.imgUrl ?
+            `<img src="${construirUrlImagem(item.imgUrl)}" alt="${item.nmProduto}" class="img-fluid" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                     <i class="bi bi-image text-muted" style="font-size: 2rem; display:none;"></i>` :
+            `<i class="bi bi-image text-muted" style="font-size: 2rem;"></i>`
+        }
             </div>
             
             <div class="flex-grow-1">
@@ -72,7 +72,7 @@ function carregarCarrinho() {
             </div>
         </div>
     `).join('');
-    
+
     atualizarResumo();
 }
 
@@ -109,11 +109,11 @@ function removerItem(cdProduto) {
 
 function atualizarResumo() {
     const subtotal = cart.getSubtotal();
-    
+
     document.getElementById('subtotal').textContent = formatarMoeda(subtotal);
     document.getElementById('shipping').textContent = 'Calculado no checkout';
     document.getElementById('total').textContent = formatarMoeda(subtotal);
-    
+
     const freteGratisAlert = document.getElementById('freteGratisAlert');
     if (subtotal >= 200) {
         freteGratisAlert.classList.remove('alert-success');
@@ -130,35 +130,33 @@ function atualizarResumo() {
 function setupFinalizarPedido() {
     const finalizarButton = document.getElementById('finalizarPedido');
     const modalConfirmar = new bootstrap.Modal(document.getElementById('modalConfirmarPedido'));
-    
+
     finalizarButton.addEventListener('click', () => {
         const items = cart.getItems();
-        
+
         if (items.length === 0) {
             mostrarToast('Seu carrinho está vazio!', 'warning');
             return;
         }
-        
+
         preencherModalConfirmacao(items);
-        
+
         modalConfirmar.show();
     });
-    
+
     document.getElementById('btnConfirmarFinalizar').addEventListener('click', async () => {
         const items = cart.getItems();
         const btnConfirmar = document.getElementById('btnConfirmarFinalizar');
-        
+
         try {
             btnConfirmar.disabled = true;
             btnConfirmar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processando...';
-            
-            // 1. Verificar se usuário está logado
+
             const user = getLoggedUser();
             if (!user || !user.usuario || !user.usuario.cdUsuario) {
                 throw new Error('Você precisa estar logado para finalizar o pedido');
             }
-            
-            // 2. Baixar estoque de cada item
+
             for (const item of items) {
                 try {
                     await estoqueAPI.baixarEstoque(item.cdProduto, item.quantidade);
@@ -166,8 +164,7 @@ function setupFinalizarPedido() {
                     throw new Error(`Erro ao processar ${item.nmProduto}: ${error.message || 'Estoque insuficiente'}`);
                 }
             }
-            
-            // 3. Criar pedido no banco (backend calcula frete e total automaticamente)
+
             const pedidoData = {
                 cdUsuario: user.usuario.cdUsuario,
                 itens: items.map(item => ({
@@ -175,18 +172,18 @@ function setupFinalizarPedido() {
                     qtItem: item.quantidade
                 }))
             };
-            
+
             const pedidoCriado = await pedidoAPI.criar(pedidoData);
-            
+
             const numeroPedido = pedidoCriado.cdPedido || 'PED' + Date.now();
             const totalPedido = pedidoCriado.vlTotalPedido || 0;
-            
+
             modalConfirmar.hide();
-            
+
             cart.clear();
-            
+
             mostrarSucessoPedido(numeroPedido, items, totalPedido);
-            
+
         } catch (error) {
             mostrarToast('Erro ao finalizar pedido: ' + (error.message || 'Erro desconhecido'), 'error');
             btnConfirmar.disabled = false;
@@ -204,11 +201,11 @@ function mostrarToast(mensagem, tipo = 'success') {
         toastContainer.style.zIndex = '9999';
         document.body.appendChild(toastContainer);
     }
-    
+
     const toastId = 'toast-carrinho-' + Date.now();
     const bgClass = tipo === 'success' ? 'bg-success' : tipo === 'error' ? 'bg-danger' : tipo === 'warning' ? 'bg-warning' : 'bg-info';
     const iconClass = tipo === 'success' ? 'bi-check-circle-fill' : tipo === 'error' ? 'bi-exclamation-circle-fill' : tipo === 'warning' ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
-    
+
     const toastHtml = `
         <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header ${bgClass} text-white">
@@ -221,13 +218,13 @@ function mostrarToast(mensagem, tipo = 'success') {
             </div>
         </div>
     `;
-    
+
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
+
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
     toast.show();
-    
+
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });
@@ -243,7 +240,7 @@ function preencherModalConfirmacao(items) {
             <span class="fw-bold">${formatarMoeda(item.vlProduto * item.quantidade)}</span>
         </div>
     `).join('');
-    
+
     document.getElementById('modalResumoItens').innerHTML = resumoHtml;
     document.getElementById('modalTotalPedido').textContent = formatarMoeda(cart.getSubtotal());
 }
@@ -304,17 +301,17 @@ function mostrarSucessoPedido(numeroPedido, items, totalPedido) {
             </div>
         </div>
     `;
-    
+
     const existingModal = document.getElementById('sucessoModal');
     if (existingModal) {
         existingModal.remove();
     }
-    
+
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
+
     const modal = new bootstrap.Modal(document.getElementById('sucessoModal'));
     modal.show();
-    
+
     document.getElementById('sucessoModal').addEventListener('hidden.bs.modal', () => {
         document.getElementById('sucessoModal').remove();
     });

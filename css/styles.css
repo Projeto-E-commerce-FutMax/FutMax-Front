@@ -11,7 +11,9 @@
     --bs-link-color: var(--bs-primary);
     --bs-link-hover-color: #e14e2e;
     --bs-focus-ring-color: rgba(var(--bs-primary-rgb), .25);
-    
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
+    --bs-btn-focus-shadow-rgb: 0, 0, 0, 0;
 }
 
 [data-bs-theme="light"] {
@@ -20,25 +22,29 @@
     --bs-link-color: var(--bs-primary);
     --bs-link-hover-color: #e14e2e;
     --bs-focus-ring-color: rgba(var(--bs-primary-rgb), .25);
-    --bs-primary-text-emphasis: #a23a28; 
-    --bs-primary-bg-subtle: #ffe2db;    
-    --bs-primary-border-subtle: #ffb5a5; 
+    --bs-primary-text-emphasis: #a23a28;
+    --bs-primary-bg-subtle: #ffe2db;
+    --bs-primary-border-subtle: #ffb5a5;
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
+    --bs-btn-focus-shadow-rgb: 0, 0, 0, 0;
 }
 
-/* Forçar mesma paleta também no tema escuro para evitar azul nativo */
 [data-bs-theme="dark"] {
     --bs-primary: #FF5733;
     --bs-primary-rgb: 255, 87, 51;
     --bs-link-color: var(--bs-primary);
     --bs-link-hover-color: #ff6a3f;
     --bs-focus-ring-color: rgba(var(--bs-primary-rgb), .25);
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
+    --bs-btn-focus-shadow-rgb: 0, 0, 0, 0;
 }
 
-/* Navbar clara: fundo, borda e leve sombra para separar do conteúdo */
 [data-bs-theme="light"] .navbar:not([data-bs-theme="dark"]) {
     background-color: var(--bs-body-bg) !important;
     border-bottom: 1px solid var(--bs-border-color);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 [data-bs-theme="light"] .navbar .btn-link,
@@ -73,50 +79,128 @@
     letter-spacing: -1px;
 }
 
+.btn:focus,
+.btn:focus-visible,
+.btn:active:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 .btn-primary {
     --bs-btn-bg: var(--bs-primary);
     --bs-btn-border-color: var(--bs-primary);
     --bs-btn-hover-bg: var(--bs-secondary);
     --bs-btn-hover-border-color: var(--bs-secondary);
+    --bs-btn-active-bg: var(--bs-secondary);
+    --bs-btn-active-border-color: var(--bs-secondary);
+    --bs-btn-focus-shadow-rgb: 0, 0, 0, 0;
 }
 
-/* Cards de produtos: garantir botão laranja */
-#productsGrid .btn.btn-primary {
+.btn-primary,
+.btn-primary:focus,
+.btn-primary:focus-visible,
+.btn-primary:active,
+.btn-primary:active:focus,
+.btn-primary.active,
+.btn-primary.active:focus {
     background-color: var(--bs-primary) !important;
     border-color: var(--bs-primary) !important;
+    color: white !important;
+    box-shadow: none !important;
 }
 
-#productsGrid .btn.btn-primary:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled),
+.btn-primary:hover:not(:disabled):focus {
     background-color: var(--bs-secondary) !important;
     border-color: var(--bs-secondary) !important;
+    color: white !important;
 }
 
-/* Botões/cores dos cards do destaque no index */
-#produtosDestaque .btn.btn-primary {
+.btn-primary:active:not(:disabled),
+.btn-primary.active:not(:disabled),
+.btn-primary.show:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
+    color: white !important;
+    box-shadow: none !important;
+}
+
+#productsGrid .btn.btn-primary,
+#productsGrid .btn.btn-primary:focus,
+#productsGrid .btn.btn-primary:active,
+#productsGrid .btn.btn-primary:active:focus {
     background-color: var(--bs-primary) !important;
     border-color: var(--bs-primary) !important;
+    color: white !important;
 }
 
-#produtosDestaque .btn.btn-primary:hover:not(:disabled) {
+#productsGrid .btn.btn-primary:hover:not(:disabled),
+#productsGrid .btn.btn-primary:hover:not(:disabled):focus {
     background-color: var(--bs-secondary) !important;
     border-color: var(--bs-secondary) !important;
+    color: white !important;
+}
+
+#productsGrid .btn.btn-primary:active:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
+    color: white !important;
+}
+
+#produtosDestaque .btn.btn-primary,
+#produtosDestaque .btn.btn-primary:focus,
+#produtosDestaque .btn.btn-primary:active,
+#produtosDestaque .btn.btn-primary:active:focus {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: white !important;
+}
+
+#produtosDestaque .btn.btn-primary:hover:not(:disabled),
+#produtosDestaque .btn.btn-primary:hover:not(:disabled):focus {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
+    color: white !important;
+}
+
+#produtosDestaque .btn.btn-primary:active:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
+    color: white !important;
 }
 
 .btn-comprar {
-    background-color: white;
-    color: var(--bs-primary);
+    background-color: white !important;
+    color: var(--bs-primary) !important;
     padding: 0.8rem 2rem;
     border-radius: 30px;
     font-weight: 700;
-    border: none;
+    border: none !important;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-decoration: none;
 }
 
-.btn-comprar:hover {
+.btn-comprar:focus,
+.btn-comprar:active,
+.btn-comprar:active:focus {
+    background-color: white !important;
+    color: var(--bs-primary) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.btn-comprar:hover,
+.btn-comprar:hover:focus {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    color: var(--bs-primary);
+    color: var(--bs-primary) !important;
+    background-color: white !important;
+}
+
+.btn-comprar:active:not(:disabled) {
+    background-color: white !important;
+    color: var(--bs-primary) !important;
+    transform: translateY(0);
 }
 
 .badge-oferta {
@@ -170,6 +254,37 @@
     font-weight: 700;
 }
 
+#carouselExample {
+    overflow: hidden;
+}
+
+.carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.carousel-item {
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out;
+    -webkit-transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+#carouselExample .carousel-item img.img-navbar {
+    display: block !important;
+    width: 100%;
+    max-height: 280px;
+    height: auto;
+    object-fit: contain !important;
+    object-position: center;
+    margin: 0 auto;
+    transition: opacity 0.6s ease-in-out;
+}
+
 .hero-section {
     background: linear-gradient(135deg, #FF0000 0%, #FF5733 50%, #FF8C42 100%);
     color: white;
@@ -221,7 +336,6 @@
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Cards do index (#produtosDestaque) - mesmo padrão de produtos.html */
 #produtosDestaque .card:hover {
     transform: translateY(-2px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
@@ -320,17 +434,14 @@
     color: var(--bs-primary) !important;
 }
 
-/* Ativo laranja também no tema claro */
 [data-bs-theme="light"] .navbar .nav-link.active {
     color: var(--bs-primary) !important;
 }
 
-/* Hover laranja para links da navbar - tema claro */
 [data-bs-theme="light"] .navbar .nav-link:hover:not(.active) {
     color: var(--bs-primary) !important;
 }
 
-/* Hover laranja para links da navbar - tema escuro */
 [data-bs-theme="dark"] .navbar .nav-link:hover:not(.active) {
     color: var(--bs-primary) !important;
 }
@@ -340,11 +451,32 @@
     border-color: var(--bs-border-color);
 }
 
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active,
+.btn-outline-secondary:active:focus {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: white !important;
+    box-shadow: none !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled),
+.btn-outline-secondary:hover:not(:disabled):focus {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: white !important;
+}
+
+.btn-outline-secondary:active:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
+    color: white !important;
+}
+
 [data-bs-theme="dark"] .navbar .btn-link:hover {
     color: var(--bs-primary) !important;
 }
 
-/* Remover sublinhado do usuário (e btn-link) no tema escuro */
 [data-bs-theme="dark"] .navbar a.btn-link,
 [data-bs-theme="dark"] .navbar a.btn-link:hover,
 [data-bs-theme="dark"] .navbar #userButton,
@@ -382,9 +514,9 @@ a.link-primary:hover {
 }
 
 .btn-add-cart {
-    background-color: var(--bs-primary);
-    border: none;
-    color: white;
+    background-color: var(--bs-primary) !important;
+    border: none !important;
+    color: white !important;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -394,8 +526,23 @@ a.link-primary:hover {
     transition: all 0.3s ease;
 }
 
-.btn-add-cart:hover:not(:disabled) {
-    background-color: var(--bs-secondary);
+.btn-add-cart:focus,
+.btn-add-cart:active,
+.btn-add-cart:active:focus {
+    background-color: var(--bs-primary) !important;
+    border: none !important;
+    color: white !important;
+    box-shadow: none !important;
+}
+
+.btn-add-cart:hover:not(:disabled),
+.btn-add-cart:hover:not(:disabled):focus {
+    background-color: var(--bs-secondary) !important;
+    transform: scale(1.1);
+}
+
+.btn-add-cart:active:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
     transform: scale(1.1);
 }
 
@@ -475,40 +622,52 @@ footer .btn-outline-secondary {
     color: var(--bs-body-color);
 }
 
-footer .btn-outline-secondary:hover {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
-    color: white;
+footer .btn-outline-secondary:focus,
+footer .btn-outline-secondary:active,
+footer .btn-outline-secondary:active:focus {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: white !important;
+    box-shadow: none !important;
 }
 
-/* Badges de pagamento no footer - cor de texto consistente com outras escritas */
+footer .btn-outline-secondary:hover,
+footer .btn-outline-secondary:hover:focus {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: white !important;
+}
+
+footer .btn-outline-secondary:active:not(:disabled) {
+    background-color: var(--bs-secondary) !important;
+    border-color: var(--bs-secondary) !important;
+    color: white !important;
+}
+
 footer .badge {
     color: var(--bs-secondary-color) !important;
     background-color: var(--bs-secondary-bg) !important;
 }
 
-/* Garantir visibilidade no modo claro */
 [data-bs-theme="light"] footer .badge {
     color: var(--bs-secondary-color) !important;
     background-color: var(--bs-secondary-bg) !important;
 }
 
-/* Garantir visibilidade no modo escuro */
 [data-bs-theme="dark"] footer .badge {
     color: var(--bs-secondary-color) !important;
     background-color: var(--bs-secondary-bg) !important;
 }
 
-/* Links de termos de uso e política de privacidade - mesma cor do texto */
 .form-check-label a,
-#acceptTerms + label a,
+#acceptTerms+label a,
 label[for="acceptTerms"] a {
     color: var(--bs-body-color) !important;
     text-decoration: none !important;
 }
 
 .form-check-label a:hover,
-#acceptTerms + label a:hover,
+#acceptTerms+label a:hover,
 label[for="acceptTerms"] a:hover {
     color: var(--bs-body-color) !important;
     text-decoration: underline !important;

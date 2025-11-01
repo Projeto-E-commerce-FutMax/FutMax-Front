@@ -29,7 +29,6 @@
     color: var(--bs-primary) !important;
 }
 
-/* Link "Esqueceu sua senha?" em laranja */
 #loginForm a,
 #loginForm a.text-decoration-none {
     color: var(--bs-primary) !important;

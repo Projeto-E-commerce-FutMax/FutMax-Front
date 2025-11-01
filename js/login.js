@@ -6,30 +6,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupLoginForm() {
     const form = document.getElementById('loginForm');
-    
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData(form);
         const data = {
             nmEmail: formData.get('nmEmail'),
             nmSenha: formData.get('nmSenha')
         };
-        
+
         try {
             const response = await authAPI.login(data);
-            
+
             console.log('Login bem-sucedido:', response);
-            
+
             if (!response.usuario.flAtivo) {
                 showToast('Usuário inativo. Entre em contato com o suporte.', 'error');
                 return;
             }
-            
+
             localStorage.setItem('futmax_user', JSON.stringify(response));
-            
+
             showToast('Login realizado com sucesso!', 'success');
-            
+
             setTimeout(() => {
                 const roles = (response.usuario && response.usuario.roleModels) ? Array.from(response.usuario.roleModels).map(r => r.nmRole || r) : [];
                 const isAdmin = roles.some(r => String(r).includes('ADMIN'));
@@ -40,10 +40,10 @@ function setupLoginForm() {
                 const returnUrl = new URLSearchParams(window.location.search).get('return') || 'index.html';
                 window.location.href = returnUrl;
             }, 1000);
-            
+
         } catch (error) {
             console.error('Erro no login:', error);
-            
+
             if (error.message.includes('401') || error.message.includes('Unauthorized')) {
                 showToast('E-mail ou senha incorretos', 'error');
             } else if (error.message.includes('403')) {
@@ -58,24 +58,24 @@ function setupLoginForm() {
 
 function setupRegisterForm() {
     const form = document.getElementById('registerForm');
-    
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData(form);
-        
+
         const senha = formData.get('nmSenha');
         if (!validarSenha(senha)) {
             showToast('A senha deve conter: maiúscula, minúscula, número e caractere especial', 'error');
             return;
         }
-        
+
         const cpf = formData.get('nmCpf').replace(/\D/g, '');
         if (!validarCPF(cpf)) {
             showToast('CPF inválido', 'error');
             return;
         }
-        
+
         const data = {
             nmUsuario: formData.get('nmUsuario'),
             nmEmail: formData.get('nmEmail'),
@@ -86,21 +86,21 @@ function setupRegisterForm() {
             dsEndereco: formData.get('dsEndereco') || '',
             flAtivo: true
         };
-        
+
         try {
             const response = await usuarioAPI.cadastrar(data);
-            
+
             showToast('Cadastro realizado com sucesso!', 'success');
-            
+
             localStorage.setItem('futmax_user', JSON.stringify(response));
-            
+
             setTimeout(() => {
                 window.location.href = 'index.html';
             }, 1000);
-            
+
         } catch (error) {
             console.error('Erro no cadastro:', error);
-            
+
             if (error.message.includes('CPF')) {
                 showToast('CPF já cadastrado', 'error');
             } else if (error.message.includes('email')) {
@@ -119,7 +119,7 @@ function setupMasks() {
             e.target.value = mascaraCPF(e.target.value);
         });
     });
-    
+
     const telInputs = document.querySelectorAll('input[name="nmTelefone"]');
     telInputs.forEach(input => {
         input.addEventListener('input', (e) => {
@@ -136,18 +136,18 @@ function validarSenha(senha) {
 function showToast(message, type = 'success') {
     const toastEl = document.getElementById('notificationToast');
     if (!toastEl) return;
-    
+
     const toastBody = document.getElementById('toastMessage');
     const toastIcon = toastEl.querySelector('.toast-header i');
-    
+
     toastBody.textContent = message;
-    
+
     if (type === 'success') {
         toastIcon.className = 'bi bi-check-circle-fill text-success me-2';
     } else {
         toastIcon.className = 'bi bi-exclamation-circle-fill text-danger me-2';
     }
-    
+
     const toast = new bootstrap.Toast(toastEl);
     toast.show();
 }

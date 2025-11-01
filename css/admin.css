@@ -7,7 +7,6 @@
     color: var(--bs-primary) !important;
 }
 
-/* Remover hovers chamativos nas telas admin */
 .navbar .nav-link:hover {
     text-decoration: none;
 }

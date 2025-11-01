@@ -23,16 +23,16 @@ async function carregarProdutosPagina() {
     const empty = document.getElementById('emptyState');
     try {
         const produtos = await produtoAPI.listar();
-        
+
         const produtosAtivos = Array.isArray(produtos) ? produtos.filter(p => p.flAtivo) : [];
-        
+
         const produtosComEstoque = produtosAtivos.map(produto => {
             return {
                 ...produto,
                 estoque: produto.qtEstoque || 0
             };
         });
-        
+
         listaProdutos = produtosComEstoque;
         produtosVisiveis = [...listaProdutos];
         renderProdutos();
@@ -54,7 +54,7 @@ function renderProdutos() {
         return;
     }
     document.getElementById('emptyState').classList.add('d-none');
-    
+
     grid.innerHTML = produtosVisiveis.map(produto => `
         <div class="col-sm-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100">
@@ -108,7 +108,7 @@ function setupFiltrosProdutos() {
                 category.value = value;
             }
         }
-    } catch(_) {}
+    } catch (_) { }
 
     const applyFilters = () => {
         const termo = (search.value || '').toLowerCase();
@@ -160,21 +160,21 @@ function verProduto(cdProduto) {
 
 function adicionarAoCarrinho(cdProduto) {
     const produto = listaProdutos.find(p => p.cdProduto === cdProduto);
-    
+
     if (!produto) {
         console.error('❌ Produto não encontrado na lista');
         mostrarToast('Produto não encontrado!', 'error');
         return;
     }
-    
+
     if (produto.estoque === 0) {
         mostrarToast('Produto sem estoque!', 'warning');
         return;
     }
-    
+
     let carrinho = JSON.parse(localStorage.getItem('futmax_carrinho') || '[]');
     const itemExistente = carrinho.find(item => item.cdProduto === cdProduto);
-    
+
     if (itemExistente) {
         if (itemExistente.quantidade >= produto.estoque) {
             mostrarToast('Quantidade máxima em estoque atingida!', 'warning');
@@ -191,7 +191,7 @@ function adicionarAoCarrinho(cdProduto) {
         };
         carrinho.push(novoItem);
     }
-    
+
     localStorage.setItem('futmax_carrinho', JSON.stringify(carrinho));
     mostrarToast(`${produto.nmProduto} adicionado ao carrinho!`, 'success');
     updateCartCount();
@@ -216,11 +216,11 @@ function mostrarToast(mensagem, tipo = 'success') {
         toastContainer.style.zIndex = '9999';
         document.body.appendChild(toastContainer);
     }
-    
+
     const toastId = 'toast-' + Date.now();
     const bgClass = tipo === 'success' ? 'bg-success' : tipo === 'error' ? 'bg-danger' : 'bg-warning';
     const iconClass = tipo === 'success' ? 'bi-check-circle-fill' : tipo === 'error' ? 'bi-exclamation-circle-fill' : 'bi-info-circle-fill';
-    
+
     const toastHtml = `
         <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header ${bgClass} text-white">
@@ -233,13 +233,13 @@ function mostrarToast(mensagem, tipo = 'success') {
             </div>
         </div>
     `;
-    
+
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
+
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
     toast.show();
-    
+
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });

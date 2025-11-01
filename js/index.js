@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function construirUrlImagem(imgUrl) {
     if (!imgUrl) return null;
     if (imgUrl.startsWith('/api/')) {
-        return API_CONFIG.baseURL + imgUrl.substring(4); 
+        return API_CONFIG.baseURL + imgUrl.substring(4);
     }
     if (imgUrl.startsWith('/')) {
         return API_CONFIG.baseURL + imgUrl;
@@ -18,10 +18,10 @@ function construirUrlImagem(imgUrl) {
 
 async function carregarProdutosDestaque() {
     const container = document.getElementById('produtosDestaque');
-    
+
     try {
         const produtos = await produtoAPI.listar();
-        
+
         if (!produtos || produtos.length === 0) {
             container.innerHTML = `
                 <div class="col-12 text-center py-5">
@@ -33,14 +33,14 @@ async function carregarProdutosDestaque() {
         }
 
         const produtosAtivos = produtos.filter(p => p.flAtivo).slice(0, 4);
-        
+
         const produtosComEstoque = produtosAtivos.map(produto => {
             return {
                 ...produto,
                 estoque: produto.qtEstoque || 0
             };
         });
-        
+
         window.listaProdutosComEstoque = produtosComEstoque;
 
         container.innerHTML = produtosComEstoque.map(produto => `
@@ -82,21 +82,21 @@ function verProduto(cdProduto) {
 
 function adicionarAoCarrinho(cdProduto) {
     const produto = window.listaProdutosComEstoque?.find(p => p.cdProduto === cdProduto);
-    
+
     if (!produto) {
         console.error('❌ Produto não encontrado na lista');
         mostrarToast('Produto não encontrado!', 'error');
         return;
     }
-    
+
     if (produto.estoque === 0) {
         mostrarToast('Produto sem estoque!', 'warning');
         return;
     }
-    
+
     let carrinho = JSON.parse(localStorage.getItem('futmax_carrinho') || '[]');
     const itemExistente = carrinho.find(item => item.cdProduto === cdProduto);
-    
+
     if (itemExistente) {
         if (itemExistente.quantidade >= produto.estoque) {
             mostrarToast('Quantidade máxima em estoque atingida!', 'warning');
@@ -113,7 +113,7 @@ function adicionarAoCarrinho(cdProduto) {
         };
         carrinho.push(novoItem);
     }
-    
+
     localStorage.setItem('futmax_carrinho', JSON.stringify(carrinho));
     mostrarToast(`${produto.nmProduto} adicionado ao carrinho!`, 'success');
     updateCartCount();
@@ -138,11 +138,11 @@ function mostrarToast(mensagem, tipo = 'success') {
         toastContainer.style.zIndex = '9999';
         document.body.appendChild(toastContainer);
     }
-    
+
     const toastId = 'toast-index-' + Date.now();
     const bgClass = tipo === 'success' ? 'bg-success' : tipo === 'error' ? 'bg-danger' : tipo === 'info' ? 'bg-info' : 'bg-warning';
     const iconClass = tipo === 'success' ? 'bi-check-circle-fill' : tipo === 'error' ? 'bi-exclamation-circle-fill' : tipo === 'info' ? 'bi-info-circle-fill' : 'bi-exclamation-triangle-fill';
-    
+
     const toastHtml = `
         <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header ${bgClass} text-white">
@@ -155,13 +155,13 @@ function mostrarToast(mensagem, tipo = 'success') {
             </div>
         </div>
     `;
-    
+
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
+
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
     toast.show();
-    
+
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });
@@ -169,7 +169,7 @@ function mostrarToast(mensagem, tipo = 'success') {
 
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
-    
+
     if (searchInput) {
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -184,13 +184,13 @@ function setupSearch() {
 
 function setupNewsletter() {
     const form = document.getElementById('newsletterForm');
-    
+
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             const email = form.querySelector('input[type="email"]').value;
-            
+
             alert(`Obrigado por se inscrever! Confirme seu e-mail: ${email}`);
             form.reset();
         });

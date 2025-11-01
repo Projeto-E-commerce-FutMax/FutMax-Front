@@ -23,7 +23,7 @@ class ThemeManager {
     applyTheme() {
         const html = document.documentElement;
         const body = document.body;
-        
+
         if (this.theme === 'dark') {
             html.setAttribute('data-bs-theme', 'dark');
             body.setAttribute('data-bs-theme', 'dark');
@@ -41,7 +41,7 @@ class ThemeManager {
                 nav.setAttribute('data-bs-theme', 'light');
             }
         }
-        
+
         this.updateToggleIcon();
     }
 
@@ -49,7 +49,7 @@ class ThemeManager {
         this.theme = this.theme === 'light' ? 'dark' : 'light';
         this.saveTheme();
         this.applyTheme();
-        
+
         document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
         setTimeout(() => {
             document.documentElement.style.transition = '';
@@ -70,7 +70,7 @@ class ThemeManager {
 
         const buttons = document.querySelectorAll('#themeToggle');
         buttons.forEach(button => {
-            button.setAttribute('title', 
+            button.setAttribute('title',
                 this.theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'
             );
         });

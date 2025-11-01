@@ -297,7 +297,6 @@ function checkUserLogin() {
         userButton.setAttribute('data-bs-toggle', 'dropdown');
         userButton.setAttribute('aria-expanded', 'false');
         
-        // Verificar se é admin para adicionar link de administração
         const adminMenuItem = isAdmin() 
             ? '<li><a class="dropdown-item" href="admin.html"><i class="bi bi-shield-lock me-2"></i>Administração</a></li><li><hr class="dropdown-divider"></li>' 
             : '';

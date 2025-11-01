@@ -21,7 +21,7 @@ async function carregarProdutos() {
 
 function exibirProdutos() {
     const tbody = document.getElementById('tabelaProdutos');
-    
+
     if (produtosFiltrados.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted">Nenhum produto encontrado</td></tr>';
         return;
@@ -80,7 +80,7 @@ function abrirModalNovo() {
 async function editarProduto(cdProduto) {
     try {
         produtoEditando = await produtoAPI.buscar(cdProduto);
-        
+
         document.getElementById('modalProdutoTitle').textContent = 'Editar Produto';
         document.getElementById('cdProduto').value = produtoEditando.cdProduto;
         document.getElementById('nmProduto').value = produtoEditando.nmProduto;
@@ -88,10 +88,10 @@ async function editarProduto(cdProduto) {
         document.getElementById('dsProduto').value = produtoEditando.dsProduto;
         document.getElementById('flAtivo').checked = produtoEditando.flAtivo;
         document.getElementById('nmCategoria').value = produtoEditando.nmCategoria || '';
-        
+
         const modal = new bootstrap.Modal(document.getElementById('modalProduto'));
         modal.show();
-        
+
     } catch (error) {
         console.error('Erro ao carregar produto:', error);
         mostrarToast('Erro ao carregar produto', 'error');
@@ -100,7 +100,7 @@ async function editarProduto(cdProduto) {
 
 async function desativarProduto(cdProduto) {
     if (!confirm('Deseja realmente desativar este produto?')) return;
-    
+
     try {
         await produtoAPI.desativar(cdProduto);
         mostrarToast('Produto desativado com sucesso!', 'success');
@@ -130,20 +130,20 @@ function setupFormulario() {
         inputImagem.addEventListener('change', (e) => {
             const file = e.target.files && e.target.files[0];
             const preview = document.getElementById('previewImagem');
-            
+
             if (file) {
                 if (file.size > 5 * 1024 * 1024) {
                     alert('Arquivo muito grande. Máximo 5MB.');
                     e.target.value = '';
                     return;
                 }
-                
+
                 if (!file.type.startsWith('image/')) {
                     alert('Apenas arquivos de imagem são permitidos.');
                     e.target.value = '';
                     return;
                 }
-                
+
                 if (preview) {
                     preview.src = URL.createObjectURL(file);
                     preview.classList.remove('d-none');
@@ -151,17 +151,17 @@ function setupFormulario() {
             }
         });
     }
-    
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const nmProduto = document.getElementById('nmProduto').value;
         const vlProduto = parseFloat(document.getElementById('vlProduto').value);
         const dsProduto = document.getElementById('dsProduto').value;
         const flAtivo = document.getElementById('flAtivo').checked;
         const nmCategoria = document.getElementById('nmCategoria').value;
         const imagem = inputImagem && inputImagem.files ? inputImagem.files[0] : null;
-        
+
         try {
             const fd = new FormData();
             fd.append('nmProduto', nmProduto);
@@ -172,7 +172,7 @@ function setupFormulario() {
             if (imagem) {
                 fd.append('imagem', imagem);
             }
-            
+
             if (produtoEditando) {
                 await produtoAPI.atualizar(produtoEditando.cdProduto, fd);
                 mostrarToast('Produto atualizado com sucesso!', 'success');
@@ -180,12 +180,12 @@ function setupFormulario() {
                 await produtoAPI.cadastrar(fd);
                 mostrarToast('Produto cadastrado com sucesso!', 'success');
             }
-            
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
             modal.hide();
-            
+
             await carregarProdutos();
-            
+
         } catch (error) {
             console.error('Erro ao salvar produto:', error);
             console.error('Detalhes do erro:', {
@@ -203,7 +203,7 @@ function setupFiltros() {
     const filtroCategoria = document.getElementById('filtroCategoria');
     const filtroStatus = document.getElementById('filtroStatus');
     const filtroOrdenacao = document.getElementById('filtroOrdenacao');
-    
+
     filtroNome.addEventListener('input', aplicarFiltros);
     filtroCategoria.addEventListener('change', aplicarFiltros);
     filtroStatus.addEventListener('change', aplicarFiltros);
@@ -215,14 +215,14 @@ function aplicarFiltros() {
     const categoria = document.getElementById('filtroCategoria').value;
     const status = document.getElementById('filtroStatus').value;
     const ordenacao = document.getElementById('filtroOrdenacao').value;
-    
+
     produtosFiltrados = todosProdutos.filter(produto => {
         const matchNome = produto.nmProduto.toLowerCase().includes(nome);
         const matchCategoria = categoria === '' || (produto.nmCategoria && produto.nmCategoria === categoria);
         const matchStatus = status === '' || produto.flAtivo.toString() === status;
         return matchNome && matchCategoria && matchStatus;
     });
-    
+
     switch (ordenacao) {
         case 'nome':
             produtosFiltrados.sort((a, b) => a.nmProduto.localeCompare(b.nmProduto));
@@ -237,7 +237,7 @@ function aplicarFiltros() {
             produtosFiltrados.sort((a, b) => b.cdProduto - a.cdProduto);
             break;
     }
-    
+
     exibirProdutos();
 }
 
@@ -253,13 +253,13 @@ function mostrarToast(mensagem, tipo = 'success') {
     const toastEl = document.getElementById('toast');
     const toastIcon = document.getElementById('toastIcon');
     const toastMessage = document.getElementById('toastMessage');
-    
-    toastIcon.className = tipo === 'success' 
+
+    toastIcon.className = tipo === 'success'
         ? 'bi bi-check-circle-fill text-success me-2'
         : 'bi bi-exclamation-circle-fill text-danger me-2';
-    
+
     toastMessage.textContent = mensagem;
-    
+
     const toast = new bootstrap.Toast(toastEl);
     toast.show();
 }

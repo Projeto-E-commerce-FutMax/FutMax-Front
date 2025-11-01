@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/admin.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg sticky-top shadow-sm" data-bs-theme="light">
         <div class="container-fluid">
@@ -58,7 +60,8 @@
                 <p class="text-muted mb-0">Controle o estoque dos produtos</p>
             </div>
             <div class="col-auto">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEstoque" onclick="abrirModalNovo()">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEstoque"
+                    onclick="abrirModalNovo()">
                     <i class="bi bi-plus-circle"></i> Adicionar Estoque
                 </button>
             </div>
@@ -72,7 +75,7 @@
                             <i class="bi bi-exclamation-triangle-fill"></i> Estoque Baixo
                         </h6>
                         <p class="mb-0">
-                            <span class="fs-4 fw-bold" id="countEstoqueBaixo">0</span> 
+                            <span class="fs-4 fw-bold" id="countEstoqueBaixo">0</span>
                             <span class="text-muted">produtos</span>
                         </p>
                     </div>
@@ -112,7 +115,8 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-5">
-                                <input type="text" class="form-control" id="filtroProduto" placeholder="Buscar por produto...">
+                                <input type="text" class="form-control" id="filtroProduto"
+                                    placeholder="Buscar por produto...">
                             </div>
                             <div class="col-md-3">
                                 <select class="form-select" id="filtroNivelEstoque">
@@ -173,7 +177,6 @@
         </div>
     </div>
 
-    <!-- MODAL ESTOQUE -->
     <div class="modal fade" id="modalEstoque" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -184,7 +187,7 @@
                 <form id="formEstoque">
                     <div class="modal-body">
                         <input type="hidden" id="cdEstoque">
-                        
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Produto *</label>
                             <select class="form-select" id="cdProduto" required>
@@ -194,7 +197,8 @@
 
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Quantidade *</label>
-                            <input type="number" class="form-control" id="qtEstoque" required min="0" step="1" placeholder="0">
+                            <input type="number" class="form-control" id="qtEstoque" required min="0" step="1"
+                                placeholder="0">
                             <small class="text-muted">Quantidade a adicionar ao estoque</small>
                         </div>
                     </div>
@@ -209,7 +213,6 @@
         </div>
     </div>
 
-    <!-- MODAL AJUSTE -->
     <div class="modal fade" id="modalAjuste" tabindex="-1">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -221,11 +224,13 @@
                     <div class="modal-body">
                         <input type="hidden" id="cdEstoqueAjuste">
                         <p class="mb-2 fw-semibold" id="nomeProdutoAjuste"></p>
-                        <p class="text-muted small mb-3">Estoque atual: <span id="estoqueAtualAjuste" class="fw-semibold"></span></p>
-                        
+                        <p class="text-muted small mb-3">Estoque atual: <span id="estoqueAtualAjuste"
+                                class="fw-semibold"></span></p>
+
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Nova Quantidade</label>
-                            <input type="number" class="form-control" id="novaQuantidade" required min="0" step="1" placeholder="0">
+                            <input type="number" class="form-control" id="novaQuantidade" required min="0" step="1"
+                                placeholder="0">
                         </div>
                     </div>
                     <div class="modal-footer" style="background-color: var(--bs-secondary-bg);">
@@ -237,7 +242,6 @@
         </div>
     </div>
 
-    <!-- TOAST -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="toast" class="toast" role="alert">
             <div class="toast-header">
@@ -255,4 +259,5 @@
     <script src="../js/theme.js"></script>
     <script src="../js/admin-estoque.js"></script>
 </body>
+
 </html>

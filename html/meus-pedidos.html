@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Pedidos - FutMax</title>
-    <script>(function(){try{var t=localStorage.getItem('futmax_theme');if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){t='dark';}if(!t){t='light';}document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+    <script>(function () { try { var t = localStorage.getItem('futmax_theme'); if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { t = 'dark'; } if (!t) { t = 'light'; } document.documentElement.setAttribute('data-bs-theme', t); } catch (e) { } })();</script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg shadow-sm sticky-top">
         <div class="container">
@@ -31,7 +33,8 @@
                     </a>
                     <a href="carrinho.html" class="btn btn-link position-relative">
                         <i class="bi bi-cart3 fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            id="cartCount">0</span>
                     </a>
                 </div>
             </div>
@@ -66,39 +69,54 @@
             <div class="row g-4">
                 <div class="col-md-3">
                     <h5 class="fw-bold mb-3 text-primary">FutMax</h5>
-                    <p class="text-muted small">A maior loja de camisas de futebol do Brasil. Qualidade garantida e entrega rápida.</p>
+                    <p class="text-muted small">A maior loja de camisas de futebol do Brasil. Qualidade garantida e
+                        entrega rápida.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i
+                                class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i
+                                class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i
+                                class="bi bi-twitter"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i
+                                class="bi bi-youtube"></i></a>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <h6 class="fw-bold mb-3">Categorias</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="produtos.html?categoria=nacional" class="text-muted text-decoration-none small">Camisas Nacionais</a></li>
-                        <li class="mb-2"><a href="produtos.html?categoria=internacional" class="text-muted text-decoration-none small">Internacionais</a></li>
-                        <li class="mb-2"><a href="produtos.html?categoria=selecoes" class="text-muted text-decoration-none small">Seleções</a></li>
-                        <li class="mb-2"><a href="produtos.html?categoria=retro" class="text-muted text-decoration-none small">Retrô</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=nacional"
+                                class="text-muted text-decoration-none small">Camisas Nacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=internacional"
+                                class="text-muted text-decoration-none small">Internacionais</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=selecoes"
+                                class="text-muted text-decoration-none small">Seleções</a></li>
+                        <li class="mb-2"><a href="produtos.html?categoria=retro"
+                                class="text-muted text-decoration-none small">Retrô</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h6 class="fw-bold mb-3">Atendimento</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Central de Ajuda</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Trocas e Devoluções</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Central de Ajuda</a>
+                        </li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Trocas e
+                                Devoluções</a></li>
                         <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Fale Conosco</a></li>
-                        <li class="mb-2"><a href="sobre-nos.html" class="text-muted text-decoration-none small">Sobre Nós</a></li>
+                        <li class="mb-2"><a href="sobre-nos.html" class="text-muted text-decoration-none small">Sobre
+                                Nós</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h6 class="fw-bold mb-3">Pagamento</h6>
                     <p class="text-muted small mb-3">Aceitamos:</p>
                     <div class="d-flex gap-2 flex-wrap">
-                        <span class="badge bg-secondary bg-opacity-10 text-body"><i class="bi bi-credit-card me-1"></i> Cartão</span>
-                        <span class="badge bg-secondary bg-opacity-10 text-body"><i class="bi bi-upc-scan me-1"></i> Boleto</span>
-                        <span class="badge bg-secondary bg-opacity-10 text-body"><i class="bi bi-cash me-1"></i> PIX</span>
+                        <span class="badge bg-secondary bg-opacity-10 text-body"><i class="bi bi-credit-card me-1"></i>
+                            Cartão</span>
+                        <span class="badge bg-secondary bg-opacity-10 text-body"><i class="bi bi-upc-scan me-1"></i>
+                            Boleto</span>
+                        <span class="badge bg-secondary bg-opacity-10 text-body"><i class="bi bi-cash me-1"></i>
+                            PIX</span>
                     </div>
                 </div>
             </div>
@@ -115,5 +133,5 @@
     <script src="../js/theme.js"></script>
     <script src="../js/meus-pedidos.js"></script>
 </body>
-</html>
 
+</html>

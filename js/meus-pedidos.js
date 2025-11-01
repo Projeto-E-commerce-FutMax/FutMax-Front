@@ -1,34 +1,33 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Aguardar um momento para garantir que config.js carregou
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     if (!verificarLogin()) {
         return;
     }
-    
+
     await carregarPedidos();
     updateCartCount();
 });
 
 function verificarLogin() {
     const userRaw = localStorage.getItem('futmax_user');
-    
+
     if (!userRaw) {
         alert('Você precisa estar logado para acessar esta página.');
         window.location.href = 'login.html';
         return false;
     }
-    
+
     try {
         const user = JSON.parse(userRaw);
-        
+
         if (!user || !user.usuario || !user.usuario.cdUsuario) {
             alert('Sessão inválida. Por favor, faça login novamente.');
             localStorage.removeItem('futmax_user');
             window.location.href = 'login.html';
             return false;
         }
-        
+
         return true;
     } catch (error) {
         alert('Erro ao verificar sessão. Por favor, faça login novamente.');
@@ -41,33 +40,32 @@ function verificarLogin() {
 async function carregarPedidos() {
     const container = document.getElementById('pedidosContainer');
     const emptyState = document.getElementById('emptyState');
-    
+
     try {
         const userRaw = localStorage.getItem('futmax_user');
         const user = JSON.parse(userRaw);
-        
+
         if (!user || !user.usuario || !user.usuario.cdUsuario) {
             throw new Error('Usuário não identificado');
         }
-        
+
         const pedidos = await pedidoAPI.listarPorUsuario(user.usuario.cdUsuario);
-        
+
         if (!pedidos || pedidos.length === 0) {
             container.classList.add('d-none');
             emptyState.classList.remove('d-none');
             return;
         }
-        
+
         container.classList.remove('d-none');
         emptyState.classList.add('d-none');
-        
-        // Ordenar pedidos do mais recente para o mais antigo
-        const pedidosOrdenados = Array.isArray(pedidos) 
+
+        const pedidosOrdenados = Array.isArray(pedidos)
             ? pedidos.sort((a, b) => new Date(b.dtPedido || b.createdAt) - new Date(a.dtPedido || a.createdAt))
             : [];
-        
+
         container.innerHTML = pedidosOrdenados.map(pedido => renderPedido(pedido)).join('');
-        
+
     } catch (error) {
         container.classList.remove('d-none');
         emptyState.classList.add('d-none');
@@ -90,10 +88,10 @@ function renderPedido(pedido) {
         hour: '2-digit',
         minute: '2-digit'
     });
-    
+
     const statusBadge = '<span class="badge bg-success">Confirmado</span>';
     const items = pedido.itens || [];
-    
+
     return `
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-transparent border-bottom py-2">
@@ -151,7 +149,7 @@ function getStatusBadge(status) {
         'ENTREGUE': { class: 'bg-success', text: 'Entregue' },
         'CANCELADO': { class: 'bg-danger', text: 'Cancelado' }
     };
-    
+
     const statusInfo = statusMap[status] || { class: 'bg-secondary', text: status || 'Pendente' };
     return `<span class="badge ${statusInfo.class}">${statusInfo.text}</span>`;
 }

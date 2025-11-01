@@ -13,13 +13,13 @@ async function carregarProdutos() {
     try {
         todosProdutos = await produtoAPI.listar();
         const select = document.getElementById('cdProduto');
-        
+
         const produtosAtivos = todosProdutos.filter(p => p.flAtivo);
         select.innerHTML = '<option value="">Selecione um produto...</option>' +
-            produtosAtivos.map(p => 
+            produtosAtivos.map(p =>
                 `<option value="${p.cdProduto}">${p.nmProduto} - ${formatarMoeda(p.vlProduto)}</option>`
             ).join('');
-            
+
     } catch (error) {
         console.error('Erro ao carregar produtos:', error);
     }
@@ -39,20 +39,20 @@ async function carregarEstoques() {
 
 function exibirEstoques() {
     const tbody = document.getElementById('tabelaEstoque');
-    
+
     if (estoquesFiltrados.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted">Nenhum estoque encontrado</td></tr>';
         return;
     }
 
     tbody.innerHTML = estoquesFiltrados.map(estoque => {
-        const nivel = estoque.qtEstoque === 0 ? 'zerado' : 
-                     estoque.qtEstoque < 10 ? 'baixo' : 'normal';
+        const nivel = estoque.qtEstoque === 0 ? 'zerado' :
+            estoque.qtEstoque < 10 ? 'baixo' : 'normal';
         const badgeNivel = nivel === 'zerado' ? 'badge-nivel-zerado' :
-                          nivel === 'baixo' ? 'badge-nivel-baixo' : 'badge-nivel-normal';
+            nivel === 'baixo' ? 'badge-nivel-baixo' : 'badge-nivel-normal';
         const textoNivel = nivel === 'zerado' ? 'Sem Estoque' :
-                          nivel === 'baixo' ? 'Baixo' : 'Normal';
-        
+            nivel === 'baixo' ? 'Baixo' : 'Normal';
+
         return `
             <tr>
                 <td><strong>#${estoque.cdEstoque}</strong></td>
@@ -100,7 +100,7 @@ function atualizarContadores() {
     const estoqueBaixo = todosEstoques.filter(e => e.qtEstoque > 0 && e.qtEstoque < 10 && e.flAtivo).length;
     const estoqueNormal = todosEstoques.filter(e => e.qtEstoque >= 10 && e.flAtivo).length;
     const semEstoque = todosEstoques.filter(e => e.qtEstoque === 0 && e.flAtivo).length;
-    
+
     document.getElementById('countEstoqueBaixo').textContent = estoqueBaixo;
     document.getElementById('countEstoqueNormal').textContent = estoqueNormal;
     document.getElementById('countSemEstoque').textContent = semEstoque;
@@ -117,14 +117,14 @@ function abrirAjusteRapido(cdEstoque, nomeProduto, quantidadeAtual) {
     document.getElementById('nomeProdutoAjuste').textContent = nomeProduto;
     document.getElementById('estoqueAtualAjuste').textContent = quantidadeAtual;
     document.getElementById('novaQuantidade').value = quantidadeAtual;
-    
+
     const modal = new bootstrap.Modal(document.getElementById('modalAjuste'));
     modal.show();
 }
 
 async function desativarEstoque(cdEstoque) {
     if (!confirm('Deseja realmente desativar este estoque?')) return;
-    
+
     try {
         await estoqueAPI.desativar(cdEstoque);
         mostrarToast('Estoque desativado com sucesso!', 'success');
@@ -150,53 +150,53 @@ function setupFormularios() {
     const formEstoque = document.getElementById('formEstoque');
     formEstoque.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const dados = {
             qtEstoque: parseInt(document.getElementById('qtEstoque').value),
             cdProduto: parseInt(document.getElementById('cdProduto').value)
         };
-        
+
         try {
             await estoqueAPI.cadastrar(dados);
             mostrarToast('Estoque adicionado com sucesso!', 'success');
-            
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalEstoque'));
             modal.hide();
-            
+
             await carregarEstoques();
-            
+
             localStorage.setItem('forcar_atualizacao_produtos', Date.now().toString());
-            
+
         } catch (error) {
             mostrarToast('Erro ao adicionar estoque: ' + error.message, 'error');
         }
     });
-    
+
     const formAjuste = document.getElementById('formAjuste');
     formAjuste.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const cdEstoque = parseInt(document.getElementById('cdEstoqueAjuste').value);
         const novaQuantidade = parseInt(document.getElementById('novaQuantidade').value);
-        
+
         const estoque = todosEstoques.find(e => e.cdEstoque === cdEstoque);
-        
+
         const dados = {
             qtEstoque: novaQuantidade,
             cdProduto: estoque.cdProduto
         };
-        
+
         try {
             await estoqueAPI.atualizar(cdEstoque, dados);
             mostrarToast('Estoque atualizado com sucesso!', 'success');
-            
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalAjuste'));
             modal.hide();
-            
+
             await carregarEstoques();
-            
+
             localStorage.setItem('forcar_atualizacao_produtos', Date.now().toString());
-            
+
         } catch (error) {
             mostrarToast('Erro ao atualizar estoque: ' + error.message, 'error');
         }
@@ -207,7 +207,7 @@ function setupFiltros() {
     const filtroProduto = document.getElementById('filtroProduto');
     const filtroNivelEstoque = document.getElementById('filtroNivelEstoque');
     const filtroStatus = document.getElementById('filtroStatus');
-    
+
     filtroProduto.addEventListener('input', aplicarFiltros);
     filtroNivelEstoque.addEventListener('change', aplicarFiltros);
     filtroStatus.addEventListener('change', aplicarFiltros);
@@ -217,20 +217,20 @@ function aplicarFiltros() {
     const textoProduto = document.getElementById('filtroProduto').value.toLowerCase();
     const nivelEstoque = document.getElementById('filtroNivelEstoque').value;
     const status = document.getElementById('filtroStatus').value;
-    
+
     estoquesFiltrados = todosEstoques.filter(estoque => {
         const matchProduto = estoque.nmProduto.toLowerCase().includes(textoProduto);
-        
+
         let matchNivel = true;
         if (nivelEstoque === 'baixo') matchNivel = estoque.qtEstoque > 0 && estoque.qtEstoque < 10;
         if (nivelEstoque === 'normal') matchNivel = estoque.qtEstoque >= 10;
         if (nivelEstoque === 'zerado') matchNivel = estoque.qtEstoque === 0;
-        
+
         const matchStatus = status === '' || estoque.flAtivo.toString() === status;
-        
+
         return matchProduto && matchNivel && matchStatus;
     });
-    
+
     exibirEstoques();
 }
 
@@ -250,11 +250,11 @@ function mostrarToast(mensagem, tipo = 'success') {
         toastContainer.style.zIndex = '9999';
         document.body.appendChild(toastContainer);
     }
-    
+
     const toastId = 'admin-toast-' + Date.now();
     const bgClass = tipo === 'success' ? 'bg-success' : tipo === 'error' ? 'bg-danger' : tipo === 'info' ? 'bg-info' : 'bg-warning';
     const iconClass = tipo === 'success' ? 'bi-check-circle-fill' : tipo === 'error' ? 'bi-exclamation-circle-fill' : tipo === 'info' ? 'bi-info-circle-fill' : 'bi-exclamation-triangle-fill';
-    
+
     const toastHtml = `
         <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header ${bgClass} text-white">
@@ -267,13 +267,13 @@ function mostrarToast(mensagem, tipo = 'success') {
             </div>
         </div>
     `;
-    
+
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
+
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
     toast.show();
-    
+
     toastElement.addEventListener('hidden.bs.toast', () => {
         toastElement.remove();
     });

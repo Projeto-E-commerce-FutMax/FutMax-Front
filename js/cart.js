@@ -8,7 +8,7 @@ class CartManager {
         const cartData = localStorage.getItem('futmax_carrinho') || localStorage.getItem('futmax_cart');
         return cartData ? JSON.parse(cartData) : [];
     }
-    
+
 
     saveCart() {
         localStorage.setItem('futmax_carrinho', JSON.stringify(this.cart));
@@ -61,9 +61,6 @@ class CartManager {
         return this.cart.reduce((total, item) => total + (item.vlProduto * item.quantidade), 0);
     }
 
-    // Método removido: getShipping() - O backend calcula o frete
-    // Método removido: getTotal() - O backend calcula o total com frete
-
     clear() {
         this.cart = [];
         this.saveCart();
@@ -72,7 +69,7 @@ class CartManager {
     updateCartCount() {
         const cartCountElements = document.querySelectorAll('#cartCount');
         const totalItems = this.getTotalItems();
-        
+
         cartCountElements.forEach(element => {
             element.textContent = totalItems;
             element.style.display = totalItems > 0 ? 'inline-block' : 'none';
@@ -88,7 +85,6 @@ class CartManager {
             document.body.appendChild(toastContainer);
         }
 
-        // Criar toast
         const toastId = 'toast-' + Date.now();
         const toastHTML = `
             <div id="${toastId}" class="toast" role="alert">
@@ -102,22 +98,19 @@ class CartManager {
         `;
 
         toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-        
+
         const toastElement = document.getElementById(toastId);
         const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
         toast.show();
 
-        // Remover elemento após fechar
         toastElement.addEventListener('hidden.bs.toast', () => {
             toastElement.remove();
         });
     }
 }
 
-// Instância global do carrinho
 const cart = new CartManager();
 
-// Atualizar contador ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     cart.updateCartCount();
 });
