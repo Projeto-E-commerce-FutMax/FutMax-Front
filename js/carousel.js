@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    initializeCarousel();
+    // Aguardar um pouco para garantir que tudo esteja renderizado
+    setTimeout(() => {
+        initializeCarousel();
+    }, 100);
 });
 
 function initializeCarousel() {
@@ -12,26 +15,25 @@ function initializeCarousel() {
 
     try {
         const carousel = new bootstrap.Carousel(carouselElement, {
-            
             interval: 3000,
             ride: 'carousel',
             wrap: true,
             touch: true,
             pause: 'hover',
             keyboard: true
-
         });
 
+        // Configurar controles e acessibilidade imediatamente (não afetam as transições)
         setupCarouselControls(carousel, carouselElement);
-
         improveAccessibility(carouselElement);
-
+        
+        // Adicionar transições suaves após um delay para evitar conflitos nas primeiras 3 transições
         addSmoothTransitions(carouselElement);
 
-        console.log(' Carrossel inicializado com sucesso!');
+        console.log('✅ Carrossel inicializado com sucesso!');
         
     } catch (error) {
-        console.error(' Erro ao inicializar carrossel:', error);
+        console.error('❌ Erro ao inicializar carrossel:', error);
     }
 }
 
@@ -100,24 +102,39 @@ function improveAccessibility(carouselElement) {
 }
 
 function addSmoothTransitions(carouselElement) {
+    // Contador para as primeiras transições
+    let transitionCount = 0;
+    const maxInitialTransitions = 3;
+    
+    // Listener temporário para contar as primeiras transições
+    const countInitialTransitions = () => {
+        transitionCount++;
+        if (transitionCount >= maxInitialTransitions) {
+            // Remover o listener temporário
+            carouselElement.removeEventListener('slid.bs.carousel', countInitialTransitions);
+            
+            // Agora adicionar os listeners de transição suave
+            carouselElement.addEventListener('slide.bs.carousel', (event) => {
+                const activeItem = carouselElement.querySelector('.carousel-item.active');
+                if (activeItem) {
+                    activeItem.style.transition = 'transform 0.6s ease-in-out';
+                }
+            });
 
-    carouselElement.addEventListener('slide.bs.carousel', (event) => {
-        const activeItem = carouselElement.querySelector('.carousel-item.active');
-        if (activeItem) {
-            activeItem.style.transition = 'transform 0.6s ease-in-out';
+            carouselElement.addEventListener('slid.bs.carousel', (event) => {
+                const newActiveItem = carouselElement.querySelector('.carousel-item.active');
+                if (newActiveItem) {
+                    newActiveItem.classList.add('animate-in');
+                    setTimeout(() => {
+                        newActiveItem.classList.remove('animate-in');
+                    }, 600);
+                }
+            });
         }
-    });
-
-    carouselElement.addEventListener('slid.bs.carousel', (event) => {
-
-        const newActiveItem = carouselElement.querySelector('.carousel-item.active');
-        if (newActiveItem) {
-            newActiveItem.classList.add('animate-in');
-            setTimeout(() => {
-                newActiveItem.classList.remove('animate-in');
-            }, 600);
-        }
-    });
+    };
+    
+    // Começar a contar as transições
+    carouselElement.addEventListener('slid.bs.carousel', countInitialTransitions);
 }
 
 function pauseCarousel() {

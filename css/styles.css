@@ -319,6 +319,16 @@
     color: var(--bs-primary) !important;
 }
 
+/* Hover laranja para links da navbar - tema claro */
+[data-bs-theme="light"] .navbar .nav-link:hover:not(.active) {
+    color: var(--bs-primary) !important;
+}
+
+/* Hover laranja para links da navbar - tema escuro */
+[data-bs-theme="dark"] .navbar .nav-link:hover:not(.active) {
+    color: var(--bs-primary) !important;
+}
+
 [data-bs-theme="dark"] .navbar .btn-outline-secondary {
     color: var(--bs-body-color) !important;
     border-color: var(--bs-border-color);
@@ -463,4 +473,37 @@ footer .btn-outline-secondary:hover {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
     color: white;
+}
+
+/* Badges de pagamento no footer - cor de texto consistente com outras escritas */
+footer .badge {
+    color: var(--bs-secondary-color) !important;
+    background-color: var(--bs-secondary-bg) !important;
+}
+
+/* Garantir visibilidade no modo claro */
+[data-bs-theme="light"] footer .badge {
+    color: var(--bs-secondary-color) !important;
+    background-color: var(--bs-secondary-bg) !important;
+}
+
+/* Garantir visibilidade no modo escuro */
+[data-bs-theme="dark"] footer .badge {
+    color: var(--bs-secondary-color) !important;
+    background-color: var(--bs-secondary-bg) !important;
+}
+
+/* Links de termos de uso e política de privacidade - mesma cor do texto */
+.form-check-label a,
+#acceptTerms + label a,
+label[for="acceptTerms"] a {
+    color: var(--bs-body-color) !important;
+    text-decoration: none !important;
+}
+
+.form-check-label a:hover,
+#acceptTerms + label a:hover,
+label[for="acceptTerms"] a:hover {
+    color: var(--bs-body-color) !important;
+    text-decoration: underline !important;
 }

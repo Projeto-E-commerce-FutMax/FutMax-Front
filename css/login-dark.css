@@ -16,4 +16,25 @@
 .nav-pills .nav-link {
     position: relative;
     z-index: 10;
+    color: var(--bs-body-color) !important;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--bs-primary) !important;
+    color: white !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.nav-pills .nav-link:not(.active):hover {
+    color: var(--bs-primary) !important;
+}
+
+/* Link "Esqueceu sua senha?" em laranja */
+#loginForm a,
+#loginForm a.text-decoration-none {
+    color: var(--bs-primary) !important;
+}
+
+#loginForm a:hover {
+    color: var(--bs-secondary) !important;
 }
